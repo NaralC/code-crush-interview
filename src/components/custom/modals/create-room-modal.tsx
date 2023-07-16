@@ -1,5 +1,4 @@
 import { FC } from "react";
-import Modal from "@/components/ui/modal";
 import { useCreateRoomModal } from "@/hooks/use-create-room-modal";
 
 import { Button } from "@/components/ui/button";
@@ -39,6 +38,8 @@ import { GiTalk } from "react-icons/gi";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
+import Modal from "@/components/ui/modal";
+
 const createRoomSchemaFrontend = z.object({
   roomName: z.string().min(1, {
     message: "Room name cannot be empty",
@@ -58,7 +59,7 @@ const createRoomSchemaFrontend = z.object({
 });
 
 const CreateRoomModal: FC = () => {
-  const { isOpen, setOpen, setClose } = useCreateRoomModal();
+  const { isOpen, setClose } = useCreateRoomModal();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createRoomSchemaFrontend>>({
@@ -81,13 +82,7 @@ const CreateRoomModal: FC = () => {
   };
 
   return (
-    <Modal
-      title="Create a Room"
-      description="Powered by Pusher"
-      isOpen={isOpen}
-      setOpen={setOpen}
-      setClose={setClose}
-    >
+    <Modal title="Leave Feedback" isOpen={isOpen} setClose={setClose}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid items-center w-full gap-5">

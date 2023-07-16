@@ -51,7 +51,6 @@ const JoinRoomModal: FC = () => {
       title="Join an Interview Room"
       description="Powered by Pusher"
       isOpen={isOpen}
-      setOpen={setOpen}
       setClose={setClose}
     >
       <Form {...form}>
@@ -73,7 +72,7 @@ const JoinRoomModal: FC = () => {
                 </>
               )}
             />
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" onSubmit={(e) => e.preventDefault()}>
               Proceed
             </Button>
           </div>

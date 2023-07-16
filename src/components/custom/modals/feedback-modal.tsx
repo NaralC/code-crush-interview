@@ -51,7 +51,6 @@ const FeedbackModal: FC = () => {
     <Modal
       title="Leave Feedback"
       isOpen={isOpen}
-      setOpen={setOpen}
       setClose={setClose}
     >
       <Form {...form}>
