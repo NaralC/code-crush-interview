@@ -82,7 +82,7 @@ const CreateRoomModal: FC = () => {
   };
 
   return (
-    <Modal title="Leave Feedback" isOpen={isOpen} setClose={setClose}>
+    <Modal title="Create an Interview Room" description="Powered by Pusher" isOpen={isOpen} setClose={setClose}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid items-center w-full gap-5">
