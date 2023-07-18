@@ -21,7 +21,7 @@ const Home: NextPage = () => {
         <title>Code Crush</title>
         <meta name="Code Crush" content="Become an interview pro!" />
       </Head>
-      <main className="flex flex-col items-center justify-center min-h-screen p-24 xl:container">
+      <main className="flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100 xl:container">
         <p className="text-6xl font-bold text-center md:text-8xl">Code Crush</p>
         <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance">
           Interviewing — the ultimate leverage for career progression. Period.
