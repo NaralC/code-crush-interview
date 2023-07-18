@@ -1,5 +1,4 @@
 import LandingOverlay from "@/components/custom/landing-overlay";
-import RevolvingGrid from "@/components/custom/revolving-grid";
 import { Button } from "@/components/ui/button";
 import { useCreateRoomModal } from "@/hooks/use-create-room-modal";
 import { useFeedbackModal } from "@/hooks/use-feedback-modal";
