@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useCreateRoomModal } from "@/hooks/use-create-room-modal";
+import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 
 import { Button } from "@/components/ui/button";
 import {

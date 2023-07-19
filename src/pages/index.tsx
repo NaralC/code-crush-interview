@@ -1,16 +1,16 @@
-import LandingOverlay from "@/components/custom/landing-overlay";
-import { Button } from "@/components/ui/button";
-import useBroadcast from "@/hooks/use-broadcast";
-import { useCreateRoomModal } from "@/hooks/use-create-room-modal";
-import { useFeedbackModal } from "@/hooks/use-feedback-modal";
-import { useJoinRoomModal } from "@/hooks/use-join-room-modal";
-import { useToast } from "@/hooks/use-toast";
-import { Bird, Code2, Paperclip } from "lucide-react";
-import { NextPage } from "next";
 import Head from "next/head";
-import usePresence from "@/hooks/use-presence";
+import { NextPage } from "next";
+import { Bird, Code2, Paperclip } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import LandingOverlay from "@/components/custom/landing-overlay";
+import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
+import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
+import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
+import useBroadcast from "@/hooks/real-time/use-broadcast";
+import usePresence from "@/hooks/real-time/use-presence";
+import usePostgresChanges from "@/hooks/real-time/use-postgres-changes";
+import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
-import usePostgresChanges from "@/hooks/use-postgres-changes";
 
 const Home: NextPage = () => {
   // Real-time
