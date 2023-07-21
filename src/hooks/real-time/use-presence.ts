@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import supabaseClient from "@/lib/supa-client";
 import { nanoid } from "nanoid";
 import { faker } from "@faker-js/faker";
@@ -12,7 +13,7 @@ import {
 import useSharedState from "@/context/shared-state";
 import { RealtimeChannel } from "@supabase/supabase-js";
 
-const usePresence = (): MutableRefObject<RealtimeChannel | null> => {
+const usePresence = () => {
   const { updateUsersList } = useSharedState();
   const name = faker.person.firstName();
 

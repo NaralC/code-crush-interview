@@ -21,7 +21,7 @@ const useSharedState = create<{
       },
     ],
   },
-  updateUsersList: (newList: any): void => {
+  updateUsersList: (newList: UsersList): void => {
     set({
       usersList: newList,
     });

@@ -1,13 +1,14 @@
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { MutableRefObject, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 const EVENT = {
-  NEW_JOIN: "new-join",
+  NEW_JOIN: "kuayma",
   CLICK: "click",
 };
 
-const useBroadcast = (): MutableRefObject<RealtimeChannel | null> => {
+const useBroadcast = () => {
   const broadcastRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
@@ -34,18 +35,21 @@ const useBroadcast = (): MutableRefObject<RealtimeChannel | null> => {
         { event: EVENT.CLICK }, // Filtering events
         (payload) => {
           console.log(payload);
+          toast("Someone just clicked")
         }
       );
 
     broadcastChannel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
-        await broadcastChannel.send({
-          type: "broadcast",
-          event: EVENT.NEW_JOIN,
-          payload: {
-            message: "someone just joined lmao",
-          },
-        });
+        // Do something when someone joins
+        // This interferes with the presence channel, thus being commented out
+        // await broadcastChannel.send({
+        //   type: "broadcast",
+        //   event: EVENT.NEW_JOIN,
+        //   payload: {
+        //     message: "someone just joined lmao",
+        //   },
+        // });
       }
     });
 

@@ -1,16 +1,16 @@
 import supabaseClient from "@/lib/supa-client";
+import toast from "react-hot-toast";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { nanoid } from "nanoid";
-import { MutableRefObject, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const usePostgresChanges = () => {
-  const postgresRefA = useRef<RealtimeChannel | null>(null);
-  const postgresRefB = useRef<RealtimeChannel | null>(null);
-  const postgresRefC = useRef<RealtimeChannel | null>(null);
+  const schemaChangesRef = useRef<RealtimeChannel | null>(null);
+  const tableDBChangesRef = useRef<RealtimeChannel | null>(null);
+  const tableFilterChangesRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
     // Listen to changes by schema
-    const channelA = supabaseClient
+    const schemaChannel = supabaseClient
       .channel("schema-db-changes")
       .on(
         "postgres_changes",
@@ -18,12 +18,15 @@ const usePostgresChanges = () => {
           event: "*",
           schema: "public",
         },
-        (payload) => console.log(payload)
+        (payload) => {
+          console.log(payload);
+          toast("schema-db-changes");
+        }
       )
       .subscribe();
 
     // Listen to changes by table
-    const channelB = supabaseClient
+    const tableChannel = supabaseClient
       .channel("table-db-changes")
       .on(
         "postgres_changes",
@@ -32,12 +35,15 @@ const usePostgresChanges = () => {
           schema: "public",
           table: "interview_rooms",
         },
-        (payload) => console.log(payload)
+        (payload) => {
+          console.log(payload);
+          toast("table-db-changes");
+        }
       )
       .subscribe();
 
     // Listen to changes by filter
-    const channelC = supabaseClient
+    const filterChannel = supabaseClient
       .channel("table-filter-changes")
       .on(
         "postgres_changes",
@@ -45,31 +51,33 @@ const usePostgresChanges = () => {
           event: "*",
           schema: "public",
           table: "interview_rooms",
-          filter: "creator=eq.naral",
+          filter: "room_id=eq.d7a1af15-4fea-4207-98e6-b3a97e42f19a",
         },
-        (payload) => console.log(payload)
+        (payload) => {
+          console.log(payload);
+          toast("table-filter-changes");
+        }
       )
       .subscribe();
 
-    postgresRefA.current = channelA;
-    postgresRefB.current = channelB;
-    postgresRefC.current = channelC;
+    schemaChangesRef.current = schemaChannel;
+    tableDBChangesRef.current = tableChannel;
+    tableFilterChangesRef.current = filterChannel;
 
     return () => {
-      channelA.unsubscribe();
-      channelB.unsubscribe();
-      channelC.unsubscribe();
-      supabaseClient.removeAllChannels();
-      postgresRefA.current = null;
-      postgresRefB.current = null;
-      postgresRefC.current = null;
+      schemaChannel.unsubscribe();
+      tableChannel.unsubscribe();
+      filterChannel.unsubscribe();
+      schemaChangesRef.current = null;
+      tableDBChangesRef.current = null;
+      tableFilterChangesRef.current = null;
     };
   }, []);
 
   return {
-    schemaChangesRef: postgresRefA,
-    tableDBChangesRef: postgresRefB,
-    tableFilterChangesRef: postgresRefC,
+    schemaChangesRef,
+    tableDBChangesRef,
+    tableFilterChangesRef,
   };
 };
 
