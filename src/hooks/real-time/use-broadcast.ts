@@ -1,70 +1,64 @@
 import supabaseClient from "@/lib/supa-client";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import { MutableRefObject, useEffect, useRef } from "react";
 
 const EVENT = {
   NEW_JOIN: "new-join",
   CLICK: "click",
 };
 
-const useBroadcast = () => {
-  const broadcastChannel = supabaseClient.channel("room-1", {
-    config: {
-      broadcast: {
-        self: false,
-        ack: false,
-      },
-    },
-  });
+const useBroadcast = (): MutableRefObject<RealtimeChannel | null> => {
+  const broadcastRef = useRef<RealtimeChannel | null>(null);
 
-  // Subscribe
-  broadcastChannel
-    .on(
-      "broadcast",
-      { event: EVENT.NEW_JOIN }, // Filtering events
-      (payload) => {
-        console.log(payload);
-      }
-    )
-    .on(
-      "broadcast",
-      { event: EVENT.CLICK }, // Filtering events
-      (payload) => {
-        console.log(payload);
-      }
-    )
-    .subscribe((status) => {
+  useEffect(() => {
+    const broadcastChannel = supabaseClient.channel("123", {
+      config: {
+        broadcast: {
+          self: false,
+          ack: false,
+        },
+      },
+    });
+
+    // Subscribe
+    broadcastChannel
+      .on(
+        "broadcast",
+        { event: EVENT.NEW_JOIN }, // Filtering events
+        (payload) => {
+          console.log(payload);
+        }
+      )
+      .on(
+        "broadcast",
+        { event: EVENT.CLICK }, // Filtering events
+        (payload) => {
+          console.log(payload);
+        }
+      );
+
+    broadcastChannel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
-        joinFunction();
+        await broadcastChannel.send({
+          type: "broadcast",
+          event: EVENT.NEW_JOIN,
+          payload: {
+            message: "someone just joined lmao",
+          },
+        });
       }
     });
 
-  // Publish
-  const joinFunction = () => {
-    broadcastChannel.send({
-      type: "broadcast",
-      event: EVENT.NEW_JOIN,
-      payload: {
-        message: "someone just joined lmao",
-      },
-    });
-  };
+    broadcastRef.current = broadcastChannel;
 
-  const clickFunction = () => {
-    broadcastChannel.send({
-      type: "broadcast",
-      event: EVENT.CLICK,
-      payload: {
-        message: "who the fuck clicked",
-      },
-    });
-  };
+    return () => {
+      broadcastChannel.unsubscribe();
+      supabaseClient.removeChannel(broadcastChannel);
+      broadcastRef.current = null;
+    };
+  }, []);
 
-  // TODO: Clean up when leave
-  const cleanUp = () => {
-    broadcastChannel.subscribe();
-    supabaseClient.removeChannel(broadcastChannel);
-  };
-
-  return { broadcastChannel, clickFunction };
+  return broadcastRef;
 };
 
 export default useBroadcast;

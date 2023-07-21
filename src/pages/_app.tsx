@@ -1,5 +1,5 @@
 import ModalProvider from "@/components/providers/modal-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { ToastProvider } from "@/components/providers/toast-provider";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={inter.className}>
       <Component {...pageProps} />
       <ModalProvider />
-      <Toaster />
+      <ToastProvider />
     </main>
   );
 }

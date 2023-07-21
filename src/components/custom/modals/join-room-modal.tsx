@@ -16,7 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useToast } from "@/hooks/use-toast";
-import { useJoinRoomModal } from "@/hooks/use-join-room-modal";
+import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {

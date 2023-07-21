@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import Modal from "@/components/ui/modal";
 import { FC } from "react";
-import { useFeedbackModal } from "@/hooks/use-feedback-modal";
+import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
 
 const feedbackSchema = z.object({
   subject: z.string().min(1, {

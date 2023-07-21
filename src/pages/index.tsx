@@ -6,18 +6,9 @@ import LandingOverlay from "@/components/custom/landing-overlay";
 import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
 import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
-import useBroadcast from "@/hooks/real-time/use-broadcast";
-import usePresence from "@/hooks/real-time/use-presence";
-import usePostgresChanges from "@/hooks/real-time/use-postgres-changes";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 
 const Home: NextPage = () => {
-  // Real-time
-  const { clickFunction } = useBroadcast();
-  // usePresence();
-  // usePostgresChanges();
-
   // Modals & Toast
   const { toast } = useToast();
   const createRoomModal = useCreateRoomModal();
@@ -36,13 +27,6 @@ const Home: NextPage = () => {
           Interviewing — the ultimate leverage for career progression. Period.
         </p>
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
-          <Button
-            onClick={() => {
-              clickFunction();
-            }}
-          >
-            Send real-time stuff yo
-          </Button>
           <Button
             onClick={() => {
               createRoomModal.setOpen();
