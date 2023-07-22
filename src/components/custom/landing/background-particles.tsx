@@ -4,7 +4,7 @@ import type { Container, Engine } from "tsparticles-engine";
 import { loadSlim } from "tsparticles-slim"; // if you are going to use `loadSlim`, install the "tsparticles-slim" package too.
 
 const BackgroundParticles: FC = () => {
-  // Inspiration: https://highstorm.app/
+  // Inspiration: https://highstorm.app/ && https://github.com/matteobruni/tsparticles/blob/main/utils/configs/src/a/absorbers.ts
   
   const particlesInit = useCallback(async (engine: Engine) => {
     console.log(engine);
