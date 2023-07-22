@@ -17,6 +17,20 @@ module.exports = {
     },
     extend: {
       keyframes: {
+        "blob": {
+          '0%': {
+            transform: 'translate(0px, 0px) scale(1);'
+          },
+          '33%': {
+            transform: 'translate(30px, -50px) scale(1.2);'
+          },
+          '66%': {
+            transform: 'translate(-20px, 20px) scale(0.8);'
+          },
+          '100%': {
+            transform: 'translate(0px, 0px) scale(1);'
+          },
+        },
         "accordion-down": {
           from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -25,10 +39,38 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "sliding-img-up-1": {
+          '0%': {
+            transform: 'translateY(0);'
+          },
+          '100%': {
+            transform: 'translateY(-615px);'
+          }
+        },
+        "sliding-img-up-2": {
+          '0%': {
+            transform: 'translateY(0);'
+          },
+          '100%': {
+            transform: 'translateY(-928px);'
+          }
+        },
+        "sliding-img-down-1": {
+          '0%': {
+            transform: 'translateY(-986px);'
+          },
+          '100%': {
+            transform: 'translateY(0);'
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "sliding-img-up-1": "sliding-img-up-1 15s linear infinite",
+        "sliding-img-down-1": "sliding-img-down-1 15s linear infinite",
+        "sliding-img-up-2": "sliding-img-up-2 15s linear infinite",
+        "blob": "blob 7s infinite"
       },
     },
   },

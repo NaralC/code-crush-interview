@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BadgeDollarSign, History, Key, UserCircle2 } from "lucide-react";
 
-const LandingOverlay: FC = () => {
+const Overlay: FC = () => {
   return (
     <>
       <div className="fixed inset-y-0 top-[5vh] right-[10vw]">
@@ -48,4 +48,4 @@ const LandingOverlay: FC = () => {
   );
 };
 
-export default LandingOverlay;
+export default Overlay;
