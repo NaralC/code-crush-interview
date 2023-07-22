@@ -8,11 +8,11 @@ const EVENT = {
   CLICK: "click",
 };
 
-const useBroadcast = () => {
+const useBroadcast = (roomId: string) => {
   const broadcastRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    const broadcastChannel = supabaseClient.channel("123", {
+    const broadcastChannel = supabaseClient.channel(roomId, {
       config: {
         broadcast: {
           self: false,
@@ -35,7 +35,7 @@ const useBroadcast = () => {
         { event: EVENT.CLICK }, // Filtering events
         (payload) => {
           console.log(payload);
-          toast("Someone just clicked")
+          toast("Someone just clicked");
         }
       );
 

@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useToast } from "@/hooks/use-toast";
 import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
+import { DEFAULT_ROOM_ID } from "@/lib/constant";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
@@ -31,7 +32,7 @@ const JoinRoomModal: FC = () => {
   const form = useForm<z.infer<typeof joinRoomSchemaFrontend>>({
     resolver: zodResolver(joinRoomSchemaFrontend),
     defaultValues: {
-      roomId: "d7a1af15-4fea-4207-98e6-b3a97e42f19a",
+      roomId: DEFAULT_ROOM_ID,
     },
   });
 

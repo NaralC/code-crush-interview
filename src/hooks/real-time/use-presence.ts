@@ -13,14 +13,15 @@ import {
 import useSharedState from "@/context/shared-state";
 import { RealtimeChannel } from "@supabase/supabase-js";
 
-const usePresence = () => {
+const usePresence = (roomId: string) => {
+  // State & Utility
   const { updateUsersList } = useSharedState();
   const name = faker.person.firstName();
 
   const presenceChannelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    const presenceChannel = supabaseClient.channel("presence-123", {
+    const presenceChannel = supabaseClient.channel(`presence-${roomId}`, {
       config: {
         presence: {
           key: name,

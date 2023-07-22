@@ -15,16 +15,14 @@ import Head from "next/head";
 import { useRef, useEffect } from "react";
 import Split from "react-split";
 
+const ROOM_ID = "948u5";
+
 const CodingPage: NextPage = () => {
-  // Broastcast channel
-  const broadcastRef = useBroadcast();
-
-  // Presence channel
-  const presenceRef = usePresence();
-
-  // Postgres channel
+  // Real-time refs
+  const broadcastRef = useBroadcast(ROOM_ID);
+  const presenceRef = usePresence(ROOM_ID);
   const { schemaChangesRef, tableDBChangesRef, tableFilterChangesRef } =
-    usePostgresChanges();
+    usePostgresChanges(ROOM_ID);
 
   return (
     <>
@@ -33,15 +31,19 @@ const CodingPage: NextPage = () => {
         <meta name="Code Crush" content="Code Crush" />
       </Head>
       <UtilityBar />
-      <Button onClick={() => {
-        broadcastRef.current?.send({
-          type: "broadcast",
-          event: "click",
-          payload: {
-            message: "someone just clicked lmao",
-          },
-        });
-      }}>Test Broadcast</Button>
+      <Button
+        onClick={() => {
+          broadcastRef.current?.send({
+            type: "broadcast",
+            event: "click",
+            payload: {
+              message: "someone just clicked lmao",
+            },
+          });
+        }}
+      >
+        Test Broadcast
+      </Button>
       <main className="flex flex-col w-full">
         <Split className="flex flex-row h-screen cursor-grab bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
           <div className="cursor-auto bg-zinc-500">

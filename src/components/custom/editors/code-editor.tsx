@@ -1,24 +1,53 @@
 import { Button } from "@/components/ui/button";
 import { Editor, Monaco, OnMount } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import useCodeState from "@/context/code-state";
 
 const CodeEditor: FC = () => {
   // Code state
-  const [value, setValue] = useState<string>("");
-  const [language, setLanguage] = useState<string>("typescript");
+  const { code, language, setCode, setLanguage } = useCodeState();
 
-  // Refs
+  // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
   const monacoRef = useRef<Monaco | null>(null); // for editor instance
 
+  // Mutations
+  const { isLoading, mutate: saveCodeToDB } = useMutation({
+    mutationFn: async (code: any) => {
+      const response = await fetch("/api/db/save-code", {
+        method: "PATCH",
+        body: code,
+      });
+
+      if (!response.ok) throw new Error("Could not save code to DB");
+
+      return response.json();
+    },
+    onError: (error) => {
+      toast.error((error as Error).message);
+    },
+    onSuccess: () => toast.success("Code saved to DB"),
+  });
+
+  // Editor state changes
   const handleEditorChange = useCallback(
     (value: string | undefined, event: editor.IModelContentChangedEvent) => {
       if (value === undefined) return;
 
-      setValue(value);
+      setCode(value);
+      saveCodeToDB(value);
     },
-    []
+    [code]
   );
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
@@ -27,15 +56,6 @@ const CodeEditor: FC = () => {
     }
 
     monacoRef.current = monaco;
-  };
-
-  const handleEditorWillMount = (monaco: Monaco) => {
-    monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
-  };
-
-  const handleEditorValidation = (markers: editor.IMarker[]) => {
-    // model markers
-    // markers.forEach((marker) => console.log("onValidate:", marker.message));
   };
 
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
@@ -75,7 +95,7 @@ const CodeEditor: FC = () => {
           weight: 48
         }
         `}
-        value={value}
+        value={code}
         options={{
           // fontFamily: "Courier New",
           fontLigatures: true,
@@ -83,8 +103,15 @@ const CodeEditor: FC = () => {
         }}
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
-        beforeMount={handleEditorWillMount}
-        onValidate={handleEditorValidation}
+        beforeMount={(monaco: Monaco) => {
+          monaco.languages.typescript.javascriptDefaults.setEagerModelSync(
+            true
+          );
+        }}
+        onValidate={(markers: editor.IMarker[]) => {
+          // model markers
+          // markers.forEach((marker) => console.log("onValidate:", marker.message));
+        }}
       />
     </div>
   );
