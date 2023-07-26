@@ -10,13 +10,13 @@ import {
   useRef,
   useState,
 } from "react";
-import useUsersList from "@/context/users-list";
 import { RealtimeChannel, RealtimePresenceState } from "@supabase/supabase-js";
-import useCodeState from "@/context/code-state";
+import { useCodeContext } from "@/context/code-context";
+import { useUsersList } from "@/context/users-list-context";
 
 const usePresence = (roomId: string) => {
   // State & Utility
-  const { code, setCode } = useCodeState();
+  const { code, updateCode } = useCodeContext();
   const { updateUsersList } = useUsersList();
   const name = faker.person.firstName();
 

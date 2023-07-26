@@ -1,5 +1,7 @@
 import ModalProvider from "@/components/providers/modal-provider";
 import { ToastProvider } from "@/components/providers/toast-provider";
+import { CodeContextProvider } from "@/context/code-context";
+import { UsersListContextProvider } from "@/context/users-list-context";
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
@@ -12,9 +14,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={inter.className}>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-        <ModalProvider />
-        <ToastProvider />
+        <CodeContextProvider>
+          <UsersListContextProvider>
+            <Component {...pageProps} />
+            <ModalProvider />
+            <ToastProvider />
+          </UsersListContextProvider>
+        </CodeContextProvider>
       </QueryClientProvider>
     </main>
   );

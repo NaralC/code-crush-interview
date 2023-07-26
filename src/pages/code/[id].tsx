@@ -2,18 +2,11 @@
 import CodeEditor from "@/components/custom/editors/code-editor";
 import SharedNoteEditor from "@/components/custom/editors/shared-note-editor";
 import UtilityBar from "@/components/custom/utility-bar";
-import { Button } from "@/components/ui/button";
-import useUsersList from "@/context/users-list";
 import useBroadcast from "@/hooks/real-time/use-broadcast";
 import usePostgresChanges from "@/hooks/real-time/use-postgres-changes";
 import usePresence from "@/hooks/real-time/use-presence";
-import { DEFAULT_ROOM_ID } from "@/lib/constant";
-import supabaseClient from "@/lib/supa-client";
-import { faker } from "@faker-js/faker";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useRef, useEffect } from "react";
-import toast from "react-hot-toast";
 import Split from "react-split";
 
 const ROOM_ID = "948u5";

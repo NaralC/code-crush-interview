@@ -4,11 +4,11 @@ import toast from "react-hot-toast";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 import { DEFAULT_ROOM_ID } from "@/lib/constant";
-import useCodeState from "@/context/code-state";
+import { useCodeContext } from "@/context/code-context";
 
 const usePostgresChanges = (roomId: string) => {
   // States
-  const { setCode } = useCodeState();
+  const { updateCode } = useCodeContext();
 
   // Refs
   const schemaChangesRef = useRef<RealtimeChannel | null>(null);
@@ -66,7 +66,7 @@ const usePostgresChanges = (roomId: string) => {
 
           // @ts-ignore
           const newCode = payload.new.code_state         
-          setCode(newCode);
+          updateCode(newCode);
         }
       )
       .subscribe();

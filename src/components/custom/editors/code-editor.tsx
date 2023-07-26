@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "@/components/ui/button";
 import { Editor, Monaco, OnMount } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
@@ -11,15 +12,15 @@ import {
 } from "react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import useCodeState from "@/context/code-state";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { EVENT } from "@/hooks/real-time/use-broadcast";
+import { useCodeContext } from "@/context/code-context";
 
 const CodeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
-  const { code, language, setCode, setLanguage } = useCodeState();
+  const { code, language, updateCode, setLanguage } = useCodeContext();
 
   // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
@@ -30,8 +31,9 @@ const CodeEditor: FC<{
     (value: string | undefined, event: editor.IModelContentChangedEvent) => {
       if (value === undefined) return;
 
-      setCode(value);
-
+      // setCode(value);
+      updateCode(value)
+      
       // TODO: Implement throttling/debounce
       realTimeRef.current?.send({
         type: "broadcast",
@@ -42,7 +44,7 @@ const CodeEditor: FC<{
       });
     },
     
-    [code, realTimeRef, setCode]
+    [code]
   );
 
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
