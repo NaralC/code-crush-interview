@@ -3,13 +3,15 @@ Essential:
 - Front-end interview
 - Behavioral interview
 - Coding Page: ▶
-    - Drag-around-or-hide-like-Zoom voice call
     - Code synchronization (slow rn, should switch from db changes to presence) ▶
     - UI: codeinterview.io / Pramp style (don't forget console output)
 - Note between peers (Notion-like-editor): ▶
     - Text ▶
     - Images
     - Links
+- Voice/audio call:
+    - WebRTC
+    - Drag-around-or-hide-like-Zoom voice call
 - Interviewer/interviewee roles:
     - Pick questions/hints/follow-ups
 - Questions pool (hints/solutions) 

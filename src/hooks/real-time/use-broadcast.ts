@@ -1,14 +1,18 @@
+import useCodeState from "@/context/code-state";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { MutableRefObject, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
-const EVENT = {
-  NEW_JOIN: "kuayma",
-  CLICK: "click",
+export const EVENT = {
+  NEW_JOIN: "new-join",
+  CODE_UPDATE: "code-update"
 };
 
 const useBroadcast = (roomId: string) => {
+  // States
+  const { setCode, code } = useCodeState();
+
   const broadcastRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
@@ -27,27 +31,33 @@ const useBroadcast = (roomId: string) => {
         "broadcast",
         { event: EVENT.NEW_JOIN }, // Filtering events
         (payload) => {
-          console.log(payload);
+          // console.log(payload.payload.message);
+          // broadcastChannel.send({
+          //   type: "broadcast",
+          //   event: EVENT.CODE_UPDATE,
+          //   payload: {
+          //     message: code,
+          //   },
+          // });
         }
       )
       .on(
         "broadcast",
-        { event: EVENT.CLICK }, // Filtering events
+        { event: EVENT.CODE_UPDATE }, // Filtering events
         (payload) => {
-          console.log(payload);
-          toast("Someone just clicked");
+          console.log(payload.payload.message)
+          setCode(payload.payload.message)
         }
       );
 
     broadcastChannel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
-        // Do something when someone joins
-        // This interferes with the presence channel, thus being commented out
+        // Do something when someone else joins
         // await broadcastChannel.send({
         //   type: "broadcast",
-        //   event: EVENT.NEW_JOIN,
+        //   event: EVENT.CODE_UPDATE,
         //   payload: {
-        //     message: "someone just joined lmao",
+        //     message: code,
         //   },
         // });
       }

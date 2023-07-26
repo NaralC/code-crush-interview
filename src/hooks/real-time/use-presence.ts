@@ -10,12 +10,14 @@ import {
   useRef,
   useState,
 } from "react";
-import useSharedState from "@/context/shared-state";
-import { RealtimeChannel } from "@supabase/supabase-js";
+import useUsersList from "@/context/users-list";
+import { RealtimeChannel, RealtimePresenceState } from "@supabase/supabase-js";
+import useCodeState from "@/context/code-state";
 
 const usePresence = (roomId: string) => {
   // State & Utility
-  const { updateUsersList } = useSharedState();
+  const { code, setCode } = useCodeState();
+  const { updateUsersList } = useUsersList();
   const name = faker.person.firstName();
 
   const presenceChannelRef = useRef<RealtimeChannel | null>(null);
@@ -32,11 +34,13 @@ const usePresence = (roomId: string) => {
     // State update when peer joins
     presenceChannel
       .on("presence", { event: "sync" }, () => {
-        console.log("Online users: ", presenceChannel.presenceState());
         updateUsersList(presenceChannel.presenceState());
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
+
+        // TODO: code sync for new joiners
+        
       })
       .on("presence", { event: "leave" }, ({ leftPresences }) => {
         toast.error(`${leftPresences[0]["name"]} just left!`);
@@ -44,7 +48,11 @@ const usePresence = (roomId: string) => {
 
     presenceChannel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
-        const status = await presenceChannel.track({ name });
+        const status = await presenceChannel.track({
+          name,
+          code,
+          online_at: new Date().toISOString(),
+        });
         // console.log(status);
       }
     });
@@ -52,6 +60,7 @@ const usePresence = (roomId: string) => {
     presenceChannelRef.current = presenceChannel;
 
     return () => {
+      presenceChannel.untrack();
       presenceChannel.unsubscribe();
       presenceChannelRef.current = null;
     };

@@ -9,7 +9,7 @@ type UsersList = {
   ];
 };
 
-const useSharedState = create<{
+const useUsersList = create<{
   usersList: UsersList;
   updateUsersList: (newList: any) => void;
 }>((set) => ({
@@ -28,4 +28,4 @@ const useSharedState = create<{
   },
 }));
 
-export default useSharedState;
+export default useUsersList;

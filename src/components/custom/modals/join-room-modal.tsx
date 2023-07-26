@@ -50,7 +50,7 @@ const JoinRoomModal: FC = () => {
   return (
     <Modal
       title="Join an Interview Room"
-      description="Powered by Pusher"
+      description="Powered by Web Sockets"
       isOpen={isOpen}
       setClose={setClose}
     >

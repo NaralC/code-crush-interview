@@ -12,8 +12,12 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import useCodeState from "@/context/code-state";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import { EVENT } from "@/hooks/real-time/use-broadcast";
 
-const CodeEditor: FC = () => {
+const CodeEditor: FC<{
+  realTimeRef: MutableRefObject<RealtimeChannel | null>;
+}> = ({ realTimeRef }) => {
   // Code state
   const { code, language, setCode, setLanguage } = useCodeState();
 
@@ -21,42 +25,25 @@ const CodeEditor: FC = () => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
   const monacoRef = useRef<Monaco | null>(null); // for editor instance
 
-  // Mutations
-  const { isLoading, mutate: saveCodeToDB } = useMutation({
-    mutationFn: async (code: any) => {
-      const response = await fetch("/api/db/save-code", {
-        method: "PATCH",
-        body: code,
-      });
-
-      if (!response.ok) throw new Error("Could not save code to DB");
-
-      return response.json();
-    },
-    onError: (error) => {
-      toast.error((error as Error).message);
-    },
-    onSuccess: () => toast.success("Code saved to DB"),
-  });
-
   // Editor state changes
   const handleEditorChange = useCallback(
     (value: string | undefined, event: editor.IModelContentChangedEvent) => {
       if (value === undefined) return;
 
       setCode(value);
-      saveCodeToDB(value);
+
+      // TODO: Implement throttling/debounce
+      realTimeRef.current?.send({
+        type: "broadcast",
+        event: EVENT.CODE_UPDATE,
+        payload: {
+          message: value,
+        },
+      });
     },
-    [code]
+    
+    [code, realTimeRef, setCode]
   );
-
-  const handleEditorDidMount: OnMount = (editor, monaco) => {
-    if (editorRef) {
-      editorRef.current = editor;
-    }
-
-    monacoRef.current = monaco;
-  };
 
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
@@ -80,21 +67,6 @@ const CodeEditor: FC = () => {
         // value={value[fileName]}
         defaultLanguage={"typescript"}
         language={language}
-        defaultValue={`
-        type Person = {
-          fullName: string;
-          age: number;
-          height: number;
-          weight: number;
-        }
-      
-        const Peter: Person = {
-          fullName: "Peter Custard",
-          age: 5,
-          height: 162,
-          weight: 48
-        }
-        `}
         value={code}
         options={{
           // fontFamily: "Courier New",
@@ -102,7 +74,13 @@ const CodeEditor: FC = () => {
           selectOnLineNumbers: true,
         }}
         onChange={handleEditorChange}
-        onMount={handleEditorDidMount}
+        onMount={(editor, monaco) => {
+          if (editorRef) {
+            editorRef.current = editor;
+          }
+
+          monacoRef.current = monaco;
+        }}
         beforeMount={(monaco: Monaco) => {
           monaco.languages.typescript.javascriptDefaults.setEagerModelSync(
             true

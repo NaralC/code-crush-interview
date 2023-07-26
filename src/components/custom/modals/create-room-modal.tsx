@@ -82,7 +82,12 @@ const CreateRoomModal: FC = () => {
   };
 
   return (
-    <Modal title="Create an Interview Room" description="Powered by Pusher" isOpen={isOpen} setClose={setClose}>
+    <Modal
+      title="Create an Interview Room"
+      description="Powered by Web Sockets"
+      isOpen={isOpen}
+      setClose={setClose}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid items-center w-full gap-5">
@@ -242,7 +247,9 @@ const CreateRoomModal: FC = () => {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Role</FormLabel>
+                  <FormLabel>
+                    Your Role <Badge variant="caution">WIP</Badge>
+                  </FormLabel>
                   <Select
                     // @ts-ignore
                     onValueChange={field.onChange}

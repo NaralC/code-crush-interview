@@ -1,8 +1,8 @@
-import useSharedState from "@/context/shared-state";
+import useUsersList from "@/context/users-list";
 import { FC } from "react";
 
 const UtilityBar: FC = () => {
-  const { usersList } = useSharedState();
+  const { usersList } = useUsersList();
 
   return (
     <div className="bg-white border shadow-xl h-14 border-zinc-50">

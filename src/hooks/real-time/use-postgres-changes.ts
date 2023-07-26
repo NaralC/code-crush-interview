@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import supabaseClient from "@/lib/supa-client";
 import toast from "react-hot-toast";
 import { RealtimeChannel } from "@supabase/supabase-js";
