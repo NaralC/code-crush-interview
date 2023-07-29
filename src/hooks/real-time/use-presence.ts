@@ -16,7 +16,6 @@ import { useUsersList } from "@/context/users-list-context";
 
 const usePresence = (roomId: string) => {
   // State & Utility
-  const { code, updateCode } = useCodeContext();
   const { updateUsersList } = useUsersList();
   const name = faker.person.firstName();
 
@@ -38,9 +37,6 @@ const usePresence = (roomId: string) => {
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
-
-        // TODO: code sync for new joiners
-        
       })
       .on("presence", { event: "leave" }, ({ leftPresences }) => {
         toast.error(`${leftPresences[0]["name"]} just left!`);
@@ -50,7 +46,6 @@ const usePresence = (roomId: string) => {
       if (status === "SUBSCRIBED") {
         const status = await presenceChannel.track({
           name,
-          code,
           online_at: new Date().toISOString(),
         });
         // console.log(status);

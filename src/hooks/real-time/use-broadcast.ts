@@ -1,17 +1,15 @@
 import { useCodeContext } from "@/context/code-context";
+import { useNoteContext } from "@/context/note-context";
+import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-export const EVENT = {
-  NEW_JOIN: "new-join",
-  CODE_UPDATE: "code-update",
-};
-
 const useBroadcast = (roomId: string) => {
   // States
-  const { updateCode, code, latestCodeRef } = useCodeContext();
+  const { updateCode, latestCodeRef } = useCodeContext();
+  const { editorRef } = useNoteContext();
 
   const broadcastRef = useRef<RealtimeChannel | null>(null);
 
@@ -30,10 +28,10 @@ const useBroadcast = (roomId: string) => {
       .on(
         "broadcast",
         { event: EVENT.NEW_JOIN }, // Filtering events
-        (payload) => {
+        async (payload) => {
           toast(String(payload.payload.message));
-
-          // Send the latest code state to the newly joined user
+          
+          // Send the latest code and note state to the new comer
           broadcastChannel.send({
             type: "broadcast",
             event: EVENT.CODE_UPDATE,
@@ -41,6 +39,17 @@ const useBroadcast = (roomId: string) => {
               message: latestCodeRef.current
             },
           });
+
+          const noteData = await editorRef.current?.save();
+          setTimeout(() => {
+            broadcastChannel.send({
+              type: "broadcast",
+              event: EVENT.NOTE_UPDATE,
+              payload: {
+                message: {...noteData}
+              },
+            });
+          }, 1000);
         }
       )
       .on(
@@ -61,7 +70,7 @@ const useBroadcast = (roomId: string) => {
           type: "broadcast",
           event: EVENT.NEW_JOIN,
           payload: {
-            message: "Ayo guys may I have the code please 💀❓",
+            message: "Ayo guys may I have the code and note please 💀❓",
           },
         });
       }

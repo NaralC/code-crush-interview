@@ -13,14 +13,16 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { EVENT } from "@/hooks/real-time/use-broadcast";
 import { useCodeContext } from "@/context/code-context";
+import { useUsersList } from "@/context/users-list-context";
+import { EVENT } from "@/lib/constant";
 
 const CodeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
   const { code, language, updateCode, setLanguage } = useCodeContext();
+  const { usersList } = useUsersList();
 
   // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
@@ -58,6 +60,15 @@ const CodeEditor: FC<{
         }}
       >
         Show value
+      </Button>
+      <Button
+        variant="outline"
+        className="fixed inset-x-0 z-50 left-36 bottom-6 w-28"
+        onClick={() => {
+          alert(JSON.stringify(usersList));
+        }}
+      >
+        Show users list
       </Button>
       <Editor
         className="p-0 m-0 overflow-hidden"

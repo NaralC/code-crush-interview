@@ -3,10 +3,11 @@ Essential:
 - Front-end interview
 - Behavioral interview
 - Coding Page: ▶
-    - Code synchronization (slow rn, should switch from db changes to presence) ▶
+    - Code synchronization ✅
+    - Presence states not working (i.e., online users)
     - UI: codeinterview.io / Pramp style (don't forget console output)
 - Note between peers (Notion-like-editor): ▶
-    - Text ▶
+    - Text ✅
     - Images
     - Links
 - Voice/audio call:
@@ -41,7 +42,3 @@ Polish:
     - Multiple grid display choices for UI of coding collab (AlgoExpert style)
 - Spectator role (2+ voice/audio call participants)
 - Loading/Error pages
-
-Extra stuff:
-- AI-powered behavioral interview (https://demo.useliftoff.com/)
-- AI-powered coding interview (https://youtu.be/ffJ38dBzrlY)

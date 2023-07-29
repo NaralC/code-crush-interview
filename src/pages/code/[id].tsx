@@ -14,9 +14,9 @@ const ROOM_ID = "948u5";
 const CodingPage: NextPage = () => {
   // Real-time refs
   const broadcastRef = useBroadcast(ROOM_ID);
-  const presenceRef = usePresence(ROOM_ID);
-  const { schemaChangesRef, tableDBChangesRef, tableFilterChangesRef } =
-    usePostgresChanges(ROOM_ID);
+  // const presenceRef = usePresence(ROOM_ID);
+  // const { schemaChangesRef, tableDBChangesRef, tableFilterChangesRef } =
+  //   usePostgresChanges(ROOM_ID);
 
   return (
     <>
@@ -31,7 +31,7 @@ const CodingPage: NextPage = () => {
             <CodeEditor realTimeRef={broadcastRef} />
           </div>
           <div className="cursor-auto bg-slate-500">
-            <SharedNoteEditor />
+            <SharedNoteEditor realTimeRef={broadcastRef} />
           </div>
         </Split>
       </main>

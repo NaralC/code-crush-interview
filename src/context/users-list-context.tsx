@@ -13,6 +13,7 @@ type UsersList = {
     {
       name: string;
       presence_ref: string;
+      online_at: string;
     }
   ];
 };
@@ -33,6 +34,7 @@ export const UsersListContextProvider: FC<{ children: ReactNode }> = ({
       {
         name: "...",
         presence_ref: "iansrht98h",
+        online_at: "0"
       },
     ],
   });

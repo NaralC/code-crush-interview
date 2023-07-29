@@ -1,15 +1,22 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
-import type Editorjs from "@editorjs/editorjs";
-import { useToast } from "@/hooks/use-toast";
-import { nanoid } from "nanoid";
+import {
+  FC,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import toast from "react-hot-toast";
+import { EVENT } from "@/lib/constant";
+import { useNoteContext } from "@/context/note-context";
+import { cn } from "@/lib/utils";
 
-const SharedNoteEditor: FC = () => {
+const SharedNoteEditor: FC<{
+  realTimeRef: MutableRefObject<RealtimeChannel | null>;
+}> = ({ realTimeRef }) => {
   // Editor State
-  const [editorIsMounted, setEditorIsMounted] = useState<boolean>(false);
-  const editorRef = useRef<Editorjs | null>();
-
-  // Utility
-  const { toast } = useToast();
+  const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteContext();
 
   const initializeEditor = useCallback(async () => {
     // Check out more here: https://github.com/editor-js/awesome-editorjs#tools
@@ -31,6 +38,17 @@ const SharedNoteEditor: FC = () => {
         },
         onChange: async (api, event) => {
           console.log("Shared note editor changed!", event);
+
+          // TODO: Implement throttling/debounce
+          const outputData = await editorRef.current?.save();
+
+          realTimeRef.current?.send({
+            type: "broadcast",
+            event: EVENT.NOTE_UPDATE,
+            payload: {
+              message: { ...outputData },
+            },
+          });
         },
         placeholder: "Write your solution outline here...",
         inlineToolbar: true,
@@ -93,6 +111,20 @@ const SharedNoteEditor: FC = () => {
   useEffect(() => {
     const init = async () => {
       await initializeEditor();
+
+      realTimeRef.current?.on(
+        "broadcast",
+        { event: EVENT.NOTE_UPDATE }, // Filtering events
+        (payload) => {
+          toast("notes changed!");
+          try {
+            console.log(payload.payload.message);
+            editorRef.current?.render(payload.payload.message);
+          } catch (error) {
+            toast.error((error as Error).message);
+          }
+        }
+      );
     };
 
     if (editorIsMounted && effectRan.current === false) {
@@ -104,7 +136,7 @@ const SharedNoteEditor: FC = () => {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editorIsMounted]);
+  }, [editorIsMounted, initializeEditor]);
 
   return (
     <div className="w-full h-full p-4 overflow-y-auto border bg-red-50 grow border-zinc-200">
