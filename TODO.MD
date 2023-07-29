@@ -1,11 +1,9 @@
 Essential:
 - DS-Algo interview ▶
-- Front-end interview
-- Behavioral interview
 - Coding Page: ▶
     - Code synchronization ✅
     - Presence states not working (i.e., online users)
-    - UI: codeinterview.io / Pramp style (don't forget console output)
+    - UI: codeinterview.io / Pramp style (don't forget console output) ▶
 - Note between peers (Notion-like-editor): ▶
     - Text ✅
     - Images
@@ -25,6 +23,8 @@ Should haves:
     - Being able to end an interview
     - Status: ongoing/finished
 - Authentication
+- Front-end interview
+- Behavioral interview
 - Feedback from peer (SQL)
 - Paywall (Stripe)
 - Video/audio device settings

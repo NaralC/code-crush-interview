@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import CodeEditor from "@/components/custom/editors/code-editor";
 import SharedNoteEditor from "@/components/custom/editors/shared-note-editor";
+import OutputConsole from "@/components/custom/output-console";
 import UtilityBar from "@/components/custom/utility-bar";
 import useBroadcast from "@/hooks/real-time/use-broadcast";
 import usePostgresChanges from "@/hooks/real-time/use-postgres-changes";
@@ -24,8 +25,8 @@ const CodingPage: NextPage = () => {
         <title>Interview Time!</title>
         <meta name="Code Crush" content="Code Crush" />
       </Head>
-      <UtilityBar />
       <main className="flex flex-col w-full">
+        <UtilityBar />
         <Split className="flex flex-row h-screen cursor-grab bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
           <div className="cursor-auto bg-zinc-500">
             <CodeEditor realTimeRef={broadcastRef} />
@@ -34,6 +35,7 @@ const CodingPage: NextPage = () => {
             <SharedNoteEditor realTimeRef={broadcastRef} />
           </div>
         </Split>
+        <OutputConsole />
       </main>
     </>
   );

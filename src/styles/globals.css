@@ -6,13 +6,35 @@
   * {
     font-family: "Inter", sans-serif;
   }
+
+  .ce-toolbar__actions {
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding-right: 0px;
+  }
+
+  .ce-toolbar__actions--opened {
+    background-color: #ffffff;
+  }
+
+  .ce-inline-toolbar__toggler-and-button-wrapper {
+    color: black;
+  }
+
+  .ce-conversion-toolbar {
+    color: black;
+  }
+
+  .ce-conversion-toolbar--showed {
+    color: black;
+  }
 }
 
 @layer utilities {
   .animation-delay-2000 {
     animation-delay: 2s;
   }
-  
+
   .animation-delay-4000 {
     animation-delay: 4s;
   }

@@ -11,6 +11,9 @@ import toast from "react-hot-toast";
 import { EVENT } from "@/lib/constant";
 import { useNoteContext } from "@/context/note-context";
 import { cn } from "@/lib/utils";
+import supabaseClient from "@/lib/supa-client";
+import { nanoid } from "nanoid";
+import OutputConsole from "../output-console";
 
 const SharedNoteEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
@@ -36,17 +39,17 @@ const SharedNoteEditor: FC<{
         onReady: () => {
           editorRef.current = editor; // Prevents re-initialization
         },
-        onChange: async (api, event) => {
-          console.log("Shared note editor changed!", event);
-
+        onChange: async (api, event: CustomEvent) => {
+          // console.log("Shared note editor changed!", event);
           // TODO: Implement throttling/debounce
-          const outputData = await editorRef.current?.save();
+          const noteData = await editorRef.current?.save();
+          if (!noteData?.blocks.length) return;
 
           realTimeRef.current?.send({
             type: "broadcast",
             event: EVENT.NOTE_UPDATE,
             payload: {
-              message: { ...outputData },
+              message: { ...noteData },
             },
           });
         },
@@ -60,7 +63,7 @@ const SharedNoteEditor: FC<{
           // linkTool: {
           //   class: LinkTool,
           //   config: {
-          //     endpoint: "/api/link",
+          //     endpoint: "/api/link"
           //   },
           // },
           // image: {
@@ -76,11 +79,10 @@ const SharedNoteEditor: FC<{
           //           });
 
           //         if (error) {
-          //           toast({
-          //             variant: "destructive",
-          //             title: "Image upload failed.",
-          //           });
+          //           toast.error("Image upload failed :(")
           //         }
+
+          //         toast.success("Image uploaded!")
 
           //         return {
           //           success: 1,
@@ -116,9 +118,9 @@ const SharedNoteEditor: FC<{
         "broadcast",
         { event: EVENT.NOTE_UPDATE }, // Filtering events
         (payload) => {
-          toast("notes changed!");
           try {
-            console.log(payload.payload.message);
+            if (payload.payload.message.blocks.length < 1) return;
+            toast("notes changed!");
             editorRef.current?.render(payload.payload.message);
           } catch (error) {
             toast.error((error as Error).message);
@@ -139,9 +141,12 @@ const SharedNoteEditor: FC<{
   }, [editorIsMounted, initializeEditor]);
 
   return (
-    <div className="w-full h-full p-4 overflow-y-auto border bg-red-50 grow border-zinc-200">
-      <div className="prose prose-stone dark:prose-invert">
-        <div id="editor" className="max-h-fit bg-teal-50" />
+    <div className="w-full h-full overflow-y-auto grow">
+      <div className="prose text-white prose-stone dark:prose-invert">
+        <div
+          id="editor"
+          className="p-3 max-h-fit bg-gradient-to-b from-slate-900 to-slate-500 selection:text-black selection:bg-white"
+        />
       </div>
     </div>
   );

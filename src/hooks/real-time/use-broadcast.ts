@@ -41,6 +41,8 @@ const useBroadcast = (roomId: string) => {
           });
 
           const noteData = await editorRef.current?.save();
+          if (!noteData?.blocks.length) return;
+
           setTimeout(() => {
             broadcastChannel.send({
               type: "broadcast",

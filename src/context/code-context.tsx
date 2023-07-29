@@ -12,9 +12,11 @@ export const CodeContext = createContext<
   | {
       code: string;
       updateCode: (newCode: string) => void;
-      latestCodeRef: MutableRefObject<string>
+      latestCodeRef: MutableRefObject<string>;
       language: string;
       setLanguage: (newLanguage: string) => void;
+      consoleIsVisible: boolean;
+      toggleConsoleVisiblity: () => void;
     }
   | undefined
 >(undefined);
@@ -47,6 +49,10 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
 
   const [language, setLanguage] = useState("typescript");
 
+  const [consoleIsVisible, setConsoleIsVisible] = useState<boolean>(false);
+
+  const toggleConsoleVisiblity = () => setConsoleIsVisible((prev) => !prev);
+
   return (
     <CodeContext.Provider
       value={{
@@ -55,6 +61,8 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
         latestCodeRef,
         language,
         setLanguage,
+        consoleIsVisible,
+        toggleConsoleVisiblity,
       }}
     >
       {children}

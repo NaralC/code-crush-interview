@@ -16,12 +16,13 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
 import { EVENT } from "@/lib/constant";
+import OutputConsole from "../output-console";
 
 const CodeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
-  const { code, language, updateCode, setLanguage } = useCodeContext();
+  const { code, language, updateCode, toggleConsoleVisiblity } = useCodeContext();
   const { usersList } = useUsersList();
 
   // Editor refs
@@ -34,8 +35,8 @@ const CodeEditor: FC<{
       if (value === undefined) return;
 
       // setCode(value);
-      updateCode(value)
-      
+      updateCode(value);
+
       // TODO: Implement throttling/debounce
       realTimeRef.current?.send({
         type: "broadcast",
@@ -45,7 +46,7 @@ const CodeEditor: FC<{
         },
       });
     },
-    
+
     [code]
   );
 
@@ -69,6 +70,13 @@ const CodeEditor: FC<{
         }}
       >
         Show users list
+      </Button>
+      <Button
+        variant="outline"
+        className="fixed inset-x-0 z-50 left-[265px] bottom-6 w-28"
+        onClick={toggleConsoleVisiblity}
+      >
+        Show output tab
       </Button>
       <Editor
         className="p-0 m-0 overflow-hidden"
