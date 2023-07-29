@@ -112,6 +112,7 @@ const CodeEditor: FC<{
           // markers.forEach((marker) => console.log("onValidate:", marker.message));
         }}
       />
+      <div className="bg-white ce-toolbar__actions ce-toolbar__actions--opened ce-inline-toolbar__toggler-and-button-wrapper ce-conversion-toolbar ce-conversion-toolbar--showed ce-paragraph" />
     </div>
   );
 };

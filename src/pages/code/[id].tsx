@@ -28,7 +28,7 @@ const CodingPage: NextPage = () => {
       <main className="flex flex-col w-full">
         <UtilityBar />
         <Split className="flex flex-row h-screen cursor-grab bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
-          <div className="cursor-auto bg-zinc-500">
+          <div className="bg-black cursor-auto">
             <CodeEditor realTimeRef={broadcastRef} />
           </div>
           <div className="cursor-auto bg-slate-500">

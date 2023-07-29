@@ -15,7 +15,7 @@ export function ToastProvider() {
   return (
     <>
       <Toaster
-        position="top-right"
+        position="top-center"
         reverseOrder={false}
         gutter={8}
         containerClassName=""

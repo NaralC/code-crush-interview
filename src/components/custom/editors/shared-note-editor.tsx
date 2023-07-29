@@ -43,7 +43,7 @@ const SharedNoteEditor: FC<{
           // console.log("Shared note editor changed!", event);
           // TODO: Implement throttling/debounce
           const noteData = await editorRef.current?.save();
-          if (!noteData?.blocks.length) return;
+          // if (!noteData?.blocks.length) return;
 
           realTimeRef.current?.send({
             type: "broadcast",
@@ -97,7 +97,7 @@ const SharedNoteEditor: FC<{
           list: List,
           code: Code,
           InLineCode: InLineCode,
-          table: Table,
+          // table: Table,
           embed: Embed,
         },
         readOnly: false, // TODO: Change this when a room's finished

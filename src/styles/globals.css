@@ -28,6 +28,10 @@
   .ce-conversion-toolbar--showed {
     color: black;
   }
+
+  .ce-paragraph {
+    color: white
+  }
 }
 
 @layer utilities {

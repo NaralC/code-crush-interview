@@ -48,9 +48,7 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
   };
 
   const [language, setLanguage] = useState("typescript");
-
   const [consoleIsVisible, setConsoleIsVisible] = useState<boolean>(false);
-
   const toggleConsoleVisiblity = () => setConsoleIsVisible((prev) => !prev);
 
   return (
