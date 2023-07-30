@@ -28,15 +28,19 @@ const useBroadcast = (roomId: string) => {
       .on(
         "broadcast",
         { event: EVENT.NEW_JOIN }, // Filtering events
-        async (payload) => {
-          toast(String(payload.payload.message));
-          
+        async (
+          payload: Payload<{
+            message: string;
+          }>
+        ) => {
+          toast(String(payload.payload?.message));
+
           // Send the latest code and note state to the new comer
           broadcastChannel.send({
             type: "broadcast",
             event: EVENT.CODE_UPDATE,
             payload: {
-              message: latestCodeRef.current
+              message: latestCodeRef.current,
             },
           });
 
@@ -48,7 +52,7 @@ const useBroadcast = (roomId: string) => {
               type: "broadcast",
               event: EVENT.NOTE_UPDATE,
               payload: {
-                message: {...noteData}
+                message: { ...noteData },
               },
             });
           }, 1000);
@@ -59,7 +63,7 @@ const useBroadcast = (roomId: string) => {
         { event: EVENT.CODE_UPDATE }, // Filtering events
         (payload) => {
           const newCode = payload.payload.message;
-          updateCode(newCode)
+          updateCode(newCode);
         }
       );
 

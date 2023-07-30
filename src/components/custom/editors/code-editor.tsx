@@ -22,7 +22,7 @@ const CodeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
-  const { code, language, updateCode, toggleConsoleVisiblity } = useCodeContext();
+  const { code, language, updateCode, setConsoleIsVisible } = useCodeContext();
   const { usersList } = useUsersList();
 
   // Editor refs
@@ -74,7 +74,7 @@ const CodeEditor: FC<{
       <Button
         variant="outline"
         className="fixed inset-x-0 z-50 left-[265px] bottom-6 w-28"
-        onClick={toggleConsoleVisiblity}
+        onClick={() => setConsoleIsVisible(true)}
       >
         Show output tab
       </Button>

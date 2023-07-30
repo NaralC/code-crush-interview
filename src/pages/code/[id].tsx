@@ -1,13 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import CodeEditor from "@/components/custom/editors/code-editor";
+import ExcalidrawEditor from "@/components/custom/editors/excalidraw-editor";
 import SharedNoteEditor from "@/components/custom/editors/shared-note-editor";
 import OutputConsole from "@/components/custom/output-console";
 import UtilityBar from "@/components/custom/utility-bar";
 import useBroadcast from "@/hooks/real-time/use-broadcast";
 import usePostgresChanges from "@/hooks/real-time/use-postgres-changes";
 import usePresence from "@/hooks/real-time/use-presence";
+import useMousePosition from "@/hooks/use-mouse-position";
+import { Excalidraw } from "@excalidraw/excalidraw";
 import { NextPage } from "next";
 import Head from "next/head";
+import Draggable from "react-draggable";
 import Split from "react-split";
 
 const ROOM_ID = "948u5";
@@ -15,7 +19,7 @@ const ROOM_ID = "948u5";
 const CodingPage: NextPage = () => {
   // Real-time refs
   const broadcastRef = useBroadcast(ROOM_ID);
-  // const presenceRef = usePresence(ROOM_ID);
+  const presenceRef = usePresence(ROOM_ID);
   // const { schemaChangesRef, tableDBChangesRef, tableFilterChangesRef } =
   //   usePostgresChanges(ROOM_ID);
 

@@ -22,7 +22,7 @@ const usePresence = (roomId: string) => {
   const presenceChannelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    const presenceChannel = supabaseClient.channel(`presence-${roomId}`, {
+    const presenceChannel = supabaseClient.channel(roomId, {
       config: {
         presence: {
           key: name,
