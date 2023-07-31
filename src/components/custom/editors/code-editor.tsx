@@ -16,7 +16,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
 import { EVENT } from "@/lib/constant";
-import OutputConsole from "../output-console";
+import throttle from "lodash.throttle";
 
 const CodeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
@@ -34,17 +34,19 @@ const CodeEditor: FC<{
     (value: string | undefined, event: editor.IModelContentChangedEvent) => {
       if (value === undefined) return;
 
-      // setCode(value);
       updateCode(value);
 
-      // TODO: Implement throttling/debounce
-      realTimeRef.current?.send({
-        type: "broadcast",
-        event: EVENT.CODE_UPDATE,
-        payload: {
-          message: value,
-        },
+      const sendCodeToOtherClients = throttle(() => {
+        realTimeRef.current?.send({
+          type: "broadcast",
+          event: EVENT.CODE_UPDATE,
+          payload: {
+            message: value,
+          },
+        });
       });
+
+      sendCodeToOtherClients();
     },
 
     [code]

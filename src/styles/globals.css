@@ -30,7 +30,28 @@
   }
 
   .ce-paragraph {
-    color: white
+    color: white;
+  }
+
+  /* Width */
+  ::-webkit-scrollbar {
+    width: 8px; /* Thin scrollbar */
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Transparent background */
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #d1d1d1; /* Light gray color */
+    border-radius: 6px; /* Rounded edges */
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b1b1b1; /* Slightly darker color on hover */
   }
 }
 

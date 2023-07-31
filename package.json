@@ -47,6 +47,7 @@
     "clsx": "^2.0.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
+    "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.260.0",
     "monaco-editor": "^0.40.0",
     "nanoid": "^4.0.2",
@@ -67,11 +68,13 @@
     "tsparticles": "^2.11.0",
     "tsparticles-slim": "^2.11.0",
     "typescript": "5.1.6",
+    "uuidv4": "^6.2.13",
     "zod": "^3.21.4",
     "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
+    "@types/lodash.throttle": "^4.1.7",
     "supabase": "^1.77.9"
   }
 }
