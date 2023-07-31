@@ -2,13 +2,6 @@ import { FC } from "react";
 import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -39,6 +32,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
 import Modal from "@/components/ui/modal";
+import toast from "react-hot-toast";
+import { Dices } from "lucide-react";
+import { faker } from "@faker-js/faker";
+import { useRouter } from "next/router";
 
 const createRoomSchemaFrontend = z.object({
   roomName: z.string().min(1, {
@@ -53,14 +50,15 @@ const createRoomSchemaFrontend = z.object({
       message: "You have to select at least one item.",
     })
     .optional(),
-  role: z.enum(["interviewer", "interviewee", "spectator"], {
-    required_error: "You need to pick a role.",
+  userName: z.string({
+    required_error: "Name cannot be empty",
   }),
 });
 
 const CreateRoomModal: FC = () => {
   const { isOpen, setClose } = useCreateRoomModal();
-  const { toast } = useToast();
+  const { toast: debugToast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof createRoomSchemaFrontend>>({
     resolver: zodResolver(createRoomSchemaFrontend),
@@ -71,7 +69,7 @@ const CreateRoomModal: FC = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof createRoomSchemaFrontend>) => {
-    toast({
+    debugToast({
       title: "You submitted the following values:",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
@@ -79,6 +77,26 @@ const CreateRoomModal: FC = () => {
         </pre>
       ),
     });
+
+    toast.loading("Creating a room for you...");
+
+    const response = await fetch("/api/db", {
+      method: "POST",
+      body: JSON.stringify({
+        roomName: values.roomName,
+        userName: values.userName,
+      }),
+    });
+
+    if (!response.ok) toast.error("Error creating a room :(");
+
+    const { content: roomId } = await response.json();
+
+    toast.success("Wallah! Redirecting you to it!");
+    setTimeout(() => {
+      setClose();
+      router.push(`/code/${roomId}`);
+    }, 1000);
   };
 
   return (
@@ -98,11 +116,49 @@ const CreateRoomModal: FC = () => {
                 <>
                   <FormItem>
                     <FormLabel>Room name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Input room name" {...field} />
+                    <FormControl className="select-none">
+                      <div className="flex items-center justify-between">
+                        <Input placeholder="Input room name" {...field} />
+                        <Dices
+                          className="ml-4 cursor-pointer w-7 h-7"
+                          onClick={() => {
+                            form.setValue("roomName", faker.company.name());
+                          }}
+                        />
+                      </div>
                     </FormControl>
                     <FormDescription>
                       This is the room&apos;s public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                </>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="userName"
+              render={({ field }) => (
+                <>
+                  <FormItem>
+                    <FormLabel>Your Name</FormLabel>
+                    <FormControl className="select-none">
+                      <div className="flex items-center justify-between">
+                        <Input placeholder="Input your name" {...field} />
+                        <Dices
+                          className="ml-4 cursor-pointer w-7 h-7"
+                          onClick={() => {
+                            form.setValue(
+                              "userName",
+                              faker.internet.userName()
+                            );
+                          }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      This is how other players see you.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -241,36 +297,6 @@ const CreateRoomModal: FC = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Your Role <Badge variant="caution">WIP</Badge>
-                  </FormLabel>
-                  <Select
-                    // @ts-ignore
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="interviewer">Interviewer</SelectItem>
-                      <SelectItem value="interviewee">Interviewee</SelectItem>
-                      <SelectItem value="spectator">Spectator</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <Button type="submit">Proceed</Button>
           </div>
         </form>
