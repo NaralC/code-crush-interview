@@ -5,80 +5,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
-import { SiChartdotjs, SiCsharp } from "react-icons/si";
 import { useUsersList } from "@/context/users-list-context";
-import { FC, useEffect, useRef } from "react";
+import { FC, useRef } from "react";
 import { useCodeContext } from "@/context/code-context";
 import { Button } from "../ui/button";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, PlayCircle, Save } from "lucide-react";
+import useCompileCode from "@/hooks/use-compile-code";
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import toast from "react-hot-toast";
 
 const UtilityBar: FC<{ roomName: string }> = ({ roomName }) => {
   const { usersList } = useUsersList();
-  const { code, language, setLanguage, setConsoleIsVisible, setConsoleOutput } =
-    useCodeContext();
-  const isCompilingRef = useRef<boolean>(false);
+  const { language, setLanguage, code } = useCodeContext();
+  const { handleCompile, isCompilingRef } = useCompileCode();
 
-  const { data: token, mutate: handleCompile } = useMutation({
-    mutationKey: ["token"],
+  // Saving code
+  const { isLoading: isSaving, mutate: handleSave } = useMutation({
+    mutationKey: ["saveCode"],
     mutationFn: async () => {
-      isCompilingRef.current = true;
-
-      const response = await fetch("/api/compile/token", {
-        method: "POST",
+      const response = await fetch("/api/db", {
+        method: "PATCH",
         body: JSON.stringify({
-          code: window.btoa(code),
-          language,
+          code,
         }),
       });
+
       const { content } = await response.json();
       return z.string().parse(content);
     },
-    onError: () => (isCompilingRef.current = false),
-    // onSuccess: (data) => console.log(data),
-  });
-
-  const { data: output } = useQuery({
-    queryKey: ["submission"],
-    queryFn: async () => {
-      const response = await fetch("/api/compile/submission", {
-        method: "POST",
-        body: JSON.stringify({
-          token,
-        }),
-      });
-      const { content } = await response.json();
-      // console.log(content);
-      return z
-        .object({
-          memory: z.number(),
-          memory_limit: z.number(),
-          status: z.object({
-            id: z.number(),
-            description: z.string(),
-          }),
-          stdout: z.string().nullable(),
-          time: z.string(),
-        })
-        .parse(content);
-    },
-    refetchInterval: (data) => (data?.status.id === 3 ? false : 300),
-    onError: (error) => toast.error("Compilation Error"),
-    onSettled: () => (isCompilingRef.current = false),
-    onSuccess: (data) => {
-      toast.success("Compilation Successful");
-      setConsoleOutput(
-        JSON.stringify({
-          ...data,
-          stdout: data.stdout ? window.atob(data.stdout) : "",
-        })
-      );
-      setConsoleIsVisible(true);
-    },
-    enabled: !!token,
+    onSuccess: (data) => toast.success(data),
+    onError: (error) => toast.error("Failed to save"),
   });
 
   return (
@@ -125,8 +82,24 @@ const UtilityBar: FC<{ roomName: string }> = ({ roomName }) => {
         >
           Compile
           {isCompilingRef.current ? (
-            <Loader2 className="ml-1 -mr-1 animate-spin" />
-          ) : null}
+            <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
+          ) : (
+            <PlayCircle className="hidden ml-1 -mr-1 md:block" />
+          )}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            handleSave();
+          }}
+          disabled={isSaving}
+        >
+          Save
+          {isSaving ? (
+            <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
+          ) : (
+            <Save className="hidden ml-1 -mr-1 md:block" />
+          )}
         </Button>
       </div>
     </div>

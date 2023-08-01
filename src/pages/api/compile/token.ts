@@ -10,7 +10,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  
   if (req.method === "POST") {
     const { code, language } = JSON.parse(req.body);
     const parsedCode = z.string().parse(code);
@@ -36,7 +35,12 @@ export default async function handler(
       }
     );
 
-    const { token } = await response.json();
+    const { token, message } = await response.json();
+
+    // TODO: Exceeded API call quota
+    if (message) {
+      return res.status(500).json({ content: z.string().parse(message) });
+    }
     return res.status(200).json({ content: z.string().parse(token) });
   }
 

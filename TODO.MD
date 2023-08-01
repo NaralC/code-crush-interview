@@ -3,7 +3,7 @@ Essential:
 - Coding Page: ▶
     - Code synchronization ✅
     - Presence states not working (i.e., online users)
-    - UI: codeinterview.io / Pramp style (don't forget console output) ▶
+    - Code compilation ✅
 - Note between peers (Notion-like-editor): ▶
     - Text ✅
     - Images
@@ -23,6 +23,7 @@ Should haves:
     - Live cursors
     - Being able to end an interview
     - Status: ongoing/finished
+    - UI: codeinterview.io / Pramp style
 - Authentication
 - Front-end interview
 - Behavioral interview
