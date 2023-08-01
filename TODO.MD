@@ -20,6 +20,7 @@ Should haves:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file
     - Interview timer
+    - Live cursors
     - Being able to end an interview
     - Status: ongoing/finished
 - Authentication

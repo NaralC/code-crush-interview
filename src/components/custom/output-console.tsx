@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 const OutputConsole: FC = () => {
-  const { consoleIsVisible, setConsoleIsVisible } = useCodeContext();
+  const { consoleIsVisible, setConsoleIsVisible, consoleOutput } = useCodeContext();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isDraggable, setIsDraggable] = useState<boolean>(false);
 
@@ -52,7 +52,7 @@ const OutputConsole: FC = () => {
               </div>
             </div>
             <div className="px-4 py-2 overflow-y-auto">
-              Output content goes here...
+              {consoleOutput}
             </div>
           </div>
         </Draggable>
@@ -93,7 +93,7 @@ const OutputConsole: FC = () => {
             </div>
           </div>
           <div className="px-4 py-2 overflow-y-auto">
-            Output content goes here...
+            {consoleOutput}
           </div>
         </div>
       )}

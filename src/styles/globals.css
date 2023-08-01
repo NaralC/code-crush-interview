@@ -53,6 +53,22 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #b1b1b1; /* Slightly darker color on hover */
   }
+
+  /* Width and height specifically for horizontal scrollbar */
+  ::-webkit-scrollbar:horizontal {
+    height: 8px;
+  }
+
+  /* Handle specifically for horizontal scrollbar */
+  ::-webkit-scrollbar-thumb:horizontal {
+    background: #d1d1d1; /* Light gray color */
+    border-radius: 6px; /* Rounded edges */
+  }
+
+  /* Handle on hover specifically for horizontal scrollbar */
+  ::-webkit-scrollbar-thumb:horizontal:hover {
+    background: #b1b1b1; /* Slightly darker color on hover */
+  }
 }
 
 @layer utilities {

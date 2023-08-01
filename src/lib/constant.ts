@@ -6,3 +6,9 @@ export const EVENT = {
   NOTE_UPDATE: "note-update",
   MOUSE_UPDATE: "mouse-update",
 };
+
+export const LANGUAGE_ID = {
+  typescript: 74,
+  python: 71,
+  "c#": 51,
+};
