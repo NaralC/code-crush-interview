@@ -65,6 +65,20 @@ const useBroadcast = (roomId: string) => {
           const newCode = payload.payload.message;
           updateCode(newCode);
         }
+      )
+      .on(
+        "broadcast",
+        { event: EVENT.MOUSE_UPDATE }, // Filtering events
+        ({
+          payload,
+        }: Payload<{
+          x: number;
+          y: number;
+        }>) => {
+          const { x, y } = payload!;
+
+          console.log(`Mouse position from other client ${x} ${y}`);
+        }
       );
 
     broadcastChannel.subscribe((status) => {

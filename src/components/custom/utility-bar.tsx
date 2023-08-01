@@ -12,12 +12,13 @@ import { FC, useEffect } from "react";
 import { useCodeContext } from "@/context/code-context";
 import { Button } from "../ui/button";
 
-const UtilityBar: FC = () => {
+const UtilityBar: FC<{ roomName: string }> = ({ roomName }) => {
   const { usersList } = useUsersList();
   const { language, setLanguage, setConsoleIsVisible } = useCodeContext();
 
   return (
     <div className="z-10 flex flex-row justify-between px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-800">
+      <div>{roomName}</div>
       <div>
         Online users:
         {Object.keys(usersList).map((player) => {
@@ -35,12 +36,12 @@ const UtilityBar: FC = () => {
           value={language}
           onValueChange={(newLanguage) => setLanguage(newLanguage)}
         >
-          <SelectTrigger className="w-[180px] bg-gradient-to-b from-black to-slate-800">
+          <SelectTrigger className="w-[180px] bg-slate-900">
             <SelectValue placeholder="Pick a language..." />
           </SelectTrigger>
-          <SelectContent className="text-white bg-gradient-to-b from-black to-slate-800">
+          <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white">
             {["TypeScript", "Python", "C#"].map((language) => (
-              <SelectItem key={language} value={language.toLowerCase()}>
+              <SelectItem className="cursor-pointer" key={language} value={language.toLowerCase()}>
                 {language}
               </SelectItem>
             ))}

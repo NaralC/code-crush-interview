@@ -26,8 +26,8 @@ const OutputConsole: FC = () => {
         <Draggable bounds="parent">
           <div
             className={cn(
-              "fixed inset-x-0 bottom-0 z-50 text-white bg-gray-900 border-t-2 border-zinc-50 ring-1 ring-zinc-500 shadow-white rounded-md max-h-fit transition-transform duration-100 w-72",
-              !isExpanded ? "h-40" : "h-[85vh]"
+              "fixed inset-x-0 bottom-0 z-50 text-white bg-gray-900 border-t-2 border-zinc-50 ring-1 ring-zinc-500 shadow-white rounded-md max-h-fit transition-transform duration-100",
+              !isExpanded ? "h-36 w-64" : "h-64 w-80"
             )}
           >
             <div className="flex justify-between px-4 py-2 mt-2">

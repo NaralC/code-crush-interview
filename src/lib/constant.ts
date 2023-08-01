@@ -4,4 +4,5 @@ export const EVENT = {
   NEW_JOIN: "new-join",
   CODE_UPDATE: "code-update",
   NOTE_UPDATE: "note-update",
+  MOUSE_UPDATE: "mouse-update",
 };
