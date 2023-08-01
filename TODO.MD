@@ -3,7 +3,7 @@ Essential:
 - Coding Page: ▶
     - Code synchronization ✅
     - Presence states not working (i.e., online users)
-    - Code compilation ✅
+    - Code compilation ▶
 - Note between peers (Notion-like-editor): ▶
     - Text ✅
     - Images

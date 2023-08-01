@@ -39,7 +39,7 @@ export default async function handler(
 
   // Editing room data
   if (req.method === "PATCH") {
-    const code = req.body;
+    const { code } = JSON.parse(req.body);
 
     const { data, error } = await supabaseServerClient
       .from("interview_rooms")
