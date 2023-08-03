@@ -93,10 +93,13 @@ const CreateRoomModal: FC = () => {
     const { content: roomId } = await response.json();
 
     toast.success("Wallah! Redirecting you to it!");
-    setTimeout(() => {
-      setClose();
-      router.push(`/code/${roomId}`);
-    }, 1000);
+    router.push({
+      pathname: `/code/${roomId}`,
+      query: {
+        userName: values.userName,
+      },
+    });
+    setClose();
   };
 
   return (

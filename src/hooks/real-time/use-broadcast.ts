@@ -5,10 +5,18 @@ import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import useSaveCode from "../use-save-code";
 
-const useBroadcast = (roomId: string) => {
+const useBroadcast = (roomId: string, myUserName: string) => {
   // States
-  const { updateCode, latestCodeRef } = useCodeContext();
+  const {
+    updateCode,
+    latestCodeRef,
+    setIsCompiling,
+    setConsoleIsVisible,
+    setConsoleOutput,
+    setIsSaving
+  } = useCodeContext();
   const { editorRef } = useNoteContext();
 
   const broadcastRef = useRef<RealtimeChannel | null>(null);
@@ -78,6 +86,38 @@ const useBroadcast = (roomId: string) => {
           const { x, y } = payload!;
 
           console.log(`Mouse position from other client ${x} ${y}`);
+        }
+      )
+      .on(
+        "broadcast",
+        { event: EVENT.COMPILE_UPDATE }, // Filtering events
+        ({
+          payload,
+        }: Payload<{
+          status: boolean;
+          output: string;
+        }>) => {
+          const { status, output } = payload!;
+
+          setIsCompiling(status);
+
+          if (status === true) return;
+
+          setIsCompiling(status);
+          setConsoleIsVisible(true);
+          setConsoleOutput(output);
+        }
+      )
+      .on(
+        "broadcast",
+        { event: EVENT.SAVE_UPDATE }, // Filtering events
+        ({
+          payload,
+        }: Payload<{
+          status: boolean;
+        }>) => {
+          const { status } = payload!;
+          setIsSaving(status);
         }
       );
 

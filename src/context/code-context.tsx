@@ -21,6 +21,10 @@ export const CodeContext = createContext<
       setConsoleIsVisible: Dispatch<SetStateAction<boolean>>;
       consoleOutput: string;
       setConsoleOutput: Dispatch<SetStateAction<string>>;
+      isCompiling: boolean;
+      setIsCompiling: Dispatch<SetStateAction<boolean>>;
+      isSaving: boolean;
+      setIsSaving: Dispatch<SetStateAction<boolean>>;
     }
   | undefined
 >(undefined);
@@ -54,6 +58,8 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
   const [language, setLanguage] = useState("typescript");
   const [consoleIsVisible, setConsoleIsVisible] = useState<boolean>(false);
   const [consoleOutput, setConsoleOutput] = useState<string>("");
+  const [isCompiling, setIsCompiling] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   return (
     <CodeContext.Provider
@@ -67,6 +73,10 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
         setConsoleIsVisible,
         consoleOutput,
         setConsoleOutput,
+        isCompiling,
+        setIsCompiling,
+        isSaving,
+        setIsSaving
       }}
     >
       {children}

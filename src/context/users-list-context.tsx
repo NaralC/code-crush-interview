@@ -1,7 +1,9 @@
 import {
+  Dispatch,
   FC,
   MutableRefObject,
   ReactNode,
+  SetStateAction,
   createContext,
   useContext,
   useRef,
@@ -26,15 +28,15 @@ export const UsersListContext = createContext<
   | undefined
 >(undefined);
 
-export const UsersListContextProvider: FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const UsersListContextProvider: FC<{
+  children: ReactNode;
+}> = ({ children }) => {
   const [usersList, setUsersList] = useState<UsersList>({
     "...:": [
       {
         name: "...",
         presence_ref: "iansrht98h",
-        online_at: "0"
+        online_at: "0",
       },
     ],
   });

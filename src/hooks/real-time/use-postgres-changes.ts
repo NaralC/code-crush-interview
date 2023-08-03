@@ -65,7 +65,7 @@ const usePostgresChanges = (roomId: string) => {
           toast("table-filter-changes");
 
           // @ts-ignore
-          const newCode = payload.new.code_state         
+          const newCode = payload.new.code_state;
           updateCode(newCode);
         }
       )

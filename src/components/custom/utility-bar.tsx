@@ -6,37 +6,67 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUsersList } from "@/context/users-list-context";
-import { FC, useRef } from "react";
+import { FC, MutableRefObject, useEffect, useRef } from "react";
 import { useCodeContext } from "@/context/code-context";
 import { Button } from "../ui/button";
 import { Loader2, PlayCircle, Save } from "lucide-react";
 import useCompileCode from "@/hooks/use-compile-code";
-import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
-import toast from "react-hot-toast";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import useSaveCode from "@/hooks/use-save-code";
+import { EVENT } from "@/lib/constant";
 
-const UtilityBar: FC<{ roomName: string }> = ({ roomName }) => {
+const UtilityBar: FC<{
+  roomName: string;
+  realTimeRef: MutableRefObject<RealtimeChannel | null>;
+}> = ({ roomName, realTimeRef }) => {
   const { usersList } = useUsersList();
-  const { language, setLanguage, code } = useCodeContext();
-  const { handleCompile, isCompilingRef } = useCompileCode();
+  const { language, setLanguage, code, isCompiling, consoleOutput, isSaving } =
+    useCodeContext();
+  const { handleCompile } = useCompileCode();
+  const { handleSave } = useSaveCode();
 
-  // Saving code
-  const { isLoading: isSaving, mutate: handleSave } = useMutation({
-    mutationKey: ["saveCode"],
-    mutationFn: async () => {
-      const response = await fetch("/api/db", {
-        method: "PATCH",
-        body: JSON.stringify({
-          code,
-        }),
+  useEffect(() => {
+    if (isSaving) {
+      realTimeRef.current?.send({
+        type: "broadcast",
+        event: EVENT.SAVE_UPDATE,
+        payload: {
+          status: true,
+        },
       });
+    } else if (!isSaving) {
+      // TODO: Send whether compilation is successful
+      realTimeRef.current?.send({
+        type: "broadcast",
+        event: EVENT.SAVE_UPDATE,
+        payload: {
+          status: false,
+        },
+      });
+    }
+  }, [isSaving]);
 
-      const { content } = await response.json();
-      return z.string().parse(content);
-    },
-    onSuccess: (data) => toast.success(data),
-    onError: (error) => toast.error("Failed to save"),
-  });
+  useEffect(() => {
+    if (isCompiling) {
+      realTimeRef.current?.send({
+        type: "broadcast",
+        event: EVENT.COMPILE_UPDATE,
+        payload: {
+          status: true,
+        },
+      });
+    } else if (!isCompiling) {
+      // TODO: Send whether compilation is successful
+      realTimeRef.current?.send({
+        type: "broadcast",
+        event: EVENT.COMPILE_UPDATE,
+        payload: {
+          status: false,
+          output: consoleOutput,
+        },
+      });
+    }
+  }, [isCompiling]);
 
   return (
     <div className="z-10 flex flex-row justify-between px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-800">
@@ -74,14 +104,14 @@ const UtilityBar: FC<{ roomName: string }> = ({ roomName }) => {
           </SelectContent>
         </Select>
         <Button
-          disabled={isCompilingRef.current}
+          disabled={isCompiling}
           variant="secondary"
           onClick={() => {
             handleCompile();
           }}
         >
           Compile
-          {isCompilingRef.current ? (
+          {isCompiling ? (
             <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
           ) : (
             <PlayCircle className="hidden ml-1 -mr-1 md:block" />

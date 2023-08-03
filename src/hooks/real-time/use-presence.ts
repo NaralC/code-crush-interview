@@ -14,10 +14,10 @@ import { RealtimeChannel, RealtimePresenceState } from "@supabase/supabase-js";
 import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
 
-const usePresence = (roomId: string) => {
+const usePresence = (roomId: string, myUserName: string) => {
   // State & Utility
   const { updateUsersList } = useUsersList();
-  const name = faker.person.firstName();
+  const name = myUserName;
 
   const presenceChannelRef = useRef<RealtimeChannel | null>(null);
 

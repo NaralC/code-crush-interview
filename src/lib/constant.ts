@@ -5,6 +5,8 @@ export const EVENT = {
   CODE_UPDATE: "code-update",
   NOTE_UPDATE: "note-update",
   MOUSE_UPDATE: "mouse-update",
+  COMPILE_UPDATE: "compile-update",
+  SAVE_UPDATE: "save-update",
 };
 
 export const LANGUAGE_ID = {

@@ -5,14 +5,19 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 
 const useCompileCode = () => {
-  const isCompilingRef = useRef<boolean>(false);
-  const { code, language, setConsoleIsVisible, setConsoleOutput } =
-    useCodeContext();
+  const {
+    code,
+    language,
+    setConsoleIsVisible,
+    setConsoleOutput,
+    setIsCompiling,
+  } = useCodeContext();
 
+  // Getting a token
   const { data: token, mutate: handleCompile } = useMutation({
     mutationKey: ["token"],
     mutationFn: async () => {
-      isCompilingRef.current = true;
+      setIsCompiling(true);
 
       const response = await fetch("/api/compile/token", {
         method: "POST",
@@ -25,8 +30,8 @@ const useCompileCode = () => {
 
       // TODO: Exceeded API call quota
       if (content.message) {
-        console.log('kuay')
-        console.log(content.message)
+        console.log("kuay");
+        console.log(content.message);
         throw new Error(content.message);
       }
 
@@ -34,11 +39,12 @@ const useCompileCode = () => {
     },
     onError: (error) => {
       toast.error((error as Error).message);
-      isCompilingRef.current = false;
+      setIsCompiling(false);
     },
     // onSuccess: (data) => console.log(data),
   });
 
+  // Using the token to check fetch submission result
   const { data: output } = useQuery({
     queryKey: ["submission"],
     queryFn: async () => {
@@ -50,7 +56,8 @@ const useCompileCode = () => {
       });
       const { content } = await response.json();
       // console.log(content);
-      return z
+
+      const parsedContent = z
         .object({
           memory: z.number(),
           memory_limit: z.number(),
@@ -62,12 +69,21 @@ const useCompileCode = () => {
           time: z.string(),
         })
         .parse(content);
+
+      if (![1, 2, 3].includes(parsedContent.status.id)) throw new Error();
+
+      return parsedContent;
     },
-    refetchInterval: (data) => (data?.status.id === 3 ? false : 300),
+    refetchInterval: (data) => {
+      if (!data) return 300;
+
+      const { id } = data?.status!;
+      return [1, 2].includes(id) ? 300 : false;
+    },
     onError: (error) => toast.error("Compilation Error"),
-    onSettled: () => (isCompilingRef.current = false),
+    onSettled: () => setIsCompiling(false),
     onSuccess: (data) => {
-      toast.success("Compilation Successful");
+      toast("Compilation Finished");
       setConsoleOutput(
         JSON.stringify({
           ...data,
@@ -80,7 +96,6 @@ const useCompileCode = () => {
   });
 
   return {
-    isCompilingRef,
     handleCompile,
   };
 };
