@@ -66,7 +66,7 @@ const CodingPage: NextPage<{
   // usePostgresChanges(roomId);
 
   // States
-  const { updateCode } = useCodeContext();
+  const { dispatchCode } = useCodeContext();
   const { x, y } = useMousePosition();
 
   // Utils
@@ -83,7 +83,10 @@ const CodingPage: NextPage<{
   // }, 300);
 
   useEffect(() => {
-    updateCode(initialCodeState);
+    dispatchCode({
+      type: "UPDATE_CODE",
+      payload: initialCodeState
+    });
   }, []);
 
   return (

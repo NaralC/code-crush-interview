@@ -10,8 +10,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
@@ -22,7 +20,7 @@ const CodeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
-  const { code, language, updateCode, setConsoleIsVisible } = useCodeContext();
+  const { codeState, dispatchCode, dispatchConsole } = useCodeContext();
   const { usersList } = useUsersList();
 
   // Editor refs
@@ -34,7 +32,10 @@ const CodeEditor: FC<{
     (value: string | undefined, event: editor.IModelContentChangedEvent) => {
       if (value === undefined) return;
 
-      updateCode(value);
+      dispatchCode({
+        type: "UPDATE_CODE",
+        payload: value,
+      });
 
       const sendCodeToOtherClients = throttle(() => {
         realTimeRef.current?.send({
@@ -49,7 +50,7 @@ const CodeEditor: FC<{
       sendCodeToOtherClients();
     },
 
-    [code]
+    [codeState.code]
   );
 
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
@@ -76,7 +77,12 @@ const CodeEditor: FC<{
       <Button
         variant="outline"
         className="fixed inset-x-0 z-50 left-[265px] bottom-6 w-28"
-        onClick={() => setConsoleIsVisible(true)}
+        onClick={() =>
+          dispatchConsole({
+            type: "SET_CONSOLE_VISIBLE",
+            payload: true,
+          })
+        }
       >
         Show output tab
       </Button>
@@ -89,8 +95,8 @@ const CodeEditor: FC<{
         // language={files[fileName].language}
         // value={value[fileName]}
         defaultLanguage={"typescript"}
-        language={language}
-        value={code}
+        language={codeState.language}
+        value={codeState.code}
         options={{
           // fontFamily: "Courier New",
           fontLigatures: true,

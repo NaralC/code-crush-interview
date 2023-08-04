@@ -20,13 +20,13 @@ const UtilityBar: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ roomName, realTimeRef }) => {
   const { usersList } = useUsersList();
-  const { language, setLanguage, code, isCompiling, consoleOutput, isSaving } =
+  const { codeState, dispatchCode, asyncState, consoleState } =
     useCodeContext();
   const { handleCompile } = useCompileCode();
   const { handleSave } = useSaveCode();
 
   useEffect(() => {
-    if (isSaving) {
+    if (asyncState.isSaving) {
       realTimeRef.current?.send({
         type: "broadcast",
         event: EVENT.SAVE_UPDATE,
@@ -34,7 +34,7 @@ const UtilityBar: FC<{
           status: true,
         },
       });
-    } else if (!isSaving) {
+    } else if (!asyncState.isSaving) {
       // TODO: Send whether compilation is successful
       realTimeRef.current?.send({
         type: "broadcast",
@@ -44,10 +44,10 @@ const UtilityBar: FC<{
         },
       });
     }
-  }, [isSaving]);
+  }, [asyncState.isSaving]);
 
   useEffect(() => {
-    if (isCompiling) {
+    if (asyncState.isCompiling) {
       realTimeRef.current?.send({
         type: "broadcast",
         event: EVENT.COMPILE_UPDATE,
@@ -55,18 +55,18 @@ const UtilityBar: FC<{
           status: true,
         },
       });
-    } else if (!isCompiling) {
+    } else if (!asyncState.isCompiling) {
       // TODO: Send whether compilation is successful
       realTimeRef.current?.send({
         type: "broadcast",
         event: EVENT.COMPILE_UPDATE,
         payload: {
           status: false,
-          output: consoleOutput,
+          output: consoleState.consoleOutput,
         },
       });
     }
-  }, [isCompiling]);
+  }, [asyncState.isCompiling]);
 
   return (
     <div className="z-10 flex flex-row justify-between px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-800">
@@ -85,8 +85,13 @@ const UtilityBar: FC<{
       </div>
       <div className="flex gap-3">
         <Select
-          value={language}
-          onValueChange={(newLanguage) => setLanguage(newLanguage)}
+          value={codeState.language}
+          onValueChange={(newLanguage) =>
+            dispatchCode({
+              type: "SET_LANGUAGE",
+              payload: newLanguage,
+            })
+          }
         >
           <SelectTrigger className="w-[180px] bg-slate-900">
             <SelectValue placeholder="Pick a language..." />
@@ -104,14 +109,14 @@ const UtilityBar: FC<{
           </SelectContent>
         </Select>
         <Button
-          disabled={isCompiling}
+          disabled={asyncState.isCompiling}
           variant="secondary"
           onClick={() => {
             handleCompile();
           }}
         >
           Compile
-          {isCompiling ? (
+          {asyncState.isCompiling ? (
             <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
           ) : (
             <PlayCircle className="hidden ml-1 -mr-1 md:block" />
@@ -122,10 +127,10 @@ const UtilityBar: FC<{
           onClick={() => {
             handleSave();
           }}
-          disabled={isSaving}
+          disabled={asyncState.isSaving}
         >
           Save
-          {isSaving ? (
+          {asyncState.isSaving ? (
             <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
           ) : (
             <Save className="hidden ml-1 -mr-1 md:block" />

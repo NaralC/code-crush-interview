@@ -7,14 +7,14 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 const OutputConsole: FC = () => {
-  const { consoleIsVisible, setConsoleIsVisible, consoleOutput } = useCodeContext();
+  const { consoleState, dispatchConsole } = useCodeContext();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isDraggable, setIsDraggable] = useState<boolean>(false);
 
   return (
     <Transition
       as={Fragment}
-      show={consoleIsVisible}
+      show={consoleState.isConsoleVisible}
       enter="transition-all duration-400 ease-out"
       enterFrom="opacity-90 transform translate-y-full"
       enterTo="opacity-100 transform translate-y-0"
@@ -33,14 +33,14 @@ const OutputConsole: FC = () => {
             <div className="flex justify-between px-4 py-2 mt-2">
               <span className="font-bold">Console</span>
               <div className="flex gap-3">
-              <Button
-                onClick={() => setIsExpanded((prev) => !prev)}
-                className="p-[1px] focus:outline-none"
-                variant="ghost"
-                size="closeDialog"
-              >
-                <Expand />
-              </Button>
+                <Button
+                  onClick={() => setIsExpanded((prev) => !prev)}
+                  className="p-[1px] focus:outline-none"
+                  variant="ghost"
+                  size="closeDialog"
+                >
+                  <Expand />
+                </Button>
                 <Button
                   onClick={() => setIsDraggable((prev) => !prev)}
                   className="p-[1px] focus:outline-none"
@@ -52,7 +52,7 @@ const OutputConsole: FC = () => {
               </div>
             </div>
             <div className="px-4 py-2 overflow-y-auto">
-              {consoleOutput}
+              {consoleState.consoleOutput}
             </div>
           </div>
         </Draggable>
@@ -83,7 +83,12 @@ const OutputConsole: FC = () => {
                 <PictureInPicture2 />
               </Button>
               <Button
-                onClick={() => setConsoleIsVisible((prev) => !prev)}
+                onClick={() =>
+                  dispatchConsole({
+                    type: "SET_CONSOLE_VISIBLE",
+                    payload: false,
+                  })
+                }
                 className="focus:outline-none"
                 variant="ghost"
                 size="closeDialog"
@@ -92,9 +97,7 @@ const OutputConsole: FC = () => {
               </Button>
             </div>
           </div>
-          <div className="px-4 py-2 overflow-y-auto">
-            {consoleOutput}
-          </div>
+          <div className="px-4 py-2 overflow-y-auto">{consoleState.consoleOutput}</div>
         </div>
       )}
     </Transition>

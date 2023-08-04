@@ -3,22 +3,18 @@ import { useNoteContext } from "@/context/note-context";
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-import useSaveCode from "../use-save-code";
 
 const useBroadcast = (roomId: string, myUserName: string) => {
   // States
   const {
-    updateCode,
     latestCodeRef,
-    setIsCompiling,
-    setConsoleIsVisible,
-    setConsoleOutput,
-    setIsSaving
+    dispatchCode,
+    dispatchAsync,
+    dispatchConsole
   } = useCodeContext();
   const { editorRef } = useNoteContext();
-
   const broadcastRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
@@ -71,7 +67,10 @@ const useBroadcast = (roomId: string, myUserName: string) => {
         { event: EVENT.CODE_UPDATE }, // Filtering events
         (payload) => {
           const newCode = payload.payload.message;
-          updateCode(newCode);
+          dispatchCode({
+            type: "UPDATE_CODE",
+            payload: newCode
+          })
         }
       )
       .on(
@@ -99,13 +98,25 @@ const useBroadcast = (roomId: string, myUserName: string) => {
         }>) => {
           const { status, output } = payload!;
 
-          setIsCompiling(status);
+          dispatchAsync({
+            type: "SET_IS_COMPILING",
+            payload: status
+          })
 
           if (status === true) return;
 
-          setIsCompiling(status);
-          setConsoleIsVisible(true);
-          setConsoleOutput(output);
+          dispatchAsync({
+            type: "SET_IS_COMPILING",
+            payload: status
+          })
+          dispatchConsole({
+            type: "SET_CONSOLE_VISIBLE",
+            payload: true
+          })
+          dispatchConsole({
+            type: "SET_CONSOLE_OUTPUT",
+            payload: output
+          })
         }
       )
       .on(
@@ -117,7 +128,10 @@ const useBroadcast = (roomId: string, myUserName: string) => {
           status: boolean;
         }>) => {
           const { status } = payload!;
-          setIsSaving(status);
+          dispatchAsync({
+            type: "SET_IS_SAVING",
+            payload: status
+          })
         }
       );
 

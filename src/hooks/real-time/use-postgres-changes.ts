@@ -8,7 +8,7 @@ import { useCodeContext } from "@/context/code-context";
 
 const usePostgresChanges = (roomId: string) => {
   // States
-  const { updateCode } = useCodeContext();
+  const { dispatchCode } = useCodeContext();
 
   // Refs
   const schemaChangesRef = useRef<RealtimeChannel | null>(null);
@@ -66,7 +66,10 @@ const usePostgresChanges = (roomId: string) => {
 
           // @ts-ignore
           const newCode = payload.new.code_state;
-          updateCode(newCode);
+          dispatchCode({
+            type: "UPDATE_CODE",
+            payload: newCode,
+          });
         }
       )
       .subscribe();

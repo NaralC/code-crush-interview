@@ -11,7 +11,6 @@ import {
   useState,
 } from "react";
 import { RealtimeChannel, RealtimePresenceState } from "@supabase/supabase-js";
-import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
 
 const usePresence = (roomId: string, myUserName: string) => {

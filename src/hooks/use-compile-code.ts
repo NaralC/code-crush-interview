@@ -1,29 +1,25 @@
 import { useCodeContext } from "@/context/code-context";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRef } from "react";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
 const useCompileCode = () => {
-  const {
-    code,
-    language,
-    setConsoleIsVisible,
-    setConsoleOutput,
-    setIsCompiling,
-  } = useCodeContext();
+  const { codeState, dispatchConsole, dispatchAsync } = useCodeContext();
 
   // Getting a token
   const { data: token, mutate: handleCompile } = useMutation({
     mutationKey: ["token"],
     mutationFn: async () => {
-      setIsCompiling(true);
+      dispatchAsync({
+        type: "SET_IS_COMPILING",
+        payload: true,
+      });
 
       const response = await fetch("/api/compile/token", {
         method: "POST",
         body: JSON.stringify({
-          code: window.btoa(code),
-          language,
+          code: window.btoa(codeState.code),
+          language: codeState.language,
         }),
       });
       const { content } = await response.json();
@@ -39,7 +35,10 @@ const useCompileCode = () => {
     },
     onError: (error) => {
       toast.error((error as Error).message);
-      setIsCompiling(false);
+      dispatchAsync({
+        type: "SET_IS_COMPILING",
+        payload: false,
+      });
     },
     // onSuccess: (data) => console.log(data),
   });
@@ -81,16 +80,26 @@ const useCompileCode = () => {
       return [1, 2].includes(id) ? 300 : false;
     },
     onError: (error) => toast.error("Compilation Error"),
-    onSettled: () => setIsCompiling(false),
+    onSettled: () =>
+      dispatchAsync({
+        type: "SET_IS_COMPILING",
+        payload: false,
+      }),
     onSuccess: (data) => {
       toast("Compilation Finished");
-      setConsoleOutput(
-        JSON.stringify({
+
+      dispatchConsole({
+        type: "SET_CONSOLE_OUTPUT",
+        payload: JSON.stringify({
           ...data,
           stdout: data.stdout ? window.atob(data.stdout) : "",
-        })
-      );
-      setConsoleIsVisible(true);
+        }),
+      });
+      
+      dispatchConsole({
+        type: "SET_CONSOLE_VISIBLE",
+        payload: true,
+      });
     },
     enabled: !!token,
   });
