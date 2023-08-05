@@ -10,6 +10,7 @@ import { FC, MutableRefObject, useEffect, useRef } from "react";
 import { useCodeContext } from "@/context/code-context";
 import { Button } from "../ui/button";
 import { Loader2, PlayCircle, Save } from "lucide-react";
+import { TbDeviceDesktopCode } from "react-icons/tb";
 import useCompileCode from "@/hooks/use-compile-code";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import useSaveCode from "@/hooks/use-save-code";
@@ -69,7 +70,11 @@ const UtilityBar: FC<{
   }, [asyncState.isCompiling]);
 
   return (
-    <div className="z-10 flex flex-row justify-between px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-800">
+    <div className="z-10 flex flex-row justify-between px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-900">
+      <div className="items-center hidden gap-3 text-xl font-bold transition-all md:flex">
+        Code Crush
+        <TbDeviceDesktopCode className="w-6 h-6" />
+      </div>
       <div>{roomName}</div>
       <div>
         Online users:
@@ -93,7 +98,7 @@ const UtilityBar: FC<{
             })
           }
         >
-          <SelectTrigger className="w-[180px] bg-slate-900">
+          <SelectTrigger className="w-[130px] md:w-[180px] bg-slate-900">
             <SelectValue placeholder="Pick a language..." />
           </SelectTrigger>
           <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white">
@@ -115,11 +120,11 @@ const UtilityBar: FC<{
             handleCompile();
           }}
         >
-          Compile
+          <div className="hidden md:block">Compile</div>
           {asyncState.isCompiling ? (
-            <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
+            <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
           ) : (
-            <PlayCircle className="hidden ml-1 -mr-1 md:block" />
+            <PlayCircle className="md:ml-1 md:-mr-1" />
           )}
         </Button>
         <Button
@@ -129,11 +134,11 @@ const UtilityBar: FC<{
           }}
           disabled={asyncState.isSaving}
         >
-          Save
+          <div className="hidden md:block">Save</div>
           {asyncState.isSaving ? (
-            <Loader2 className="hidden ml-1 -mr-1 md:block animate-spin" />
+            <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
           ) : (
-            <Save className="hidden ml-1 -mr-1 md:block" />
+            <Save className="md:ml-1 md:-mr-1" />
           )}
         </Button>
       </div>

@@ -2,21 +2,19 @@
 import { Button } from "@/components/ui/button";
 import { Editor, Monaco, OnMount } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import {
-  FC,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FC, MutableRefObject, useCallback, useRef } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
 import { EVENT } from "@/lib/constant";
+import { JetBrains_Mono } from "next/font/google";
 import throttle from "lodash.throttle";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
-const CodeEditor: FC<{
+const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
+
+const MonacoEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
@@ -87,9 +85,11 @@ const CodeEditor: FC<{
         Show output tab
       </Button>
       <Editor
-        className="p-0 m-0 overflow-hidden"
+        className={cn("p-0 m-0 overflow-hidden font-jetbrains", jetBrainsMono.className)}
         height="100vh"
-        loading={<div>Loading Editor...</div>}
+        loading={<div>Loading Editor...
+          <Loader2 className="animate-spin" />
+        </div>}
         theme={"vs-dark"}
         // path={fileName}
         // language={files[fileName].language}
@@ -98,9 +98,10 @@ const CodeEditor: FC<{
         language={codeState.language}
         value={codeState.code}
         options={{
-          // fontFamily: "Courier New",
-          fontLigatures: true,
+          // fontLigatures: true,
           selectOnLineNumbers: true,
+          cursorSmoothCaretAnimation: "on",
+          cursorBlinking: "smooth",
         }}
         onChange={handleEditorChange}
         onMount={(editor, monaco) => {
@@ -125,4 +126,4 @@ const CodeEditor: FC<{
   );
 };
 
-export default CodeEditor;
+export default MonacoEditor;

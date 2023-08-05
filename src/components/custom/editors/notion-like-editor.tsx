@@ -10,12 +10,8 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import toast from "react-hot-toast";
 import { EVENT } from "@/lib/constant";
 import { useNoteContext } from "@/context/note-context";
-import { cn } from "@/lib/utils";
-import supabaseClient from "@/lib/supa-client";
-import { nanoid } from "nanoid";
-import OutputConsole from "../output-console";
 
-const SharedNoteEditor: FC<{
+const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Editor State
@@ -145,11 +141,11 @@ const SharedNoteEditor: FC<{
       <div className="prose text-white prose-stone dark:prose-invert">
         <div
           id="editor"
-          className="p-3 max-h-fit bg-gradient-to-b from-slate-900 to-slate-500 selection:text-black selection:bg-white"
+          className="p-3 max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white min-h-"
         />
       </div>
     </div>
   );
 };
 
-export default SharedNoteEditor;
+export default NotionLikeEditor;

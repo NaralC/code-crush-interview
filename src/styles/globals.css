@@ -69,6 +69,10 @@
   ::-webkit-scrollbar-thumb:horizontal:hover {
     background: #b1b1b1; /* Slightly darker color on hover */
   }
+
+  .font-jetbrains {
+    font-family: "JetBrains Mono", monospace;
+  }
 }
 
 @layer utilities {
