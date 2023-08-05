@@ -1,26 +1,18 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import Cursor from "@/components/custom/cursor";
-import CodeEditor from "@/components/custom/editors/code-editor";
+import MonacoEditor from "@/components/custom/editors/monaco-editor";
 import ExcalidrawEditor from "@/components/custom/editors/excalidraw-editor";
-import SharedNoteEditor from "@/components/custom/editors/shared-note-editor";
+import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 import OutputConsole from "@/components/custom/output-console";
 import UtilityBar from "@/components/custom/utility-bar";
-import { Button } from "@/components/ui/button";
 import { useCodeContext } from "@/context/code-context";
-import useBroadcast from "@/hooks/real-time/use-broadcast";
-import usePostgresChanges from "@/hooks/real-time/use-postgres-changes";
-import usePresence from "@/hooks/real-time/use-presence";
 import useMousePosition from "@/hooks/use-mouse-position";
-import { EVENT } from "@/lib/constant";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import throttle from "lodash.throttle";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import Draggable from "react-draggable";
-import { FaReact } from "react-icons/fa";
+import { useEffect } from "react";
 import Split from "react-split";
+import useRealTime from "@/hooks/use-real-time";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -58,16 +50,12 @@ const CodingPage: NextPage<{
   roomName: string;
   userName: string;
 }> = ({ initialCodeState, roomId, roomName, userName }) => {
-  const [isSaved, setIsSaved] = useState(false);
-  // Real-time refs
-  const broadcastRef = useBroadcast(roomId, userName);
-  // const presenceRef = usePresence(roomId, userName);
-  // const { schemaChangesRef, tableDBChangesRef, tableFilterChangesRef } =
-  // usePostgresChanges(roomId);
-
   // States
   const { dispatchCode } = useCodeContext();
   const { x, y } = useMousePosition();
+
+  // Refs
+  const { realTimeRef } = useRealTime(roomId, userName);
 
   // Utils
   const router = useRouter();
@@ -85,7 +73,7 @@ const CodingPage: NextPage<{
   useEffect(() => {
     dispatchCode({
       type: "UPDATE_CODE",
-      payload: initialCodeState
+      payload: initialCodeState,
     });
   }, []);
 
@@ -102,13 +90,13 @@ const CodingPage: NextPage<{
         // }}
       >
         {/* <Cursor x={x} y={y} /> */}
-        <UtilityBar realTimeRef={broadcastRef} roomName={roomName} />
+        <UtilityBar realTimeRef={realTimeRef} roomName={roomName} />
         <Split className="flex flex-row h-screen cursor-grab bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
           <div className="bg-black cursor-auto">
-            <CodeEditor realTimeRef={broadcastRef} />
+            <MonacoEditor realTimeRef={realTimeRef} />
           </div>
-          <div className="cursor-auto bg-slate-500">
-            <SharedNoteEditor realTimeRef={broadcastRef} />
+          <div className="bg-white cursor-auto">
+            <NotionLikeEditor realTimeRef={realTimeRef} />
           </div>
         </Split>
         <OutputConsole />

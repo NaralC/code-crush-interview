@@ -1,34 +1,37 @@
 import { useCodeContext } from "@/context/code-context";
 import { useNoteContext } from "@/context/note-context";
+import { useUsersList } from "@/context/users-list-context";
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
-const useBroadcast = (roomId: string, myUserName: string) => {
+const useRealTime = (roomId: string, name: string) => {
   // States
-  const {
-    latestCodeRef,
-    dispatchCode,
-    dispatchAsync,
-    dispatchConsole
-  } = useCodeContext();
+  const { latestCodeRef, dispatchCode, dispatchAsync, dispatchConsole } =
+    useCodeContext();
+  const { updateUsersList } = useUsersList();
   const { editorRef } = useNoteContext();
-  const broadcastRef = useRef<RealtimeChannel | null>(null);
+
+  // Refs
+  const realTimeRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    const broadcastChannel = supabaseClient.channel(roomId, {
+    const channel = supabaseClient.channel(roomId, {
       config: {
         broadcast: {
           self: false,
           ack: false,
         },
+        presence: {
+          key: name,
+        },
       },
     });
 
-    // Subscribe
-    broadcastChannel
+    // Broadcast
+    channel
       .on(
         "broadcast",
         { event: EVENT.NEW_JOIN }, // Filtering events
@@ -40,7 +43,7 @@ const useBroadcast = (roomId: string, myUserName: string) => {
           toast(String(payload.payload?.message));
 
           // Send the latest code and note state to the new comer
-          broadcastChannel.send({
+          channel.send({
             type: "broadcast",
             event: EVENT.CODE_UPDATE,
             payload: {
@@ -52,7 +55,7 @@ const useBroadcast = (roomId: string, myUserName: string) => {
           if (!noteData?.blocks.length) return;
 
           setTimeout(() => {
-            broadcastChannel.send({
+            channel.send({
               type: "broadcast",
               event: EVENT.NOTE_UPDATE,
               payload: {
@@ -69,8 +72,8 @@ const useBroadcast = (roomId: string, myUserName: string) => {
           const newCode = payload.payload.message;
           dispatchCode({
             type: "UPDATE_CODE",
-            payload: newCode
-          })
+            payload: newCode,
+          });
         }
       )
       .on(
@@ -100,23 +103,23 @@ const useBroadcast = (roomId: string, myUserName: string) => {
 
           dispatchAsync({
             type: "SET_IS_COMPILING",
-            payload: status
-          })
+            payload: status,
+          });
 
           if (status === true) return;
 
           dispatchAsync({
             type: "SET_IS_COMPILING",
-            payload: status
-          })
+            payload: status,
+          });
           dispatchConsole({
             type: "SET_CONSOLE_VISIBLE",
-            payload: true
-          })
+            payload: true,
+          });
           dispatchConsole({
             type: "SET_CONSOLE_OUTPUT",
-            payload: output
-          })
+            payload: output,
+          });
         }
       )
       .on(
@@ -130,17 +133,81 @@ const useBroadcast = (roomId: string, myUserName: string) => {
           const { status } = payload!;
           dispatchAsync({
             type: "SET_IS_SAVING",
-            payload: status
-          })
+            payload: status,
+          });
         }
       );
 
-    broadcastChannel.subscribe((status) => {
+    // Presence
+    channel
+      .on("presence", { event: "sync" }, () => {
+        updateUsersList(channel.presenceState());
+      })
+      .on("presence", { event: "join" }, ({ newPresences }) => {
+        toast.success(`${newPresences[0]["name"]} just joined!`);
+      })
+      .on("presence", { event: "leave" }, ({ leftPresences }) => {
+        toast.error(`${leftPresences[0]["name"]} just left!`);
+      });
+
+    // Postgres changes
+    channel
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+        },
+        (payload) => {
+          console.log(payload);
+          toast("schema-db-changes");
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "interview_rooms",
+        },
+        (payload) => {
+          console.log(payload);
+          toast("table-db-changes");
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "interview_rooms",
+          filter: `room_id=eq.${roomId}`,
+        },
+        (payload) => {
+          console.log(payload);
+          toast("table-filter-changes");
+
+          // @ts-ignore
+          const newCode = payload.new.code_state;
+          dispatchCode({
+            type: "UPDATE_CODE",
+            payload: newCode,
+          });
+        }
+      );
+
+    channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
+        // Synchronized states between players
+        const status = await channel.track({
+          name,
+          online_at: new Date().toISOString(),
+        });
+
         toast("Fetching code state from other players...");
 
         // Request the latest code state from other users
-        broadcastChannel.send({
+        channel.send({
           type: "broadcast",
           event: EVENT.NEW_JOIN,
           payload: {
@@ -150,16 +217,18 @@ const useBroadcast = (roomId: string, myUserName: string) => {
       }
     });
 
-    broadcastRef.current = broadcastChannel;
+    realTimeRef.current = channel;
 
     return () => {
-      broadcastChannel.unsubscribe();
-      supabaseClient.removeChannel(broadcastChannel);
-      broadcastRef.current = null;
+      channel.unsubscribe();
+      supabaseClient.removeChannel(channel);
+      realTimeRef.current = null;
     };
   }, []);
 
-  return broadcastRef;
+  return {
+    realTimeRef,
+  };
 };
 
-export default useBroadcast;
+export default useRealTime;

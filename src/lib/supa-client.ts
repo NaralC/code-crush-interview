@@ -6,7 +6,7 @@ const supabaseClient = createClient<Database>(
   {
     realtime: {
       params: {
-        eventsPerSecond: 10, // Rate limiting
+        eventsPerSecond: 1000, // Rate limiting
       },
     },
   }
