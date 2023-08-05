@@ -1,3 +1,4 @@
+import * as Reducer from "@/lib/reducers/code-context-reducer";
 import {
   Dispatch,
   FC,
@@ -10,103 +11,15 @@ import {
   useRef,
 } from "react";
 
-type CodeState = {
-  code: string;
-  language: string;
-};
-
-type ConsoleState = {
-  consoleOutput: string;
-  isConsoleVisible: boolean;
-};
-
-type AsyncState = {
-  isCompiling: boolean;
-  isSaving: boolean;
-};
-
-type CodeAction = {
-  type: "UPDATE_CODE" | "SET_LANGUAGE";
-  payload: string;
-};
-
-type ConsoleAction =
-  | {
-      type: "SET_CONSOLE_VISIBLE";
-      payload: boolean;
-    }
-  | {
-      type: "SET_CONSOLE_OUTPUT";
-      payload: string;
-    };
-
-type AsyncAction = {
-  type: "SET_IS_COMPILING" | "SET_IS_SAVING";
-  payload: boolean;
-};
-
-const initialCodeState = (): CodeState => {
-  return {
-    code: "",
-    language: "typescript",
-  };
-};
-
-const initialConsoleState = (): ConsoleState => ({
-  consoleOutput: "",
-  isConsoleVisible: false,
-});
-
-const initialAsyncState = (): AsyncState => ({
-  isCompiling: false,
-  isSaving: false,
-});
-
-const codeReducer = (state: CodeState, action: CodeAction): CodeState => {
-  switch (action.type) {
-    case "UPDATE_CODE":
-      return { ...state, code: action.payload };
-    case "SET_LANGUAGE":
-      return { ...state, language: action.payload };
-    default:
-      return state;
-  }
-};
-
-const consoleReducer = (
-  state: ConsoleState,
-  action: ConsoleAction
-): ConsoleState => {
-  switch (action.type) {
-    case "SET_CONSOLE_OUTPUT":
-      return { ...state, consoleOutput: action.payload };
-    case "SET_CONSOLE_VISIBLE":
-      return { ...state, isConsoleVisible: action.payload };
-    default:
-      return state;
-  }
-};
-
-const asyncReducer = (state: AsyncState, action: AsyncAction): AsyncState => {
-  switch (action.type) {
-    case "SET_IS_COMPILING":
-      return { ...state, isCompiling: action.payload };
-    case "SET_IS_SAVING":
-      return { ...state, isSaving: action.payload };
-    default:
-      return state;
-  }
-};
-
 export const CodeContext = createContext<
   | {
-      codeState: CodeState;
+      codeState: Reducer.CodeState;
       latestCodeRef: MutableRefObject<string>;
-      dispatchCode: Dispatch<CodeAction>;
-      consoleState: ConsoleState;
-      dispatchConsole: Dispatch<ConsoleAction>;
-      asyncState: AsyncState;
-      dispatchAsync: Dispatch<AsyncAction>;
+      dispatchCode: Dispatch<Reducer.CodeAction>;
+      consoleState: Reducer.ConsoleState;
+      dispatchConsole: Dispatch<Reducer.ConsoleAction>;
+      asyncState: Reducer.AsyncState;
+      dispatchAsync: Dispatch<Reducer.AsyncAction>;
     }
   | undefined
 >(undefined);
@@ -115,13 +28,13 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [codeState, dispatchCode] = useReducer(
-    codeReducer,
+    Reducer.codeReducer,
     {
       code: "",
       language: "typescript",
       consoleOutput: "",
     },
-    initialCodeState
+    Reducer.initialCodeState
   );
 
   const latestCodeRef = useRef<string>(codeState.code);
@@ -130,22 +43,22 @@ export const CodeContextProvider: FC<{ children: ReactNode }> = ({
   }, [codeState.code]);
 
   const [consoleState, dispatchConsole] = useReducer(
-    consoleReducer,
+    Reducer.consoleReducer,
     {
       consoleIsVisible: false,
       isCompiling: false,
       isSaving: false,
     },
-    initialConsoleState
+    Reducer.initialConsoleState
   );
 
   const [asyncState, dispatchAsync] = useReducer(
-    asyncReducer,
+    Reducer.asyncReducer,
     {
       isCompiling: false,
       isSaving: false,
     },
-    initialAsyncState
+    Reducer.initialAsyncState
   );
 
   return (

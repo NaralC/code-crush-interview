@@ -2,10 +2,11 @@ import { Sandpack } from "@codesandbox/sandpack-react";
 import { FC } from "react";
 
 const SackpackEditor: FC = () => {
+
   return (
-    <>
-      <Sandpack template="react" />
-    </>
+    <div className="border-2 shadow-lg border-zinc-500/30 shadow-white">
+      <Sandpack theme="dark" template="vue-ts" />
+    </div>
   );
 };
 

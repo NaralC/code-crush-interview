@@ -2,7 +2,7 @@ Essential:
 - DS-Algo interview ▶
 - Coding Page: ▶
     - Code synchronization ✅
-    - Presence states not working (i.e., online users) ▶
+    - Presence states not working (i.e., online users) ✅
     - Code compilation ✅
     - Code save to Supa ✅
 - Note between peers (Notion-like-editor): ▶
