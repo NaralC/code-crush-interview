@@ -6,15 +6,22 @@ import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
+import { nanoid } from "nanoid";
+import { useRouter } from "next/router";
 
 const useRealTime = (roomId: string, name: string) => {
   // States
-  const { latestCodeRef, dispatchCode, dispatchAsync, dispatchConsole } =
-    useCodeContext();
+  const {
+    latestCodeRef,
+    dispatchCode,
+    dispatchAsync,
+    dispatchConsole,
+  } = useCodeContext();
+  // States
   const { updateUsersList } = useUsersList();
   const { editorRef } = useNoteContext();
 
-  // Refs
+  // Refs and Utils
   const realTimeRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
@@ -25,7 +32,7 @@ const useRealTime = (roomId: string, name: string) => {
           ack: false,
         },
         presence: {
-          key: name,
+          key: `user-${nanoid(4)}`,
         },
       },
     });
@@ -84,10 +91,11 @@ const useRealTime = (roomId: string, name: string) => {
         }: Payload<{
           x: number;
           y: number;
+          userName: string;
         }>) => {
-          const { x, y } = payload!;
+          const { x, y, userName } = payload!;
 
-          console.log(`Mouse position from other client ${x} ${y}`);
+          // console.log(`Mouse position from ${userName} at ${x} ${y}`);
         }
       )
       .on(
@@ -136,7 +144,7 @@ const useRealTime = (roomId: string, name: string) => {
             payload: status,
           });
         }
-      );
+      )
 
     // Presence
     channel

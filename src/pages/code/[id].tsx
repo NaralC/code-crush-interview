@@ -10,9 +10,13 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Split from "react-split";
 import useRealTime from "@/hooks/use-real-time";
+import throttle from "lodash.throttle";
+import { EVENT } from "@/lib/constant";
+import AudioVideoCall from "@/components/custom/audio-video-call";
+import useWebRTC from "@/hooks/use-webrtc";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -23,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .select("*")
     .eq("room_id", roomId);
 
-  if (error) {
+  if (error || !roomId || !userName) {
     return {
       redirect: {
         destination: "/",
@@ -51,24 +55,22 @@ const CodingPage: NextPage<{
   userName: string;
 }> = ({ initialCodeState, roomId, roomName, userName }) => {
   // States
+  const { realTimeRef } = useRealTime(roomId, userName);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
   const { dispatchCode } = useCodeContext();
   const { x, y } = useMousePosition();
-
-  // Refs
-  const { realTimeRef } = useRealTime(roomId, userName);
-
-  // Utils
+  const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   const router = useRouter();
 
-  // const sendMousePosition = throttle(() => {
-  //   broadcastRef.current
-  //     ?.send({
-  //       type: "broadcast",
-  //       event: EVENT.MOUSE_UPDATE,
-  //       payload: { x, y },
-  //     })
-  //     .catch(() => {});
-  // }, 300);
+  const sendMousePosition = throttle(() => {
+    realTimeRef.current
+      ?.send({
+        type: "broadcast",
+        event: EVENT.MOUSE_UPDATE,
+        payload: { x, y, userName },
+      })
+      .catch(() => {});
+  }, 300);
 
   useEffect(() => {
     dispatchCode({
@@ -76,7 +78,7 @@ const CodingPage: NextPage<{
       payload: initialCodeState,
     });
   }, []);
-
+  
   return (
     <>
       <Head>
@@ -84,22 +86,35 @@ const CodingPage: NextPage<{
         <meta name="Code Crush" content="Code Crush" />
       </Head>
       <main
-        className="flex flex-col w-full"
-        // onMouseMove={() => {
-        //   sendMousePosition();
-        // }}
+        className="flex flex-col w-full h-screen"
+        onMouseMove={() => {
+          sendMousePosition();
+        }}
       >
+        <button
+          onClick={() => {
+            console.log(host);
+          }}
+        >
+          Check if i am host
+        </button>
         {/* <Cursor x={x} y={y} /> */}
         <UtilityBar realTimeRef={realTimeRef} roomName={roomName} />
-        <Split className="flex flex-row h-screen cursor-grab bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
-          <div className="bg-black cursor-auto">
+        <Split className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
+          <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <MonacoEditor realTimeRef={realTimeRef} />
           </div>
-          <div className="bg-white cursor-auto">
+          <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor realTimeRef={realTimeRef} />
           </div>
         </Split>
         <OutputConsole />
+        <AudioVideoCall
+          isMuted={isMuted}
+          setIsMuted={setIsMuted}
+          myVideo={myVideo}
+          partnerVideo={partnerVideo}
+        />
       </main>
     </>
   );

@@ -70,7 +70,7 @@ const UtilityBar: FC<{
   }, [asyncState.isCompiling]);
 
   return (
-    <div className="z-10 flex flex-row justify-between px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-900">
+    <div className="z-10 flex flex-row justify-between w-full px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-900 h-14">
       <div className="items-center hidden gap-3 text-xl font-bold transition-all md:flex">
         Code Crush
         <TbDeviceDesktopCode className="w-6 h-6" />

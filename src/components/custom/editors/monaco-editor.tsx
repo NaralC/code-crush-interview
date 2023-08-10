@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Editor, Monaco, OnMount } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-import { FC, MutableRefObject, useCallback, useRef } from "react";
+import { FC, MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCodeContext } from "@/context/code-context";
 import { useUsersList } from "@/context/users-list-context";
@@ -51,10 +51,23 @@ const MonacoEditor: FC<{
     [codeState.code]
   );
 
+  // editorRef.current?.getPosition()
+  // editorRef.current?.getSelections()
+  // editorRef.current?.onDidChangeCursorPosition();
+  // editorRef.current?.onDidChangeCursorSelection();
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     console.log(editorRef.current?.getPosition())
+  //     console.log(editorRef.current?.getSelections())
+  //   }, 2000)
+  // }, [editorRef.current]); 
+
+
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
-    <div>
-      <Button
+    <>
+      {/* <Button
         variant="outline"
         className="fixed inset-x-0 z-50 left-6 bottom-6 w-28"
         onClick={() => {
@@ -83,10 +96,10 @@ const MonacoEditor: FC<{
         }
       >
         Show output tab
-      </Button>
+      </Button> */}
       <Editor
-        className={cn("p-0 m-0 overflow-hidden font-jetbrains", jetBrainsMono.className)}
-        height="100vh"
+        className={cn("m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto", jetBrainsMono.className)}
+        height="100%"
         loading={<div>Loading Editor...
           <Loader2 className="animate-spin" />
         </div>}
@@ -102,6 +115,7 @@ const MonacoEditor: FC<{
           selectOnLineNumbers: true,
           cursorSmoothCaretAnimation: "on",
           cursorBlinking: "smooth",
+          fontSize: 15
         }}
         onChange={handleEditorChange}
         onMount={(editor, monaco) => {
@@ -121,8 +135,8 @@ const MonacoEditor: FC<{
           // markers.forEach((marker) => console.log("onValidate:", marker.message));
         }}
       />
-      <div className="bg-white ce-toolbar__actions ce-toolbar__actions--opened ce-inline-toolbar__toggler-and-button-wrapper ce-conversion-toolbar ce-conversion-toolbar--showed ce-paragraph" />
-    </div>
+      <div className="hidden bg-white ce-toolbar__actions ce-toolbar__actions--opened ce-inline-toolbar__toggler-and-button-wrapper ce-conversion-toolbar ce-conversion-toolbar--showed ce-paragraph" />
+    </>
   );
 };
 

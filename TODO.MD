@@ -1,17 +1,17 @@
 Essential:
 - DS-Algo interview ▶
-- Coding Page: ▶
+- Coding Page: ✅
     - Code synchronization ✅
     - Presence states not working (i.e., online users) ✅
     - Code compilation ✅
     - Code save to Supa ✅
 - Note between peers (Notion-like-editor): ▶
     - Text ✅
-    - Images
-    - Links
-- Voice/audio call:
-    - WebRTC
-    - Drag-around-or-hide-like-Zoom voice call
+    - Images ▶
+    - Links ▶
+- Voice/audio call: ✅
+    - WebRTC ✅
+    - Drag-around-or-hide-like-Zoom voice call ✅
 - Interviewer/interviewee roles:
     - Pick questions/hints/follow-ups
 - Questions pool (hints/solutions) 
