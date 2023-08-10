@@ -1,6 +1,5 @@
 import Cursor from "@/components/custom/cursor";
 import MonacoEditor from "@/components/custom/editors/monaco-editor";
-import ExcalidrawEditor from "@/components/custom/editors/excalidraw-editor";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 import OutputConsole from "@/components/custom/output-console";
 import UtilityBar from "@/components/custom/utility-bar";
