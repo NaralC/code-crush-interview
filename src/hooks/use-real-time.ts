@@ -1,25 +1,26 @@
-import { useCodeContext } from "@/context/code-context";
-import { useNoteContext } from "@/context/note-context";
-import { useUsersList } from "@/context/users-list-context";
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
-import { useRouter } from "next/router";
+import { useUsersListStore } from "@/stores/users-list-store";
+import { useCodeStore } from "@/stores/code-store";
+import { useNoteStore } from "@/stores/note-store";
 
 const useRealTime = (roomId: string, name: string) => {
   // States
-  const {
-    latestCodeRef,
-    dispatchCode,
-    dispatchAsync,
-    dispatchConsole,
-  } = useCodeContext();
+  const { latestCodeRef, dispatchConsole, dispatchAsync, dispatchCode } =
+    useCodeStore((state) => ({
+      latestCodeRef: state.latestCodeRef,
+      dispatchAsync: state.dispatchAsync,
+      dispatchConsole: state.dispatchConsole,
+      dispatchCode: state.dispatchCode,
+    }));
+
   // States
-  const { updateUsersList } = useUsersList();
-  const { editorRef } = useNoteContext();
+  const updateUsersList = useUsersListStore((state) => state.setUsersList);
+  const editorRef = useNoteStore((state) => state.editorRef);
 
   // Refs and Utils
   const realTimeRef = useRef<RealtimeChannel | null>(null);
@@ -144,7 +145,7 @@ const useRealTime = (roomId: string, name: string) => {
             payload: status,
           });
         }
-      )
+      );
 
     // Presence
     channel

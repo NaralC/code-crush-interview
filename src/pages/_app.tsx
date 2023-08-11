@@ -1,4 +1,3 @@
-import CodingPageProvider from "@/components/providers/coding-page-provider";
 import ModalProvider from "@/components/providers/modal-provider";
 import { ToastProvider } from "@/components/providers/toast-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -20,12 +19,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={inter.className}>
       <QueryClientProvider client={queryClient}>
-        <CodingPageProvider>
-          <Component {...pageProps} />
-          <ModalProvider />
-          <ToastProvider />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </CodingPageProvider>
+        <Component {...pageProps} />
+        <ModalProvider />
+        <ToastProvider />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </main>
   );

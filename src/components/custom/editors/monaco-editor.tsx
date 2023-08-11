@@ -1,16 +1,14 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "@/components/ui/button";
 import { Editor, Monaco, OnMount } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import { FC, MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useCodeContext } from "@/context/code-context";
-import { useUsersList } from "@/context/users-list-context";
 import { EVENT } from "@/lib/constant";
 import { JetBrains_Mono } from "next/font/google";
 import throttle from "lodash.throttle";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { useCodeStore } from "@/stores/code-store";
 
 const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
@@ -18,8 +16,10 @@ const MonacoEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Code state
-  const { codeState, dispatchCode, dispatchConsole } = useCodeContext();
-  const { usersList } = useUsersList();
+  const { codeState, dispatchCode } = useCodeStore((state) => ({
+    dispatchCode: state.dispatchCode,
+    codeState: state.codeState,
+  }));
 
   // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
@@ -61,8 +61,7 @@ const MonacoEditor: FC<{
   //     console.log(editorRef.current?.getPosition())
   //     console.log(editorRef.current?.getSelections())
   //   }, 2000)
-  // }, [editorRef.current]); 
-
+  // }, [editorRef.current]);
 
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
@@ -98,11 +97,17 @@ const MonacoEditor: FC<{
         Show output tab
       </Button> */}
       <Editor
-        className={cn("m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto", jetBrainsMono.className)}
+        className={cn(
+          "m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto",
+          jetBrainsMono.className
+        )}
         height="100%"
-        loading={<div>Loading Editor...
-          <Loader2 className="animate-spin" />
-        </div>}
+        loading={
+          <div>
+            Loading Editor...
+            <Loader2 className="animate-spin" />
+          </div>
+        }
         theme={"vs-dark"}
         // path={fileName}
         // language={files[fileName].language}
@@ -115,7 +120,7 @@ const MonacoEditor: FC<{
           selectOnLineNumbers: true,
           cursorSmoothCaretAnimation: "on",
           cursorBlinking: "smooth",
-          fontSize: 15
+          fontSize: 15,
         }}
         onChange={handleEditorChange}
         onMount={(editor, monaco) => {

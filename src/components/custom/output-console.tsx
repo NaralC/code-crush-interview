@@ -1,13 +1,16 @@
 import { FC, Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
-import { useCodeContext } from "@/context/code-context";
 import { Expand, PictureInPicture2, X } from "lucide-react";
 import Draggable from "react-draggable"; // The default
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { useCodeStore } from "@/stores/code-store";
 
 const OutputConsole: FC = () => {
-  const { consoleState, dispatchConsole } = useCodeContext();
+  const { consoleState, dispatchConsole } = useCodeStore((state) => ({
+    dispatchConsole: state.dispatchConsole,
+    consoleState: state.consoleState,
+  }));
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isDraggable, setIsDraggable] = useState<boolean>(false);
 
@@ -97,7 +100,9 @@ const OutputConsole: FC = () => {
               </Button>
             </div>
           </div>
-          <div className="px-4 py-2 overflow-y-auto">{consoleState.consoleOutput}</div>
+          <div className="px-4 py-2 overflow-y-auto">
+            {consoleState.consoleOutput}
+          </div>
         </div>
       )}
     </Transition>

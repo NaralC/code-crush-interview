@@ -1,10 +1,14 @@
-import { useCodeContext } from "@/context/code-context";
+import { useCodeStore } from "@/stores/code-store";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
 const useSaveCode = () => {
-  const { latestCodeRef, dispatchAsync } = useCodeContext();
+  const { latestCodeRef, dispatchAsync } =
+    useCodeStore((state) => ({
+      latestCodeRef: state.latestCodeRef,
+      dispatchAsync: state.dispatchAsync,
+    }));
 
   const { isLoading: isSaving, mutate: handleSave } = useMutation({
     mutationKey: ["saveCode"],

@@ -3,7 +3,6 @@ import MonacoEditor from "@/components/custom/editors/monaco-editor";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 import OutputConsole from "@/components/custom/output-console";
 import UtilityBar from "@/components/custom/utility-bar";
-import { useCodeContext } from "@/context/code-context";
 import useMousePosition from "@/hooks/use-mouse-position";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";
@@ -16,6 +15,7 @@ import throttle from "lodash.throttle";
 import { EVENT } from "@/lib/constant";
 import AudioVideoCall from "@/components/custom/audio-video-call";
 import useWebRTC from "@/hooks/use-webrtc";
+import { useCodeStore } from "@/stores/code-store";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -56,7 +56,9 @@ const CodingPage: NextPage<{
   // States
   const { realTimeRef } = useRealTime(roomId, userName);
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const { dispatchCode } = useCodeContext();
+  const { dispatchCode } = useCodeStore((state) => ({
+    dispatchCode: state.dispatchCode,
+  }));
   const { x, y } = useMousePosition();
   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   const router = useRouter();
@@ -77,7 +79,7 @@ const CodingPage: NextPage<{
       payload: initialCodeState,
     });
   }, []);
-  
+
   return (
     <>
       <Head>

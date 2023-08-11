@@ -5,9 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUsersList } from "@/context/users-list-context";
 import { FC, MutableRefObject, useEffect, useRef } from "react";
-import { useCodeContext } from "@/context/code-context";
 import { Button } from "../ui/button";
 import { Loader2, PlayCircle, Save } from "lucide-react";
 import { TbDeviceDesktopCode } from "react-icons/tb";
@@ -15,14 +13,23 @@ import useCompileCode from "@/hooks/use-compile-code";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import useSaveCode from "@/hooks/use-save-code";
 import { EVENT } from "@/lib/constant";
+import { useUsersListStore } from "@/stores/users-list-store";
+import { useCodeStore } from "@/stores/code-store";
 
 const UtilityBar: FC<{
   roomName: string;
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ roomName, realTimeRef }) => {
-  const { usersList } = useUsersList();
-  const { codeState, dispatchCode, asyncState, consoleState } =
-    useCodeContext();
+  const usersList = useUsersListStore((state) => state.usersList);
+  const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore(
+    (state) => ({
+      consoleState: state.consoleState,
+      asyncState: state.asyncState,
+      codeState: state.codeState,
+      dispatchCode: state.dispatchCode,
+    })
+  );
+
   const { handleCompile } = useCompileCode();
   const { handleSave } = useSaveCode();
 

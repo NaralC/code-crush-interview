@@ -1,10 +1,16 @@
-import { useCodeContext } from "@/context/code-context";
+import { useCodeStore } from "@/stores/code-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
 const useCompileCode = () => {
-  const { codeState, dispatchConsole, dispatchAsync } = useCodeContext();
+  const { codeState, dispatchConsole, dispatchAsync, dispatchCode } =
+    useCodeStore((state) => ({
+      codeState: state.codeState,
+      dispatchAsync: state.dispatchAsync,
+      dispatchConsole: state.dispatchConsole,
+      dispatchCode: state.dispatchCode,
+    }));
 
   // Getting a token
   const { data: token, mutate: handleCompile } = useMutation({
@@ -95,7 +101,7 @@ const useCompileCode = () => {
           stdout: data.stdout ? window.atob(data.stdout) : "",
         }),
       });
-      
+
       dispatchConsole({
         type: "SET_CONSOLE_VISIBLE",
         payload: true,

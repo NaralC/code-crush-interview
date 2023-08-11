@@ -9,13 +9,19 @@ import {
 import { RealtimeChannel } from "@supabase/supabase-js";
 import toast from "react-hot-toast";
 import { EVENT } from "@/lib/constant";
-import { useNoteContext } from "@/context/note-context";
+import { useNoteStore } from "@/stores/note-store";
 
 const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Editor State
-  const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteContext();
+  const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteStore(
+    (state) => ({
+      editorRef: state.editorRef,
+      editorIsMounted: state.editorIsMounted,
+      setEditorIsMounted: state.setEditorIsMounted,
+    })
+  );
 
   const initializeEditor = useCallback(async () => {
     // Check out more here: https://github.com/editor-js/awesome-editorjs#tools
