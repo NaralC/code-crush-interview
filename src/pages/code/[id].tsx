@@ -63,15 +63,15 @@ const CodingPage: NextPage<{
   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   const router = useRouter();
 
-  const sendMousePosition = throttle(() => {
-    realTimeRef.current
-      ?.send({
-        type: "broadcast",
-        event: EVENT.MOUSE_UPDATE,
-        payload: { x, y, userName },
-      })
-      .catch(() => {});
-  }, 300);
+  // const sendMousePosition = throttle(() => {
+  //   realTimeRef.current
+  //     ?.send({
+  //       type: "broadcast",
+  //       event: EVENT.MOUSE_UPDATE,
+  //       payload: { x, y, userName },
+  //     })
+  //     .catch(() => {});
+  // }, 300);
 
   useEffect(() => {
     dispatchCode({
@@ -88,9 +88,9 @@ const CodingPage: NextPage<{
       </Head>
       <main
         className="flex flex-col w-full h-screen"
-        onMouseMove={() => {
-          sendMousePosition();
-        }}
+        // onMouseMove={() => {
+        //   sendMousePosition();
+        // }}
       >
         <button
           onClick={() => {
