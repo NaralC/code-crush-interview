@@ -30,9 +30,14 @@ const initialState: State = {
 export const useCodeStore = create<State & Action>()((set, get) => ({
   ...initialState,
   dispatchCode: (payload) =>
-    set((state) => ({
-      codeState: Reducer.codeReducer(state.codeState, payload),
-    })),
+    set((state) => {
+      latestCodeRef.current = state.codeState.code;
+
+      return {
+        codeState: Reducer.codeReducer(state.codeState, payload),
+        latestCodeRef,
+      };
+    }),
   dispatchAsync: (payload) =>
     set((state) => ({
       asyncState: Reducer.asyncReducer(state.asyncState, payload),

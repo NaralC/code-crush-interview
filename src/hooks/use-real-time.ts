@@ -4,7 +4,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
-import { useUsersListStore } from "@/stores/users-list-store";
+import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 
@@ -19,7 +19,7 @@ const useRealTime = (roomId: string, name: string) => {
     }));
 
   // States
-  const updateUsersList = useUsersListStore((state) => state.setUsersList);
+  const updateUsersList = useUsersStore((state) => state.setOtherUsers);
   const editorRef = useNoteStore((state) => state.editorRef);
 
   // Refs and Utils

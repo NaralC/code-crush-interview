@@ -13,14 +13,14 @@ import useCompileCode from "@/hooks/use-compile-code";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import useSaveCode from "@/hooks/use-save-code";
 import { EVENT } from "@/lib/constant";
-import { useUsersListStore } from "@/stores/users-list-store";
+import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 
 const UtilityBar: FC<{
   roomName: string;
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ roomName, realTimeRef }) => {
-  const usersList = useUsersListStore((state) => state.usersList);
+  const usersList = useUsersStore((state) => state.otherUsers);
   const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore(
     (state) => ({
       consoleState: state.consoleState,
@@ -98,7 +98,7 @@ const UtilityBar: FC<{
       <div className="flex gap-3">
         <Select
           value={codeState.language}
-          onValueChange={(newLanguage) =>
+          onValueChange={(newLanguage: string) =>
             dispatchCode({
               type: "SET_LANGUAGE",
               payload: newLanguage,

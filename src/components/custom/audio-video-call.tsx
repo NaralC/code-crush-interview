@@ -16,7 +16,7 @@ const AudioVideoCall: FC<{
   partnerVideo: RefObject<HTMLVideoElement>;
 }> = ({ isMuted, setIsMuted, myVideo, partnerVideo }) => {
   return (
-    <Draggable>
+    <Draggable bounds="parent">
       <div className="fixed inset-x-0 bottom-0 left-0 z-50 flex flex-col justify-around w-40 p-1 px-3 text-center bg-white border-2 shadow-2xl hover:cursor-grab ring-1 ring-zinc-300/75 rounded-xl h-72 border-zinc-50">
         {/* Myself */}
         <div className="w-full">
