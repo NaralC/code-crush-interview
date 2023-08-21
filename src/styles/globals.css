@@ -32,46 +32,43 @@
   .ce-paragraph {
     color: white;
   }
-
-  /* Width */
   ::-webkit-scrollbar {
-    width: 8px; /* Thin scrollbar */
+    width: 8px;
   }
 
-  /* Track */
   ::-webkit-scrollbar-track {
-    background: transparent; /* Transparent background */
+    background: transparent;
   }
 
-  /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #d1d1d1; /* Light gray color */
-    border-radius: 6px; /* Rounded edges */
+    background: #d1d1d1;
+    border-radius: 6px;
   }
 
-  /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #b1b1b1; /* Slightly darker color on hover */
+    background: #b1b1b1;
   }
 
-  /* Width and height specifically for horizontal scrollbar */
   ::-webkit-scrollbar:horizontal {
     height: 8px;
   }
 
-  /* Handle specifically for horizontal scrollbar */
   ::-webkit-scrollbar-thumb:horizontal {
-    background: #d1d1d1; /* Light gray color */
-    border-radius: 6px; /* Rounded edges */
+    background: #d1d1d1;
+    border-radius: 6px;
   }
 
-  /* Handle on hover specifically for horizontal scrollbar */
   ::-webkit-scrollbar-thumb:horizontal:hover {
-    background: #b1b1b1; /* Slightly darker color on hover */
+    background: #b1b1b1;
   }
 
   .font-jetbrains {
     font-family: "JetBrains Mono", monospace;
+  }
+
+  .my-cursor {
+    background: red;
+    width: 3px !important;
   }
 }
 

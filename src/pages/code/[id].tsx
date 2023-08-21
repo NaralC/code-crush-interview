@@ -92,30 +92,35 @@ const CodingPage: NextPage<{
         //   sendMousePosition();
         // }}
       >
-        <button
+        {/* <button
           onClick={() => {
             console.log(host);
           }}
         >
           Check if i am host
-        </button>
+        </button> */}
         {/* <Cursor x={x} y={y} /> */}
         <UtilityBar realTimeRef={realTimeRef} roomName={roomName} />
-        <Split className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
+        <div className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
           <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-            <MonacoEditor realTimeRef={realTimeRef} />
+            <MonacoEditor realTimeRef={realTimeRef} name={userName} />
+          </div>
+        </div>
+        {/* <Split className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
+          <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
+            <MonacoEditor realTimeRef={realTimeRef} name={userName} />
           </div>
           <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor realTimeRef={realTimeRef} />
           </div>
-        </Split>
+        </Split> */}
         <OutputConsole />
-        <AudioVideoCall
+        {/* <AudioVideoCall
           isMuted={isMuted}
           setIsMuted={setIsMuted}
           myVideo={myVideo}
           partnerVideo={partnerVideo}
-        />
+        /> */}
       </main>
     </>
   );

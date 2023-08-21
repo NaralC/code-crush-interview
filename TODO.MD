@@ -1,5 +1,5 @@
 Essential:
-- DS-Algo interview ▶
+- DS-Algo interview ✅
 - Coding Page: ✅
     - Code synchronization ✅
     - Presence states not working (i.e., online users) ✅
@@ -25,11 +25,8 @@ Should haves:
     - Being able to end an interview
     - Status: ongoing/finished
     - UI: codeinterview.io / Pramp style
-- Authentication
 - Front-end interview
-- Behavioral interview
 - Feedback from peer (SQL)
-- Paywall (Stripe)
 - Video/audio device settings
 - Dark mode
 

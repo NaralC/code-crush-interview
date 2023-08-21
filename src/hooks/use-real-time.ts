@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
+import { Position } from "monaco-editor";
 
 const useRealTime = (roomId: string, name: string) => {
   // States
@@ -82,21 +83,6 @@ const useRealTime = (roomId: string, name: string) => {
             type: "UPDATE_CODE",
             payload: newCode,
           });
-        }
-      )
-      .on(
-        "broadcast",
-        { event: EVENT.MOUSE_UPDATE }, // Filtering events
-        ({
-          payload,
-        }: Payload<{
-          x: number;
-          y: number;
-          userName: string;
-        }>) => {
-          const { x, y, userName } = payload!;
-
-          // console.log(`Mouse position from ${userName} at ${x} ${y}`);
         }
       )
       .on(

@@ -46,8 +46,8 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       // example only supports 2 users per call
       else if (usersCount > 2) {
         // 3rd+ person joining will get sent back home
-        toast.error("Room already full.");
-        router.push("/");
+        // toast.error("Room already full.");
+        // router.push("/");
         return;
       }
       handleRoomJoined();

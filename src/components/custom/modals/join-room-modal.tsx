@@ -68,7 +68,6 @@ const JoinRoomModal: FC = () => {
     });
 
     toast.success("Wallah! Redirecting you to it!");
-
     router.push({
       pathname: `/code/${values.roomId}`,
       query: {

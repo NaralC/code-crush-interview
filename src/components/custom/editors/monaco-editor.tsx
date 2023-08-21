@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Editor, Monaco, OnMount } from "@monaco-editor/react";
-import { editor } from "monaco-editor";
+import { Position, editor, Range } from "monaco-editor";
 import { FC, MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { EVENT } from "@/lib/constant";
@@ -9,17 +9,24 @@ import throttle from "lodash.throttle";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCodeStore } from "@/stores/code-store";
+import { useUsersStore } from "@/stores/users-store";
 
 const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
 const MonacoEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
-}> = ({ realTimeRef }) => {
+  name: string;
+}> = ({ realTimeRef, name }) => {
   // Code state
-  const { codeState, dispatchCode } = useCodeStore((state) => ({
-    dispatchCode: state.dispatchCode,
-    codeState: state.codeState,
-  }));
+  const { codeState, dispatchCode, dispatchConsole } = useCodeStore(
+    (state) => ({
+      dispatchCode: state.dispatchCode,
+      dispatchConsole: state.dispatchConsole,
+      codeState: state.codeState,
+    })
+  );
+
+  const { otherUsers } = useUsersStore();
 
   // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
@@ -35,7 +42,7 @@ const MonacoEditor: FC<{
         payload: value,
       });
 
-      const sendCodeToOtherClients = throttle(() => {
+      const broadcastCodeUpdate = throttle(() => {
         realTimeRef.current?.send({
           type: "broadcast",
           event: EVENT.CODE_UPDATE,
@@ -45,28 +52,78 @@ const MonacoEditor: FC<{
         });
       });
 
-      sendCodeToOtherClients();
+      broadcastCodeUpdate();
     },
 
     [codeState.code]
   );
 
-  // editorRef.current?.getPosition()
-  // editorRef.current?.getSelections()
-  // editorRef.current?.onDidChangeCursorPosition();
-  // editorRef.current?.onDidChangeCursorSelection();
+  useEffect(() => {
+    const activeDecorations: {
+      [key: string]: string;
+    } = {};
 
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     console.log(editorRef.current?.getPosition())
-  //     console.log(editorRef.current?.getSelections())
-  //   }, 2000)
-  // }, [editorRef.current]);
+    realTimeRef.current?.on(
+      "broadcast",
+      { event: EVENT.MOUSE_UPDATE }, // Filtering events
+      ({
+        payload,
+      }: Payload<{
+        position: Position;
+        secondaryPositions: Position[];
+        name: string;
+      }>) => {
+        const { position, secondaryPositions, name } = payload!;
+
+        const range = monacoRef.current?.Range.fromPositions(position);
+
+        if (!range) return;
+
+        if (activeDecorations[name]) {
+          editorRef.current?.removeDecorations([activeDecorations[name]]);
+        }
+
+        let decorations = editorRef.current?.deltaDecorations(
+          [],
+          [
+            {
+              range,
+              options: {
+                isWholeLine: false,
+                className: "my-cursor",
+              },
+            },
+          ]
+        )[0];
+        if (decorations) activeDecorations[name] = decorations;
+        console.log(decorations);
+      }
+    );
+
+    const broadcastCursorPosition = throttle(
+      (position: Position, secondaryPositions: Position[]) => {
+        realTimeRef.current?.send({
+          type: "broadcast",
+          event: EVENT.MOUSE_UPDATE,
+          payload: {
+            position,
+            secondaryPositions,
+            name,
+          },
+        });
+      }
+    );
+
+    editorRef.current?.onDidChangeCursorPosition(
+      ({ position, secondaryPositions }) =>
+        broadcastCursorPosition(position, secondaryPositions)
+    );
+  }, [editorRef.current]);
 
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
     <>
-      {/* <Button
+      <Button
         variant="outline"
         className="fixed inset-x-0 z-50 left-6 bottom-6 w-28"
         onClick={() => {
@@ -79,7 +136,7 @@ const MonacoEditor: FC<{
         variant="outline"
         className="fixed inset-x-0 z-50 left-36 bottom-6 w-28"
         onClick={() => {
-          alert(JSON.stringify(usersList));
+          alert(JSON.stringify(otherUsers));
         }}
       >
         Show users list
@@ -95,7 +152,7 @@ const MonacoEditor: FC<{
         }
       >
         Show output tab
-      </Button> */}
+      </Button>
       <Editor
         className={cn(
           "m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto",
