@@ -58,68 +58,6 @@ const MonacoEditor: FC<{
     [codeState.code]
   );
 
-  useEffect(() => {
-    const activeDecorations: {
-      [key: string]: string;
-    } = {};
-
-    realTimeRef.current?.on(
-      "broadcast",
-      { event: EVENT.MOUSE_UPDATE }, // Filtering events
-      ({
-        payload,
-      }: Payload<{
-        position: Position;
-        secondaryPositions: Position[];
-        name: string;
-      }>) => {
-        const { position, secondaryPositions, name } = payload!;
-
-        const range = monacoRef.current?.Range.fromPositions(position);
-
-        if (!range) return;
-
-        if (activeDecorations[name]) {
-          editorRef.current?.removeDecorations([activeDecorations[name]]);
-        }
-
-        let decorations = editorRef.current?.deltaDecorations(
-          [],
-          [
-            {
-              range,
-              options: {
-                isWholeLine: false,
-                className: "my-cursor",
-              },
-            },
-          ]
-        )[0];
-        if (decorations) activeDecorations[name] = decorations;
-        console.log(decorations);
-      }
-    );
-
-    const broadcastCursorPosition = throttle(
-      (position: Position, secondaryPositions: Position[]) => {
-        realTimeRef.current?.send({
-          type: "broadcast",
-          event: EVENT.MOUSE_UPDATE,
-          payload: {
-            position,
-            secondaryPositions,
-            name,
-          },
-        });
-      }
-    );
-
-    editorRef.current?.onDidChangeCursorPosition(
-      ({ position, secondaryPositions }) =>
-        broadcastCursorPosition(position, secondaryPositions)
-    );
-  }, [editorRef.current]);
-
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
     <>
