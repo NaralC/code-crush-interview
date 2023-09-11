@@ -1,4 +1,4 @@
-import Cursor from "@/components/custom/cursor";
+import Cursors from "@/components/custom/cursor";
 import MonacoEditor from "@/components/custom/editors/monaco-editor";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 import OutputConsole from "@/components/custom/output-console";
@@ -63,12 +63,11 @@ const CodingPage: NextPage<{
   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
 
   const sendMousePosition = throttle(() => {
-    realTimeRef.current
-      ?.send({
-        type: "broadcast",
-        event: EVENT.MOUSE_UPDATE,
-        payload: { x, y, userName },
-      })
+    realTimeRef.current?.send({
+      type: "broadcast",
+      event: EVENT.MOUSE_UPDATE,
+      payload: { x, y, userName },
+    });
   }, 300);
 
   useEffect(() => {
@@ -97,21 +96,21 @@ const CodingPage: NextPage<{
         >
           Check if i am host
         </button> */}
-        <Cursor realTimeRef={realTimeRef} />
+        <Cursors realTimeRef={realTimeRef} />
         <UtilityBar realTimeRef={realTimeRef} roomName={roomName} />
-        <div className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
+        {/* <div className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
           <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <MonacoEditor realTimeRef={realTimeRef} name={userName} />
           </div>
-        </div>
-        {/* <Split className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
+        </div> */}
+        <Split className="flex flex-col h-screen p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
           <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <MonacoEditor realTimeRef={realTimeRef} name={userName} />
           </div>
           <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor realTimeRef={realTimeRef} />
           </div>
-        </Split> */}
+        </Split>
         <OutputConsole />
         {/* <AudioVideoCall
           isMuted={isMuted}

@@ -65,11 +65,6 @@
   .font-jetbrains {
     font-family: "JetBrains Mono", monospace;
   }
-
-  .my-cursor {
-    background: red;
-    width: 3px !important;
-  }
 }
 
 @layer utilities {

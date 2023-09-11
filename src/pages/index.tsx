@@ -7,8 +7,6 @@ import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
 import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
 import { useToast } from "@/hooks/use-toast";
-import BlurredColorSplash from "@/components/custom/landing/blurred-color-splash";
-import RevolvingGrid from "@/components/custom/landing/revolving-grid";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import BackgroundParticles from "@/components/custom/landing/background-particles";
@@ -73,25 +71,11 @@ const Home: NextPage = () => {
             <Paperclip className="mr-2" />
             Join a Room
           </Button>
-          <Button
-            className={cn(
-              "ring-1 ring-zinc-50/25 filter",
-              animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
-            )}
-            onClick={() => {
-              feedbackModal.setOpen();
-            }}
-          >
-            <Bird className="mr-2" />
-            Leave Feedback
-          </Button>
         </div>
 
         {/* Background Stuff */}
         <Overlay />
         <BackgroundParticles />
-        {/* <BlurredColorSplash /> */}
-        {/* <RevolvingGrid /> */}
       </main>
     </>
   );

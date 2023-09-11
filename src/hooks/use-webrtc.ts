@@ -30,12 +30,9 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
 
     // TODO:
     realTimeRef.current.on("presence", { event: "sync" }, () => {
-      console.log(realTimeRef.current?.presenceState());
-
       const usersCount = Object.values(
         realTimeRef.current!.presenceState()
       ).length;
-      console.log(usersCount);
 
       if (usersCount === 1) {
         // when subscribing, if you are the first member, you are the host
