@@ -1,7 +1,7 @@
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
@@ -10,6 +10,8 @@ import { useNoteStore } from "@/stores/note-store";
 import { Position } from "monaco-editor";
 
 const useRealTime = (roomId: string, name: string) => {
+  const userId = useMemo(() => `user-${nanoid(4)}`, []);
+
   // States
   const { latestCodeRef, dispatchConsole, dispatchAsync, dispatchCode } =
     useCodeStore((state) => ({
@@ -20,7 +22,7 @@ const useRealTime = (roomId: string, name: string) => {
     }));
 
   // States
-  const updateUsersList = useUsersStore((state) => state.setOtherUsers);
+  const { setOtherUsers, otherUsers } = useUsersStore();
   const editorRef = useNoteStore((state) => state.editorRef);
 
   // Refs and Utils
@@ -34,7 +36,7 @@ const useRealTime = (roomId: string, name: string) => {
           ack: false,
         },
         presence: {
-          key: `user-${nanoid(4)}`,
+          key: userId,
         },
       },
     });
@@ -136,7 +138,16 @@ const useRealTime = (roomId: string, name: string) => {
     // Presence
     channel
       .on("presence", { event: "sync" }, () => {
-        updateUsersList(channel.presenceState());
+        const presenceState = channel.presenceState();
+        const transformedState: Record<string, any> = {};
+
+        for (const key in presenceState) {
+          if (presenceState[key].length > 0) {
+            transformedState[key] = presenceState[key][0];
+          }
+        }
+
+        setOtherUsers(transformedState);
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
@@ -223,6 +234,7 @@ const useRealTime = (roomId: string, name: string) => {
 
   return {
     realTimeRef,
+    userId: userId,
   };
 };
 

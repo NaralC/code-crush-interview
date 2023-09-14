@@ -5,11 +5,13 @@ type Payload<T> = {
 };
 
 type UsersList = {
-  [key: string]: [
-    {
-      name: string;
-      presence_ref: string;
-      online_at: string;
-    }
-  ];
+  [key: string]: {
+    name: string;
+    presence_ref: string;
+    online_at: string;
+    cursor: {
+      x: number;
+      y: number;
+    };
+  };
 };

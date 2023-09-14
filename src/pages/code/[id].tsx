@@ -54,7 +54,7 @@ const CodingPage: NextPage<{
   userName: string;
 }> = ({ initialCodeState, roomId, roomName, userName }) => {
   // States
-  const { realTimeRef } = useRealTime(roomId, userName);
+  const { realTimeRef, userId } = useRealTime(roomId, userName);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const { dispatchCode } = useCodeStore((state) => ({
     dispatchCode: state.dispatchCode,
@@ -66,9 +66,9 @@ const CodingPage: NextPage<{
     realTimeRef.current?.send({
       type: "broadcast",
       event: EVENT.MOUSE_UPDATE,
-      payload: { x, y, userName },
+      payload: { x, y, userName, userId },
     });
-  }, 300);
+  }, 200);
 
   useEffect(() => {
     dispatchCode({
