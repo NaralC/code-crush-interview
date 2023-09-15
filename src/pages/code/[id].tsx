@@ -36,7 +36,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const { code_state, room_id, name } = data[0];
+  const { code_state, room_id, name, participants } = data[0];
+
+  const userCount = Object.keys(participants!).length
+
+  if (userCount >= 2) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {

@@ -8,19 +8,16 @@ import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 import { useHintsSolutionModal } from "./modals/use-hint-solution-modal";
+import { useRouter } from "next/router";
 
 const useRealTime = (roomId: string, name: string) => {
   const { setOpen, setType, setBody } = useHintsSolutionModal();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
+  const supaClient = supabaseClient;
 
   // States
   const { latestCodeRef, dispatchConsole, dispatchAsync, dispatchCode } =
-    useCodeStore((state) => ({
-      latestCodeRef: state.latestCodeRef,
-      dispatchAsync: state.dispatchAsync,
-      dispatchConsole: state.dispatchConsole,
-      dispatchCode: state.dispatchCode,
-    }));
+    useCodeStore();
 
   // States
   const { setOtherUsers, otherUsers } = useUsersStore();
@@ -154,7 +151,7 @@ const useRealTime = (roomId: string, name: string) => {
 
     // Presence
     channel
-      .on("presence", { event: "sync" }, () => {
+      .on("presence", { event: "sync" }, async () => {
         const presenceState = channel.presenceState();
         const transformedState: Record<string, any> = {};
 
@@ -165,59 +162,85 @@ const useRealTime = (roomId: string, name: string) => {
         }
 
         setOtherUsers(transformedState);
+
+        const { data, error } = await supaClient
+          .from("interview_rooms")
+          .update({
+            participants: transformedState,
+          })
+          .eq("room_id", roomId)
+          .select();
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
       })
-      .on("presence", { event: "leave" }, ({ leftPresences }) => {
+      .on("presence", { event: "leave" }, async ({ leftPresences }) => {
         toast.error(`${leftPresences[0]["name"]} just left!`);
+
+        const presenceState = channel.presenceState();
+        const transformedState: Record<string, any> = {};
+
+        for (const key in presenceState) {
+          if (presenceState[key].length > 0) {
+            transformedState[key] = presenceState[key][0];
+          }
+        }
+
+        const { data, error } = await supaClient
+          .from("interview_rooms")
+          .update({
+            participants: transformedState,
+          })
+          .eq("room_id", roomId)
+          .select();
+        console.log(transformedState);
       });
 
     // Postgres changes
-    channel
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-        },
-        (payload) => {
-          console.log(payload);
-          toast("schema-db-changes");
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "interview_rooms",
-        },
-        (payload) => {
-          console.log(payload);
-          toast("table-db-changes");
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "interview_rooms",
-          filter: `room_id=eq.${roomId}`,
-        },
-        (payload) => {
-          console.log(payload);
-          toast("table-filter-changes");
+    // channel
+    //   .on(
+    //     "postgres_changes",
+    //     {
+    //       event: "*",
+    //       schema: "public",
+    //     },
+    //     (payload) => {
+    //       console.log(payload);
+    //       toast("schema-db-changes");
+    //     }
+    //   )
+    //   .on(
+    //     "postgres_changes",
+    //     {
+    //       event: "*",
+    //       schema: "public",
+    //       table: "interview_rooms",
+    //     },
+    //     (payload) => {
+    //       console.log(payload);
+    //       toast("table-db-changes");
+    //     }
+    //   )
+    //   .on(
+    //     "postgres_changes",
+    //     {
+    //       event: "*",
+    //       schema: "public",
+    //       table: "interview_rooms",
+    //       filter: `room_id=eq.${roomId}`,
+    //     },
+    //     (payload) => {
+    //       console.log(payload);
+    //       toast("table-filter-changes");
 
-          // @ts-ignore
-          const newCode = payload.new.code_state;
-          dispatchCode({
-            type: "UPDATE_CODE",
-            payload: newCode,
-          });
-        }
-      );
+    //       // @ts-ignore
+    //       const newCode = payload.new.code_state;
+    //       dispatchCode({
+    //         type: "UPDATE_CODE",
+    //         payload: newCode,
+    //       });
+    //     }
+    //   );
 
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {

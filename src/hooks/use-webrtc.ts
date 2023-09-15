@@ -30,21 +30,17 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
 
     // TODO:
     realTimeRef.current.on("presence", { event: "sync" }, () => {
-      const usersCount = Object.values(
+      const userCount = Object.values(
         realTimeRef.current!.presenceState()
       ).length;
 
-      if (usersCount === 1) {
+      if (userCount === 1) {
         // when subscribing, if you are the first member, you are the host
         host.current = true;
-        // toast("You are the host!");
       }
 
       // example only supports 2 users per call
-      else if (usersCount > 2) {
-        // 3rd+ person joining will get sent back home
-        // toast.error("Room already full.");
-        // router.push("/");
+      else if (userCount > 2) {
         return;
       }
       handleRoomJoined();

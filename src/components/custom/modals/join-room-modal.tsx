@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Modal from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,10 +26,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
 import { DEFAULT_ROOM_ID } from "@/lib/constant";
 import { Badge } from "@/components/ui/badge";
-import { Dices } from "lucide-react";
+import { Dices, Loader2 } from "lucide-react";
 import { faker } from "@faker-js/faker";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import supabaseClient from "@/lib/supa-client";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
@@ -46,9 +47,11 @@ const joinRoomSchemaFrontend = z.object({
 });
 
 const JoinRoomModal: FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isOpen, setOpen, setClose } = useJoinRoomModal();
   const { toast: debugToast } = useToast();
   const router = useRouter();
+  const supaClient = supabaseClient;
 
   const form = useForm<z.infer<typeof joinRoomSchemaFrontend>>({
     resolver: zodResolver(joinRoomSchemaFrontend),
@@ -58,14 +61,29 @@ const JoinRoomModal: FC = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof joinRoomSchemaFrontend>) => {
-    debugToast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // debugToast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
+
+    // Check if room is full
+    const { data } = await supaClient
+      .from("interview_rooms")
+      .select("*")
+      .eq("room_id", values.roomId);
+
+    const { participants } = data![0];
+
+    const userCount = Object.keys(participants!).length;
+
+    if (userCount >= 2) {
+      toast.error("Room already full. :(")
+      return;
+    }
 
     toast.success("Wallah! Redirecting you to it!");
     router.push({
@@ -74,7 +92,13 @@ const JoinRoomModal: FC = () => {
         userName: values.userName,
       },
     });
-    setClose();
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      setClose();
+    }, 500);
   };
 
   return (
@@ -161,11 +185,13 @@ const JoinRoomModal: FC = () => {
               )}
             />
             <Button
+              disabled={isLoading}
               className="w-full"
               type="submit"
               onSubmit={(e) => e.preventDefault()}
             >
               Proceed
+              {!!isLoading && <Loader2 className="ml-2 animate-spin" />}
             </Button>
           </div>
         </form>

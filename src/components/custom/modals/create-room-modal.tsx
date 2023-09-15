@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ import { Badge } from "@/components/ui/badge";
 
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
-import { Dices } from "lucide-react";
+import { Dices, Loader2 } from "lucide-react";
 import { faker } from "@faker-js/faker";
 import { useRouter } from "next/router";
 
@@ -56,6 +56,7 @@ const createRoomSchemaFrontend = z.object({
 });
 
 const CreateRoomModal: FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isOpen, setClose } = useCreateRoomModal();
   const { toast: debugToast } = useToast();
   const router = useRouter();
@@ -99,7 +100,13 @@ const CreateRoomModal: FC = () => {
         userName: values.userName,
       },
     });
-    setClose();
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      setClose();
+    }, 500);
   };
 
   return (
@@ -211,20 +218,6 @@ const CreateRoomModal: FC = () => {
                                   </div>
                                 </FormLabel>
                               </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="behavioral" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  <div className="flex items-center space-x-2">
-                                    <GiTalk className="text-2xl transition-colors hover:text-green-600" />
-                                    <Label htmlFor="r3">
-                                      Behavioral / Communication
-                                    </Label>
-                                    <Badge variant="caution">WIP</Badge>
-                                  </div>
-                                </FormLabel>
-                              </FormItem>
                             </RadioGroup>
                           </FormControl>
                           <FormMessage />
@@ -300,7 +293,9 @@ const CreateRoomModal: FC = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <Button type="submit">Proceed</Button>
+            <Button type="submit" disabled={isLoading}>
+              Proceed {!!isLoading && <Loader2 className="ml-2 animate-spin" />}
+            </Button>
           </div>
         </form>
       </Form>

@@ -169,10 +169,10 @@ const NotionLikeEditor: FC<{
       <Popover>
         <PopoverTrigger className="z-40" asChild>
           <Button className="fixed shadow bottom-6 right-6 shadow-white">
-            Change question
+            Questions
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="fixed bottom-12 -right-20 shadow-black drop-shadow">
+        <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow">
           <ul>
             {getAllAlgoQuestions().map((question) => (
               <li key={question.id} className="px-2 rounded-lg">
