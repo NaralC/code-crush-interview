@@ -13,7 +13,7 @@ Essential:
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
 - Interviewer/interviewee roles:
-    - Role swap
+    - Role swap ▶
     - Pick questions/hints/follow-ups ✅
 
 Should haves:
@@ -21,7 +21,7 @@ Should haves:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file
     - Interview timer
-    - Edit room name
+    - Edit room name ▶
     - Live cursors ✅
     - Being able to end an interview
     - Status: ongoing/finished
