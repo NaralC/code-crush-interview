@@ -1,19 +1,24 @@
+import { FC, MutableRefObject, useCallback, useEffect, useRef } from "react";
 import {
-  FC,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import toast from "react-hot-toast";
 import { EVENT } from "@/lib/constant";
 import { useNoteStore } from "@/stores/note-store";
+import { Button } from "@/components/ui/button";
+import { getAlgoQuestionById, getAllAlgoQuestions } from "@/lib/questions";
+import { CornerDownRight, FileQuestion } from "lucide-react";
+import { useHintSolutionModal } from "@/hooks/modals/use-hint-solution-modal";
 
 const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
+  // Modal
+  const { setBody, setOpen, setType } = useHintSolutionModal();
+
   // Editor State
   const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteStore(
     (state) => ({
@@ -142,8 +147,68 @@ const NotionLikeEditor: FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorIsMounted, initializeEditor]);
 
+  const handleChangeQuestion = async (id: string) => {
+    const question = getAlgoQuestionById(id);
+
+    if (!question) {
+      toast.error("Question not found.");
+    }
+
+    editorRef.current!.render(question?.body);
+  };
+
   return (
     <div className="w-full h-full overflow-y-auto grow">
+      <Popover>
+        <PopoverTrigger className="z-40" asChild>
+          <Button className="fixed shadow bottom-6 right-6 shadow-white">
+            Change question
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="fixed bottom-12 -right-20 shadow-black drop-shadow">
+          <ul>
+            {getAllAlgoQuestions().map((question) => (
+              <li key={question.id} className="px-2 rounded-lg">
+                <div className="flex flex-row">
+                  <FileQuestion />
+                  {question.title}
+                </div>
+                <div
+                  className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                  onClick={() => {
+                    handleChangeQuestion(question.id);
+                  }}
+                >
+                  <CornerDownRight className="p-1" />
+                  Put Question in Editor
+                </div>
+                <div
+                  className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                  onClick={() => {
+                    setType("hints");
+                    setBody(question.hints);
+                    setOpen();
+                  }}
+                >
+                  <CornerDownRight className="p-1" />
+                  Show Hint(s)
+                </div>
+                <div
+                  className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                  onClick={() => {
+                    setType("solution");
+                    setBody(question.solution);
+                    setOpen();
+                  }}
+                >
+                  <CornerDownRight className="p-1" />
+                  Show Solution
+                </div>
+              </li>
+            ))}
+          </ul>
+        </PopoverContent>
+      </Popover>
       <div className="prose text-white prose-stone dark:prose-invert">
         <div
           id="editor"

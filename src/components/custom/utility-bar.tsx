@@ -79,7 +79,7 @@ const UtilityBar: FC<{
   return (
     <div className="z-10 flex flex-row justify-between w-full px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-900 h-14">
       <div>{roomName}</div>
-      <div>
+      {/* <div>
         Online users:
         {Object.keys(usersList).map((player) => {
           const { name } = usersList[player]
@@ -90,7 +90,7 @@ const UtilityBar: FC<{
             </div>
           );
         })}
-      </div>
+      </div> */}
       <div className="flex gap-3">
         <Select
           value={codeState.language}

@@ -21,7 +21,8 @@ Should haves:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file
     - Interview timer
-    - Live cursors ▶
+    - Edit room name
+    - Live cursors ✅
     - Being able to end an interview
     - Status: ongoing/finished
     - UI: codeinterview.io / Pramp style

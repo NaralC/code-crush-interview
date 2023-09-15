@@ -15,3 +15,16 @@ type UsersList = {
     };
   };
 };
+
+type Question = {
+  id: string;
+  title: string;
+  body: any;
+  hints: string;
+  solution: string;
+  // body: {
+  //   time: string,
+  //   version: string,
+  //   blocks: any[]
+  // }
+};
