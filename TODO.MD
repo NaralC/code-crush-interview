@@ -13,8 +13,8 @@ Essential:
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
 - Interviewer/interviewee roles:
-    - Pick questions/hints/follow-ups
-- Questions pool (hints/solutions) 
+    - Role swap
+    - Pick questions/hints/follow-ups ✅
 
 Should haves:
 - Coding page:

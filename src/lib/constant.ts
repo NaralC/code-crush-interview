@@ -7,6 +7,7 @@ export const EVENT = {
   MOUSE_UPDATE: "mouse-update",
   COMPILE_UPDATE: "compile-update",
   SAVE_UPDATE: "save-update",
+  HINT_SOLUTION_SHOW: "hint-solution-show",
   CLIENT_READY: "client-ready",
   CLIENT_OFFER: "client-offer",
   CLIENT_ANSWER: "client-answer",

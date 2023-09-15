@@ -28,3 +28,5 @@ type Question = {
   //   blocks: any[]
   // }
 };
+
+type HintsOrSolution = "hints" | "solution";

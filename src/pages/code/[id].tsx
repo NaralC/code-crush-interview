@@ -16,7 +16,7 @@ import { EVENT } from "@/lib/constant";
 import AudioVideoCall from "@/components/custom/audio-video-call";
 import useWebRTC from "@/hooks/use-webrtc";
 import { useCodeStore } from "@/stores/code-store";
-import HintSolutionModal from "@/components/custom/modals/hint-solution-modal";
+import HintsSolutionModal from "@/components/custom/modals/hints-solution-modal";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -57,9 +57,7 @@ const CodingPage: NextPage<{
   // States
   const { realTimeRef, userId } = useRealTime(roomId, userName);
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const { dispatchCode } = useCodeStore((state) => ({
-    dispatchCode: state.dispatchCode,
-  }));
+  const { dispatchCode } = useCodeStore();
   const { x, y } = useMousePosition();
   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
 
@@ -86,9 +84,7 @@ const CodingPage: NextPage<{
       </Head>
       <main
         className="flex flex-col w-full h-screen"
-        onMouseMove={() => {
-          sendMousePosition();
-        }}
+        onMouseMove={sendMousePosition}
       >
         <Cursors realTimeRef={realTimeRef} />
         <UtilityBar realTimeRef={realTimeRef} roomName={roomName} />
@@ -109,7 +105,7 @@ const CodingPage: NextPage<{
         /> */}
       </main>
 
-      <HintSolutionModal />
+      <HintsSolutionModal />
     </>
   );
 };

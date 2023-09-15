@@ -11,13 +11,13 @@ import { useNoteStore } from "@/stores/note-store";
 import { Button } from "@/components/ui/button";
 import { getAlgoQuestionById, getAllAlgoQuestions } from "@/lib/questions";
 import { CornerDownRight, FileQuestion } from "lucide-react";
-import { useHintSolutionModal } from "@/hooks/modals/use-hint-solution-modal";
+import { useHintsSolutionModal } from "@/hooks/modals/use-hint-solution-modal";
 
 const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Modal
-  const { setBody, setOpen, setType } = useHintSolutionModal();
+  const { setBody, setOpen, setType } = useHintsSolutionModal();
 
   // Editor State
   const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteStore(
@@ -127,7 +127,7 @@ const NotionLikeEditor: FC<{
         (payload) => {
           try {
             if (payload.payload.message.blocks.length < 1) return;
-            toast("notes changed!");
+            // toast("notes changed!");
             editorRef.current?.render(payload.payload.message);
           } catch (error) {
             toast.error((error as Error).message);
@@ -155,6 +155,13 @@ const NotionLikeEditor: FC<{
     }
 
     editorRef.current!.render(question?.body);
+    realTimeRef.current?.send({
+      type: "broadcast",
+      event: EVENT.NOTE_UPDATE,
+      payload: {
+        message: { ...question?.body },
+      },
+    });
   };
 
   return (
@@ -188,6 +195,12 @@ const NotionLikeEditor: FC<{
                     setType("hints");
                     setBody(question.hints);
                     setOpen();
+
+                    realTimeRef.current?.send({
+                      type: "broadcast",
+                      event: EVENT.HINT_SOLUTION_SHOW,
+                      payload: { type: "hints", body: question.hints },
+                    });
                   }}
                 >
                   <CornerDownRight className="p-1" />
@@ -199,6 +212,12 @@ const NotionLikeEditor: FC<{
                     setType("solution");
                     setBody(question.solution);
                     setOpen();
+
+                    realTimeRef.current?.send({
+                      type: "broadcast",
+                      event: EVENT.HINT_SOLUTION_SHOW,
+                      payload: { type: "solution", body: question.solution },
+                    });
                   }}
                 >
                   <CornerDownRight className="p-1" />

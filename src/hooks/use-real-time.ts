@@ -7,9 +7,10 @@ import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
-import { Position } from "monaco-editor";
+import { useHintsSolutionModal } from "./modals/use-hint-solution-modal";
 
 const useRealTime = (roomId: string, name: string) => {
+  const { setOpen, setType, setBody } = useHintsSolutionModal();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
 
   // States
@@ -132,6 +133,22 @@ const useRealTime = (roomId: string, name: string) => {
             type: "SET_IS_SAVING",
             payload: status,
           });
+        }
+      )
+      .on(
+        "broadcast",
+        { event: EVENT.HINT_SOLUTION_SHOW }, // Filtering events
+        ({
+          payload,
+        }: Payload<{
+          type: HintsOrSolution;
+          body: any;
+        }>) => {
+          const { type, body } = payload!;
+
+          setOpen();
+          setType(type);
+          setBody(body);
         }
       );
 

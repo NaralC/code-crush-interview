@@ -5,16 +5,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { FC, MutableRefObject, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
-import { Loader2, PlayCircle, Save } from "lucide-react";
-import { TbDeviceDesktopCode } from "react-icons/tb";
+import { CornerDownRight, Loader2, PlayCircle, Save } from "lucide-react";
 import useCompileCode from "@/hooks/use-compile-code";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import useSaveCode from "@/hooks/use-save-code";
 import { EVENT } from "@/lib/constant";
 import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const UtilityBar: FC<{
   roomName: string;
@@ -76,21 +82,25 @@ const UtilityBar: FC<{
     }
   }, [asyncState.isCompiling]);
 
+  // const 
+
   return (
     <div className="z-10 flex flex-row justify-between w-full px-3 py-2 text-white border-b-2 border-zinc-500 bg-slate-900 h-14">
-      <div>{roomName}</div>
-      {/* <div>
-        Online users:
-        {Object.keys(usersList).map((player) => {
-          const { name } = usersList[player]
+      <Popover>
+        <PopoverTrigger>
+          <div>{roomName}</div>
+        </PopoverTrigger>
+        <PopoverContent className="space-y-2 translate-x-5">
+          <Label className="text-base" htmlFor="roomName">
+            Change room name?
+          </Label>
+          <div className="relative flex">
+            <Input id="roomName" placeholder={roomName} />
+            <CornerDownRight className="absolute top-2 right-3 hover:cursor-pointer" />
+          </div>
+        </PopoverContent>
+      </Popover>
 
-          return (
-            <div className="inline-flex ml-2" key={name}>
-              {player}
-            </div>
-          );
-        })}
-      </div> */}
       <div className="flex gap-3">
         <Select
           value={codeState.language}

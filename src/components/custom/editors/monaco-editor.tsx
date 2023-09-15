@@ -61,7 +61,7 @@ const MonacoEditor: FC<{
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
     <>
-      <Button
+      {/* <Button
         variant="outline"
         className="fixed inset-x-0 z-50 left-6 bottom-6 w-28"
         onClick={() => {
@@ -78,10 +78,9 @@ const MonacoEditor: FC<{
         }}
       >
         Show users list
-      </Button>
+      </Button> */}
       <Button
-        variant="outline"
-        className="fixed inset-x-0 z-50 left-[265px] bottom-6 w-28"
+        className="fixed shadow bottom-6 right-44 shadow-white"
         onClick={() =>
           dispatchConsole({
             type: "SET_CONSOLE_VISIBLE",
@@ -89,7 +88,7 @@ const MonacoEditor: FC<{
           })
         }
       >
-        Show output tab
+        Show console
       </Button>
       <Editor
         className={cn(

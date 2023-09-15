@@ -1,7 +1,5 @@
 import { create } from "zustand";
 
-type HintsOrSolution = "hints" | "solution";
-
 interface HintSolutionModal {
   isOpen: boolean;
   setOpen: () => void;
@@ -12,7 +10,7 @@ interface HintSolutionModal {
   setType: (newType: HintsOrSolution) => void;
 }
 
-export const useHintSolutionModal = create<HintSolutionModal>((set) => ({
+export const useHintsSolutionModal = create<HintSolutionModal>((set) => ({
   isOpen: false,
   setOpen: () => set({ isOpen: true }),
   setClose: () => set({ isOpen: false }),

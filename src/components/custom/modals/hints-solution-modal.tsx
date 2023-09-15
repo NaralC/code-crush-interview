@@ -1,9 +1,9 @@
 import { FC } from "react";
 import Modal from "@/components/ui/modal";
-import { useHintSolutionModal } from "@/hooks/modals/use-hint-solution-modal";
+import { useHintsSolutionModal } from "@/hooks/modals/use-hint-solution-modal";
 
-const HintSolutionModal: FC = () => {
-  const { isOpen, setClose, body, type } = useHintSolutionModal();
+const HintsSolutionModal: FC = () => {
+  const { isOpen, setClose, body, type } = useHintsSolutionModal();
 
   return (
     <Modal
@@ -16,4 +16,4 @@ const HintSolutionModal: FC = () => {
   );
 };
 
-export default HintSolutionModal;
+export default HintsSolutionModal;

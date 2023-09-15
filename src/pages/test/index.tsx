@@ -10,8 +10,8 @@ const TestPage: NextPage = () => {
         "flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100 text-white bg-black "
       )}
     >
-      <SackpackEditor />
-      {/* <MySandpack /> */}
+      {/* <SackpackEditor /> */}
+      <MySandpack />
     </main>
   );
 };

@@ -37,7 +37,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       if (usersCount === 1) {
         // when subscribing, if you are the first member, you are the host
         host.current = true;
-        toast("You are the host!");
+        // toast("You are the host!");
       }
 
       // example only supports 2 users per call
