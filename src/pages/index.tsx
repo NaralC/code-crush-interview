@@ -2,14 +2,13 @@ import Head from "next/head";
 import { NextPage } from "next";
 import { Bird, Code2, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Overlay from "@/components/custom/landing/overlay";
 import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
 import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import BackgroundParticles from "@/components/custom/landing/background-particles";
+import BackgroundParticles from "@/components/custom/background-particles";
 
 const Home: NextPage = () => {
   // Modals & Toast
@@ -42,8 +41,8 @@ const Home: NextPage = () => {
           animation ? "text-white" : ""
         )}
       >
-        <p className="text-6xl font-bold text-center md:text-8xl">Code Crush</p>
-        <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance">
+        <p className="text-6xl font-bold text-center md:text-8xl text-shadow-2xl">Code Crush</p>
+        <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance text-shadow-2xl">
           Interviewing — the ultimate leverage for career progression. Practice now.
         </p>
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
@@ -73,8 +72,6 @@ const Home: NextPage = () => {
           </Button>
         </div>
 
-        {/* Background Stuff */}
-        <Overlay />
         <BackgroundParticles />
       </main>
     </>

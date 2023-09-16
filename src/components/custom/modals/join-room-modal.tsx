@@ -78,11 +78,13 @@ const JoinRoomModal: FC = () => {
 
     const { participants } = data![0];
 
-    const userCount = Object.keys(participants!).length;
+    if (participants) {
+      const userCount = Object.keys(participants!).length;
 
-    if (userCount >= 2) {
-      toast.error("Room already full. :(")
-      return;
+      if (userCount >= 2) {
+        toast.error("Room already full. :(");
+        return;
+      }
     }
 
     toast.success("Wallah! Redirecting you to it!");

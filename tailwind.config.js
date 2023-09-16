@@ -6,7 +6,7 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -72,7 +72,11 @@ module.exports = {
         "sliding-img-up-2": "sliding-img-up-2 15s linear infinite",
         "blob": "blob 7s infinite"
       },
+      textShadow: {
+        '2xl': '0 0 10px rgba(255, 255, 255, 0.8), 0 0 1px rgba(255, 255, 255, 0.9)',
+        '3xl': '0 0 20px rgba(255, 255, 255, 0.8), 0 0 3px rgba(255, 255, 255, 0.9)'
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require('tailwindcss-textshadow')],
 }
