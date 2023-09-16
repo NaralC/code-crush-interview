@@ -8,9 +8,12 @@ import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 import { useHintsSolutionModal } from "./modals/use-hint-solution-modal";
-import { useRouter } from "next/router";
 
-const useRealTime = (roomId: string, name: string) => {
+const useRealTime = (
+  roomId: string,
+  name: string,
+  setRoomName: (newName: string) => void
+) => {
   const { setOpen, setType, setBody } = useHintsSolutionModal();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
   const supaClient = supabaseClient;
@@ -193,54 +196,23 @@ const useRealTime = (roomId: string, name: string) => {
           })
           .eq("room_id", roomId)
           .select();
-        console.log(transformedState);
       });
 
     // Postgres changes
-    // channel
-    //   .on(
-    //     "postgres_changes",
-    //     {
-    //       event: "*",
-    //       schema: "public",
-    //     },
-    //     (payload) => {
-    //       console.log(payload);
-    //       toast("schema-db-changes");
-    //     }
-    //   )
-    //   .on(
-    //     "postgres_changes",
-    //     {
-    //       event: "*",
-    //       schema: "public",
-    //       table: "interview_rooms",
-    //     },
-    //     (payload) => {
-    //       console.log(payload);
-    //       toast("table-db-changes");
-    //     }
-    //   )
-    //   .on(
-    //     "postgres_changes",
-    //     {
-    //       event: "*",
-    //       schema: "public",
-    //       table: "interview_rooms",
-    //       filter: `room_id=eq.${roomId}`,
-    //     },
-    //     (payload) => {
-    //       console.log(payload);
-    //       toast("table-filter-changes");
-
-    //       // @ts-ignore
-    //       const newCode = payload.new.code_state;
-    //       dispatchCode({
-    //         type: "UPDATE_CODE",
-    //         payload: newCode,
-    //       });
-    //     }
-    //   );
+    channel.on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "interview_rooms",
+        filter: `room_id=eq.${roomId}`,
+      },
+      (payload) => {
+        // @ts-ignore
+        const { name } = payload["new"];
+        setRoomName(name);
+      }
+    );
 
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {

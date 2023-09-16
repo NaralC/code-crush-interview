@@ -1,5 +1,4 @@
-import ModalProvider from "@/components/providers/modal-provider";
-import { ToastProvider } from "@/components/providers/toast-provider";
+import { ToastProvider } from "@/components/custom/toast-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -20,7 +19,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={inter.className}>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
-        <ModalProvider />
         <ToastProvider />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

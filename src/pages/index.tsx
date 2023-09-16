@@ -9,6 +9,9 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import BackgroundParticles from "@/components/custom/background-particles";
+import CreateRoomModal from "@/components/custom/modals/create-room-modal";
+import FeedbackModal from "@/components/custom/modals/feedback-modal";
+import JoinRoomModal from "@/components/custom/modals/join-room-modal";
 
 const Home: NextPage = () => {
   // Modals & Toast
@@ -41,9 +44,12 @@ const Home: NextPage = () => {
           animation ? "text-white" : ""
         )}
       >
-        <p className="text-6xl font-bold text-center md:text-8xl text-shadow-2xl">Code Crush</p>
+        <p className="text-6xl font-bold text-center md:text-8xl text-shadow-2xl">
+          Code Crush
+        </p>
         <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance text-shadow-2xl">
-          Interviewing — the ultimate leverage for career progression. Practice now.
+          Interviewing — the ultimate leverage for career progression. Practice
+          now.
         </p>
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
           <Button
@@ -72,6 +78,9 @@ const Home: NextPage = () => {
           </Button>
         </div>
 
+        <CreateRoomModal />
+        <JoinRoomModal />
+        <FeedbackModal />
         <BackgroundParticles />
       </main>
     </>

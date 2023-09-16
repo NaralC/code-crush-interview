@@ -97,10 +97,10 @@ const JoinRoomModal: FC = () => {
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      setClose();
-    }, 500);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   setClose();
+    // }, 500);
   };
 
   return (

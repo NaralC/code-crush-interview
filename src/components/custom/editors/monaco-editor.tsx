@@ -80,7 +80,7 @@ const MonacoEditor: FC<{
         Show users list
       </Button> */}
       <Button
-        className="fixed shadow bottom-6 right-36 shadow-white"
+        className="fixed z-40 shadow bottom-6 right-36 shadow-white"
         onClick={() =>
           dispatchConsole({
             type: "SET_CONSOLE_VISIBLE",

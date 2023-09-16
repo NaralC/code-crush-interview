@@ -8,31 +8,32 @@ const Cursors: FC<{
 }> = ({ realTimeRef }) => {
   const { otherUsers, setOtherUsers } = useUsersStore();
 
-  realTimeRef.current?.on(
-    "broadcast",
-    { event: EVENT.MOUSE_UPDATE },
-    ({
-      payload,
-    }: Payload<{
-      x: number;
-      y: number;
-      userName: string;
-      userId: string;
-    }>) => {
-      const { x, y, userId } = payload!;
-      const copy = {...otherUsers}
+  realTimeRef.current
+    ?.on(
+      "broadcast",
+      { event: EVENT.MOUSE_UPDATE },
+      ({
+        payload,
+      }: Payload<{
+        x: number;
+        y: number;
+        userName: string;
+        userId: string;
+      }>) => {
+        const { x, y, userId } = payload!;
+        const copy = { ...otherUsers };
 
-      copy[userId] = {
-        ...otherUsers[userId],
-        cursor: {
-          x: (x ?? 0) - 25 > window.innerWidth ? window.innerWidth - 25 : x,
-          y: (y ?? 0 - 35) > window.innerHeight ? window.innerHeight - 35 : y,
-        },
+        copy[userId] = {
+          ...otherUsers[userId],
+          cursor: {
+            x: (x ?? 0) - 25 > window.innerWidth ? window.innerWidth - 25 : x,
+            y: (y ?? 0 - 35) > window.innerHeight ? window.innerHeight - 35 : y,
+          },
+        };
+
+        setOtherUsers(copy);
       }
-      
-      setOtherUsers(copy)
-    }
-  );
+    )
 
   return (
     <>
@@ -40,7 +41,7 @@ const Cursors: FC<{
         const { name: username, cursor } = otherUsers[userId];
 
         if (!cursor) return <></>;
-        
+
         return (
           <Fragment key={userId}>
             <svg
