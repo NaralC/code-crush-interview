@@ -1,7 +1,7 @@
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useMemo, useRef } from "react";
+import { MutableRefObject, useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
@@ -12,7 +12,7 @@ import { useHintsSolutionModal } from "./modals/use-hint-solution-modal";
 const useRealTime = (
   roomId: string,
   name: string,
-  setRoomName: (newName: string) => void
+  setRoomName: (newName: string) => void,
 ) => {
   const { setOpen, setType, setBody } = useHintsSolutionModal();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
@@ -23,7 +23,7 @@ const useRealTime = (
     useCodeStore();
 
   // States
-  const { setOtherUsers, otherUsers } = useUsersStore();
+  const { setOtherUsers, latestRoleRef } = useUsersStore();
   const editorRef = useNoteStore((state) => state.editorRef);
 
   // Refs and Utils
@@ -52,7 +52,7 @@ const useRealTime = (
             message: string;
           }>
         ) => {
-          toast(String(payload.payload?.message));
+          // toast(String(payload.payload?.message));
 
           // Send the latest code and note state to the new comer
           channel.send({
@@ -150,8 +150,8 @@ const useRealTime = (
           setType(type);
           setBody(body);
         }
-      );
-
+      )
+      
     // Presence
     channel
       .on("presence", { event: "sync" }, async () => {
@@ -176,6 +176,14 @@ const useRealTime = (
       })
       .on("presence", { event: "join" }, ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
+
+        channel.send({
+          type: "broadcast",
+          event: EVENT.ROLE_SWAP,
+          payload: {
+            role: latestRoleRef.current,
+          },
+        });
       })
       .on("presence", { event: "leave" }, async ({ leftPresences }) => {
         toast.error(`${leftPresences[0]["name"]} just left!`);
@@ -222,7 +230,7 @@ const useRealTime = (
           online_at: new Date().toISOString(),
         });
 
-        toast("Fetching code state from other players...");
+        // toast("Fetching code state from other players...");
 
         // Request the latest code state from other users
         channel.send({

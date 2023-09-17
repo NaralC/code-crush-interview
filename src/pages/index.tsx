@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { NextPage } from "next";
-import { Bird, Code2, Paperclip } from "lucide-react";
+import { Code2, Globe2, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
 import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
@@ -74,7 +74,19 @@ const Home: NextPage = () => {
             }}
           >
             <Paperclip className="mr-2" />
-            Join a Room
+            Join a Room by ID
+          </Button>
+          <Button
+            className={cn(
+              "ring-1 ring-zinc-50/25 filter",
+              animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
+            )}
+            // onClick={() => {
+            //   joinRoomModal.setOpen();
+            // }}
+          >
+            <Globe2 className="mr-2" />
+            Browse Rooms
           </Button>
         </div>
 

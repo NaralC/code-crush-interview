@@ -1,4 +1,4 @@
-import * as Reducer from "@/lib/reducers/code-context-reducer";
+import * as Reducer from "@/lib/reducers";
 import { Dispatch, MutableRefObject, createRef } from "react";
 import { create } from "zustand";
 

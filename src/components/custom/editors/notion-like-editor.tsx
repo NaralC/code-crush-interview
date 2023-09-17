@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { getAlgoQuestionById, getAllAlgoQuestions } from "@/lib/questions";
 import { CornerDownRight, FileQuestion } from "lucide-react";
 import { useHintsSolutionModal } from "@/hooks/modals/use-hint-solution-modal";
+import { useUsersStore } from "@/stores/users-store";
 
 const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
@@ -27,6 +28,7 @@ const NotionLikeEditor: FC<{
       setEditorIsMounted: state.setEditorIsMounted,
     })
   );
+  const { latestRoleRef } = useUsersStore();
 
   const initializeEditor = useCallback(async () => {
     // Check out more here: https://github.com/editor-js/awesome-editorjs#tools
@@ -166,9 +168,9 @@ const NotionLikeEditor: FC<{
 
   return (
     <div className="w-full h-full overflow-y-auto grow">
-      <Popover>
+      {latestRoleRef.current === "interviewer" && <Popover>
         <PopoverTrigger className="z-40" asChild>
-          <Button className="fixed shadow bottom-6 right-6 shadow-white">
+          <Button className="fixed shadow bottom-6 right-40 shadow-white">
             Questions
           </Button>
         </PopoverTrigger>
@@ -227,7 +229,7 @@ const NotionLikeEditor: FC<{
             ))}
           </ul>
         </PopoverContent>
-      </Popover>
+      </Popover>}
       <div className="prose text-white prose-stone dark:prose-invert">
         <div
           id="editor"

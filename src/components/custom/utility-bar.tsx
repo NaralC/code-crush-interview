@@ -25,6 +25,7 @@ import {
   Loader2,
   PlayCircle,
   Save,
+  Users2,
 } from "lucide-react";
 import useCompileCode from "@/hooks/use-compile-code";
 import { RealtimeChannel } from "@supabase/supabase-js";
@@ -35,6 +36,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import supabaseClient from "@/lib/supa-client";
 import toast from "react-hot-toast";
+import { useUsersStore } from "@/stores/users-store";
 
 const UtilityBar: FC<{
   roomName: string;
@@ -44,9 +46,9 @@ const UtilityBar: FC<{
   const supaClient = supabaseClient;
   const [roomNameInput, setRoomNameInput] = useState<string>("");
   const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore();
-
   const { handleCompile } = useCompileCode();
   const { handleSave } = useSaveCode();
+  const { setRole, role, latestRoleRef } = useUsersStore();
 
   useEffect(() => {
     if (asyncState.isSaving) {
@@ -90,6 +92,22 @@ const UtilityBar: FC<{
       });
     }
   }, [asyncState.isCompiling]);
+
+  realTimeRef.current?.on(
+    "broadcast",
+    { event: EVENT.ROLE_SWAP }, // Filtering events
+    ({
+      payload,
+    }: Payload<{
+      role: Roles;
+    }>) => {
+      const { role } = payload!;
+
+      if (!role) return;
+      
+      setRole(role === "interviewee" ? "interviewer" : "interviewee");
+    }
+  );
 
   const handleChangeRoomName = async (e: FormEvent) => {
     e.preventDefault();
@@ -156,6 +174,31 @@ const UtilityBar: FC<{
             ))}
           </SelectContent>
         </Select>
+        <Button
+          // disabled={asyncState.isCompiling}
+          variant="secondary"
+          onClick={() => {
+            setRole(role === "interviewee" ? "interviewer" : "interviewee");
+
+            realTimeRef.current?.send({
+              type: "broadcast",
+              event: EVENT.ROLE_SWAP,
+              payload: {
+                role: latestRoleRef.current
+              },
+            });
+          }}
+        >
+          <div className="hidden text-sm md:block">
+            <div>Swap Roles</div>
+            <div className="text-xs text-gray-500 capitalize">{latestRoleRef.current}</div>
+          </div>
+          {false ? (
+            <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
+          ) : (
+            <Users2 className="md:ml-1 md:-mr-1" />
+          )}
+        </Button>
         <Button
           disabled={asyncState.isCompiling}
           variant="secondary"

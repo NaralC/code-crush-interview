@@ -1,22 +1,28 @@
+// Components
 import Cursors from "@/components/custom/cursors";
 import MonacoEditor from "@/components/custom/editors/monaco-editor";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 import OutputConsole from "@/components/custom/output-console";
 import UtilityBar from "@/components/custom/utility-bar";
-import useMousePosition from "@/hooks/use-mouse-position";
+import Split from "react-split";
+import HintsSolutionModal from "@/components/custom/modals/hints-solution-modal";
+import AudioVideoCall from "@/components/custom/audio-video-call";
+
+// Next.js/React stuff
+import { MutableRefObject, createRef, useEffect, useState } from "react";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import Split from "react-split";
+
+// Hooks and Utility
+import useMousePosition from "@/hooks/use-mouse-position";
 import useRealTime from "@/hooks/use-real-time";
+import useWebRTC from "@/hooks/use-webrtc";
 import throttle from "lodash.throttle";
 import { EVENT } from "@/lib/constant";
-import AudioVideoCall from "@/components/custom/audio-video-call";
-import useWebRTC from "@/hooks/use-webrtc";
 import { useCodeStore } from "@/stores/code-store";
-import HintsSolutionModal from "@/components/custom/modals/hints-solution-modal";
+import { useUsersStore } from "@/stores/users-store";
+import { initialCodeState } from "@/lib/reducers";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -69,11 +75,13 @@ const CodingPage: NextPage<{
 }> = ({ initialCodeState, roomId, roomName: initialRoomName, userName }) => {
   // States
   const [roomName, setRoomName] = useState<string>(initialRoomName);
-  const { realTimeRef, userId } = useRealTime(roomId, userName, (newName) => setRoomName(newName));
+  const { realTimeRef, userId } = useRealTime(roomId, userName, (newName) =>
+    setRoomName(newName)
+  );
+  const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const { dispatchCode } = useCodeStore();
   const { x, y } = useMousePosition();
-  const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
 
   const sendMousePosition = throttle(() => {
     realTimeRef.current?.send({

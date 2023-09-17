@@ -26,8 +26,6 @@ const MonacoEditor: FC<{
     })
   );
 
-  const { otherUsers } = useUsersStore();
-
   // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
   const monacoRef = useRef<Monaco | null>(null); // for editor instance
@@ -61,26 +59,8 @@ const MonacoEditor: FC<{
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
     <>
-      {/* <Button
-        variant="outline"
-        className="fixed inset-x-0 z-50 left-6 bottom-6 w-28"
-        onClick={() => {
-          alert(editorRef.current?.getValue());
-        }}
-      >
-        Show value
-      </Button>
       <Button
-        variant="outline"
-        className="fixed inset-x-0 z-50 left-36 bottom-6 w-28"
-        onClick={() => {
-          alert(JSON.stringify(otherUsers));
-        }}
-      >
-        Show users list
-      </Button> */}
-      <Button
-        className="fixed z-40 shadow bottom-6 right-36 shadow-white"
+        className="fixed z-40 shadow bottom-6 right-6 shadow-white"
         onClick={() =>
           dispatchConsole({
             type: "SET_CONSOLE_VISIBLE",

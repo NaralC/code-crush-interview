@@ -39,11 +39,6 @@ const joinRoomSchemaFrontend = z.object({
   userName: z.string({
     required_error: "Name cannot be empty",
   }),
-  role: z
-    .enum(["interviewer", "interviewee", "spectator"], {
-      required_error: "You need to pick a role.",
-    })
-    .optional(),
 });
 
 const JoinRoomModal: FC = () => {
@@ -127,34 +122,6 @@ const JoinRoomModal: FC = () => {
                     <FormMessage />
                   </FormItem>
                 </>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Your Role <Badge variant="caution">WIP</Badge>
-                  </FormLabel>
-                  <Select
-                    // @ts-ignore
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="interviewer">Interviewer</SelectItem>
-                      <SelectItem value="interviewee">Interviewee</SelectItem>
-                      <SelectItem value="spectator">Spectator</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
               )}
             />
             <FormField

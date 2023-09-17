@@ -13,20 +13,21 @@ Essential:
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
 - Interviewer/interviewee roles:
-    - Role swap ▶
+    - Role swap ✅
     - Pick questions/hints/follow-ups ✅
 
 Should haves:
+- Browse and join a public room
+- Question pool:
+    - Put questions in DB
+    - Functionality to CRUD questions
 - Coding page:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file
     - Interview timer
-    - Edit room name ▶
+    - Edit room name ✅
     - Live cursors ✅
-    - Being able to end an interview
-    - Status: ongoing/finished
-    - UI: codeinterview.io / Pramp style
-    - Options: password lock, dim avatar when leaving page, delete room after inactivity
+    - Being able to end an interview (status: ongoing/finished)
+    - Password lock
 - FE interview
-- Feedback from peer (SQL)
 - Video/audio device settings
