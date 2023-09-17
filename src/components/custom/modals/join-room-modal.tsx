@@ -66,12 +66,17 @@ const JoinRoomModal: FC = () => {
     // });
 
     // Check if room is full
-    const { data } = await supaClient
+    const { data, error } = await supaClient
       .from("interview_rooms")
-      .select("*")
+      .select()
       .eq("room_id", values.roomId);
 
-    const { participants } = data![0];
+    if (!data || !data.length || error) {
+      toast.error("Room doesn't exist :(")
+      return;
+    }
+
+    const { participants } = data[0];
 
     if (participants) {
       const userCount = Object.keys(participants!).length;

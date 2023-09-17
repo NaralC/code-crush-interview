@@ -22,18 +22,24 @@ export default async function handler(
     const { roomName, userName } = JSON.parse(req.body);
     const roomId = uuidv4();
 
-    const { error } = await supabaseServerClient
+    const { data, error } = await supabaseServerClient
       .from("interview_rooms")
       .insert({
         room_id: roomId,
         code_state: "",
         created_at: new Date().toISOString(),
-        creator: userName,
         participants: {},
         description: faker.company.catchPhrase(),
         name: roomName,
         type: "ds_algo",
-      });
+      })
+      .select();
+
+    if (!data || error) {
+      res.status(500).json({ content: "" });
+      return;
+    }
+
     res.status(200).json({ content: roomId });
   }
 

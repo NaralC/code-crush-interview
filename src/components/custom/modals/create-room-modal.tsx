@@ -70,15 +70,16 @@ const CreateRoomModal: FC = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof createRoomSchemaFrontend>) => {
-    debugToast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // debugToast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
 
+    setIsLoading(true);
     toast.loading("Creating a room for you...");
 
     const response = await fetch("/api/db", {
@@ -89,7 +90,10 @@ const CreateRoomModal: FC = () => {
       }),
     });
 
-    if (!response.ok) toast.error("Error creating a room :(");
+    if (!response.ok) {
+      toast.error("Error creating a room :(");
+      return;
+    }
 
     const { content: roomId } = await response.json();
 
@@ -100,8 +104,6 @@ const CreateRoomModal: FC = () => {
         userName: values.userName,
       },
     });
-
-    setIsLoading(true);
 
     setTimeout(() => {
       setIsLoading(false);
@@ -228,7 +230,7 @@ const CreateRoomModal: FC = () => {
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>Advanced Options</AccordionTrigger>
+                <AccordionTrigger>Password (optional)</AccordionTrigger>
                 <AccordionContent>
                   <FormField
                     control={form.control}
@@ -236,16 +238,6 @@ const CreateRoomModal: FC = () => {
                     render={() => (
                       <FormItem>
                         {[
-                          {
-                            id: "leave_tab_dim_avatar",
-                            label:
-                              "Dim user avatars should they leave the current browser tab.",
-                          },
-                          {
-                            id: "inactivity_deletion",
-                            label:
-                              "Delete the room after 3 days of inactivity.",
-                          },
                           {
                             id: "password_protection",
                             label: "Protect this room with a password.",

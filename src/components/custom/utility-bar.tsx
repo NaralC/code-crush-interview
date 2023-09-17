@@ -10,14 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  FC,
-  FormEvent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FC, FormEvent, MutableRefObject, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   CornerDownRight,
@@ -37,6 +30,7 @@ import { Label } from "../ui/label";
 import supabaseClient from "@/lib/supa-client";
 import toast from "react-hot-toast";
 import { useUsersStore } from "@/stores/users-store";
+import { SiCsharp, SiPython, SiTypescript } from "react-icons/si";
 
 const UtilityBar: FC<{
   roomName: string;
@@ -104,7 +98,7 @@ const UtilityBar: FC<{
       const { role } = payload!;
 
       if (!role) return;
-      
+
       setRole(role === "interviewee" ? "interviewer" : "interviewee");
     }
   );
@@ -163,13 +157,20 @@ const UtilityBar: FC<{
             <SelectValue placeholder="Pick a language..." />
           </SelectTrigger>
           <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white">
-            {["TypeScript", "Python", "C#"].map((language) => (
+            {[
+              { language: "TypeScript", icon: <SiTypescript /> },
+              { language: "Python", icon: <SiPython /> },
+              { language: "C#", icon: <SiCsharp /> },
+            ].map(({ language, icon }) => (
               <SelectItem
                 className="cursor-pointer"
                 key={language}
                 value={language.toLowerCase()}
               >
-                {language}
+                <div className="flex flex-row gap-3">
+                  <div>{icon}</div>
+                  <div>{language}</div>
+                </div>
               </SelectItem>
             ))}
           </SelectContent>
@@ -184,14 +185,16 @@ const UtilityBar: FC<{
               type: "broadcast",
               event: EVENT.ROLE_SWAP,
               payload: {
-                role: latestRoleRef.current
+                role: latestRoleRef.current,
               },
             });
           }}
         >
           <div className="hidden text-sm md:block">
             <div>Swap Roles</div>
-            <div className="text-xs text-gray-500 capitalize">{latestRoleRef.current}</div>
+            <div className="text-xs text-gray-500 capitalize">
+              {latestRoleRef.current}
+            </div>
           </div>
           {false ? (
             <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
