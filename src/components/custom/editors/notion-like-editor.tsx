@@ -12,14 +12,14 @@ import { Button } from "@/components/ui/button";
 import { getAlgoQuestionById, getAllAlgoQuestions } from "@/lib/questions";
 import { CornerDownRight, FileQuestion } from "lucide-react";
 import { useUsersStore } from "@/stores/users-store";
-import useModal from "@/hooks/use-modal";
+import useModalStore from "@/stores/modal-store";
 
 const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
 }> = ({ realTimeRef }) => {
   // Modal
   // const { setBody, setOpen, setType } = useHintsSolutionModal();
-  const { hintsSolutionModal: { setBody, setOpen, setType } } = useModal();
+  const { hintsSolutionModal: { setBody, setOpen, setType } } = useModalStore();
 
   // Editor State
   const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteStore(

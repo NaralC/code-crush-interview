@@ -8,7 +8,7 @@ import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 import { useHintsSolutionModal } from "./modals/use-hint-solution-modal";
-import useModal from "./use-modal";
+import useModalStore from "../stores/modal-store";
 
 const useRealTime = (
   roomId: string,
@@ -16,7 +16,7 @@ const useRealTime = (
   setRoomName: (newName: string) => void,
 ) => {
   // const { setOpen, setType, setBody } = useHintsSolutionModal();
-  const { hintsSolutionModal: { setOpen, setType, setBody } } = useModal();
+  const { hintsSolutionModal: { setOpen, setType, setBody } } = useModalStore();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
   const supaClient = supabaseClient;
 

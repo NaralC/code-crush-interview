@@ -34,7 +34,7 @@ import toast from "react-hot-toast";
 import { Dices, Loader2 } from "lucide-react";
 import { faker } from "@faker-js/faker";
 import { useRouter } from "next/router";
-import useModal from "@/hooks/use-modal";
+import useModalStore from "@/stores/modal-store";
 
 const createRoomSchemaFrontend = z.object({
   roomName: z.string().min(1, {
@@ -56,7 +56,7 @@ const createRoomSchemaFrontend = z.object({
 
 const CreateRoomModal: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { createRoomModal: { isOpen, setClose } } = useModal();
+  const { createRoomModal: { isOpen, setClose } } = useModalStore();
   const { toast: debugToast } = useToast();
   const router = useRouter();
 

@@ -23,7 +23,7 @@ type ModalStore = {
   joinRoomModal: JoinRoomModal;
 };
 
-const useModal = create<ModalStore>((set) => ({
+const useModalStore = create<ModalStore>((set) => ({
   createRoomModal: {
     isOpen: false,
     setOpen: () =>
@@ -72,4 +72,4 @@ const useModal = create<ModalStore>((set) => ({
   },
 }));
 
-export default useModal;
+export default useModalStore;

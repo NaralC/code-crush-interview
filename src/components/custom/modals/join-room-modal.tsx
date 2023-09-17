@@ -22,7 +22,7 @@ import { faker } from "@faker-js/faker";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import supabaseClient from "@/lib/supa-client";
-import useModal from "@/hooks/use-modal";
+import useModalStore from "@/stores/modal-store";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
@@ -37,7 +37,7 @@ const JoinRoomModal: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     joinRoomModal: { isOpen, setOpen, setClose },
-  } = useModal();
+  } = useModalStore();
   const { toast: debugToast } = useToast();
   const router = useRouter();
   const supaClient = supabaseClient;

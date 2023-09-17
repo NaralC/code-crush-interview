@@ -14,7 +14,7 @@ import Head from "next/head";
 // Hooks and Utility
 import { cn } from "@/lib/utils";
 import BrowseRoomsModal from "@/components/custom/modals/browse-rooms-modal";
-import useModal from "@/hooks/use-modal";
+import useModalStore from "@/stores/modal-store";
 
 type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
 
@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
   // Modals
   // const createRoomModal = useCreateRoomModal();
-  const { createRoomModal, joinRoomModal } = useModal();
+  const { createRoomModal, joinRoomModal } = useModalStore();
   // const joinRoomModal = useJoinRoomModal();
 
   // Initial load animation

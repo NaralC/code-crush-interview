@@ -1,11 +1,11 @@
 import { FC } from "react";
 import Modal from "@/components/ui/modal";
-import useModal from "@/hooks/use-modal";
+import useModalStore from "@/stores/modal-store";
 
 const HintsSolutionModal: FC = () => {
   const {
     hintsSolutionModal: { isOpen, setClose, type, body },
-  } = useModal();
+  } = useModalStore();
   
   return (
     <Modal
