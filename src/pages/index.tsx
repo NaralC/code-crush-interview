@@ -1,24 +1,50 @@
-import Head from "next/head";
-import { NextPage } from "next";
-import { Code2, Globe2, Paperclip } from "lucide-react";
+// Components and UI
 import { Button } from "@/components/ui/button";
-import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
-import { useFeedbackModal } from "@/hooks/modals/use-feedback-modal";
-import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
-import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { Code2, Globe2, Paperclip } from "lucide-react";
 import BackgroundParticles from "@/components/custom/background-particles";
 import CreateRoomModal from "@/components/custom/modals/create-room-modal";
-import FeedbackModal from "@/components/custom/modals/feedback-modal";
 import JoinRoomModal from "@/components/custom/modals/join-room-modal";
 
-const Home: NextPage = () => {
-  // Modals & Toast
-  const { toast } = useToast();
-  const createRoomModal = useCreateRoomModal();
-  const joinRoomModal = useJoinRoomModal();
-  const feedbackModal = useFeedbackModal();
+// Next.js/React Stuff
+import { useEffect, useState } from "react";
+import { GetServerSideProps, NextPage } from "next";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import Head from "next/head";
+
+// Hooks and Utility
+import { cn } from "@/lib/utils";
+import BrowseRoomsModal from "@/components/custom/modals/browse-rooms-modal";
+import useModal from "@/hooks/use-modal";
+
+type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const supabaseClient = createPagesServerClient<Database>(ctx);
+
+  const { data, error } = await supabaseClient
+    .from("interview_rooms")
+    .select("room_id, created_at, name, description, participants, type");
+
+  if (error) {
+    return {
+      props: {
+        rooms: null,
+      },
+    };
+  }
+
+  return {
+    props: {
+      rooms: error ? null : data,
+    },
+  };
+};
+
+const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
+  // Modals
+  // const createRoomModal = useCreateRoomModal();
+  const { createRoomModal, joinRoomModal } = useModal();
+  // const joinRoomModal = useJoinRoomModal();
 
   // Initial load animation
   const [animation, setAnimation] = useState(false);
@@ -92,7 +118,7 @@ const Home: NextPage = () => {
 
         <CreateRoomModal />
         <JoinRoomModal />
-        <FeedbackModal />
+        <BrowseRoomsModal />
         <BackgroundParticles />
       </main>
     </>

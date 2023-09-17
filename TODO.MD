@@ -17,10 +17,10 @@ Essential:
     - Pick questions/hints/follow-ups ✅
 
 Should haves:
-- Browse and join a public room
+- Browse and join a room ▶
 - Question pool:
-    - Put questions in DB
-    - Functionality to CRUD questions
+    - Put questions in DB ▶
+    - Functionality to CRUD questions ▶
 - Coding page:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file

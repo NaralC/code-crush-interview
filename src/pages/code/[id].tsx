@@ -8,7 +8,7 @@ import Split from "react-split";
 import HintsSolutionModal from "@/components/custom/modals/hints-solution-modal";
 import AudioVideoCall from "@/components/custom/audio-video-call";
 
-// Next.js/React stuff
+// Next.js/React Stuff
 import { MutableRefObject, createRef, useEffect, useState } from "react";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";

@@ -1,6 +1,4 @@
 import { FC, useState } from "react";
-import { useCreateRoomModal } from "@/hooks/modals/use-create-room-modal";
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -36,6 +34,7 @@ import toast from "react-hot-toast";
 import { Dices, Loader2 } from "lucide-react";
 import { faker } from "@faker-js/faker";
 import { useRouter } from "next/router";
+import useModal from "@/hooks/use-modal";
 
 const createRoomSchemaFrontend = z.object({
   roomName: z.string().min(1, {
@@ -57,7 +56,7 @@ const createRoomSchemaFrontend = z.object({
 
 const CreateRoomModal: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isOpen, setClose } = useCreateRoomModal();
+  const { createRoomModal: { isOpen, setClose } } = useModal();
   const { toast: debugToast } = useToast();
   const router = useRouter();
 

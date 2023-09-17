@@ -11,26 +11,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useToast } from "@/hooks/use-toast";
-import { useJoinRoomModal } from "@/hooks/modals/use-join-room-modal";
 import { DEFAULT_ROOM_ID } from "@/lib/constant";
-import { Badge } from "@/components/ui/badge";
 import { Dices, Loader2 } from "lucide-react";
 import { faker } from "@faker-js/faker";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import supabaseClient from "@/lib/supa-client";
+import useModal from "@/hooks/use-modal";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
@@ -43,7 +35,9 @@ const joinRoomSchemaFrontend = z.object({
 
 const JoinRoomModal: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isOpen, setOpen, setClose } = useJoinRoomModal();
+  const {
+    joinRoomModal: { isOpen, setOpen, setClose },
+  } = useModal();
   const { toast: debugToast } = useToast();
   const router = useRouter();
   const supaClient = supabaseClient;
@@ -72,7 +66,7 @@ const JoinRoomModal: FC = () => {
       .eq("room_id", values.roomId);
 
     if (!data || !data.length || error) {
-      toast.error("Room doesn't exist :(")
+      toast.error("Room doesn't exist :(");
       return;
     }
 
