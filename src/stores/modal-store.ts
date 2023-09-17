@@ -6,21 +6,16 @@ type BasicModal = {
   setClose: () => void;
 };
 
-type CreateRoomModal = BasicModal & {};
-
-type HintSolutionModal = BasicModal & {
-  body: string;
-  setBody: (newBody: any) => void;
-  type: HintsOrSolution;
-  setType: (newType: HintsOrSolution) => void;
-};
-
-type JoinRoomModal = BasicModal & {};
-
 type ModalStore = {
-  createRoomModal: CreateRoomModal;
-  hintsSolutionModal: HintSolutionModal;
-  joinRoomModal: JoinRoomModal;
+  createRoomModal: BasicModal & {};
+  hintsSolutionModal: BasicModal & {
+    body: string;
+    setBody: (newBody: any) => void;
+    type: HintsOrSolution;
+    setType: (newType: HintsOrSolution) => void;
+  };
+  joinRoomModal: BasicModal & {};
+  browseRoomsModal: BasicModal & {};
 };
 
 const useModalStore = create<ModalStore>((set) => ({
@@ -68,6 +63,17 @@ const useModalStore = create<ModalStore>((set) => ({
     setClose: () =>
       set((state) => ({
         joinRoomModal: { ...state.joinRoomModal, isOpen: false },
+      })),
+  },
+  browseRoomsModal: {
+    isOpen: false,
+    setOpen: () =>
+      set((state) => ({
+        browseRoomsModal: { ...state.browseRoomsModal, isOpen: true },
+      })),
+    setClose: () =>
+      set((state) => ({
+        browseRoomsModal: { ...state.browseRoomsModal, isOpen: false },
       })),
   },
 }));

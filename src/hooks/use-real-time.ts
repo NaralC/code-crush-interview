@@ -7,7 +7,6 @@ import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
-import { useHintsSolutionModal } from "./modals/use-hint-solution-modal";
 import useModalStore from "../stores/modal-store";
 
 const useRealTime = (

@@ -16,8 +16,6 @@ import { cn } from "@/lib/utils";
 import BrowseRoomsModal from "@/components/custom/modals/browse-rooms-modal";
 import useModalStore from "@/stores/modal-store";
 
-type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
 
@@ -42,9 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
   // Modals
-  // const createRoomModal = useCreateRoomModal();
-  const { createRoomModal, joinRoomModal } = useModalStore();
-  // const joinRoomModal = useJoinRoomModal();
+  const { createRoomModal, joinRoomModal, browseRoomsModal } = useModalStore();
 
   // Initial load animation
   const [animation, setAnimation] = useState(false);
@@ -66,11 +62,11 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
       </Head>
       <main
         className={cn(
-          "flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100 xl:container",
+          "flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100 xl:container selection:text-black selection:bg-white",
           animation ? "text-white" : ""
         )}
       >
-        <p className="text-6xl font-bold text-center md:text-8xl text-shadow-2xl">
+        <p className="text-6xl font-bold text-center md:text-8xl text-shadow-2xl ">
           Code Crush
         </p>
         <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance text-shadow-2xl">
@@ -107,9 +103,9 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
               "ring-1 ring-zinc-50/25 filter",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
-            // onClick={() => {
-            //   joinRoomModal.setOpen();
-            // }}
+            onClick={() => {
+              browseRoomsModal.setOpen();
+            }}
           >
             <Globe2 className="mr-2" />
             Browse Rooms
@@ -118,7 +114,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
 
         <CreateRoomModal />
         <JoinRoomModal />
-        <BrowseRoomsModal />
+        <BrowseRoomsModal rooms={rooms} />
         <BackgroundParticles />
       </main>
     </>

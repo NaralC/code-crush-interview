@@ -34,3 +34,6 @@ type HintsOrSolution = "hints" | "solution";
 // Interviewer has the "Questions" btn
 // the other one doesn't
 type Roles = "interviewer" | "interviewee" | null
+
+type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
+

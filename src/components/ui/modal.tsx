@@ -1,4 +1,4 @@
-import { Dispatch, FC, Fragment, SetStateAction, useState } from "react";
+import { FC } from "react";
 import { Button } from "./button";
 import {
   Dialog,
@@ -6,9 +6,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogOverlay,
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Modal: FC<{
   title: string;
@@ -16,13 +16,14 @@ const Modal: FC<{
   children: JSX.Element;
   isOpen: boolean;
   setClose: () => void;
-}> = ({ title, description, children: content, isOpen, setClose }) => {
+  className?: string
+}> = ({ title, description, children: content, isOpen, setClose, className }) => {
   // Controlling Radix dialog state manually: https://github.com/shadcn/ui/issues/386
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={() => { setClose() }}>
-        <DialogContent className="max-h-screen overflow-y-auto">
+        <DialogContent className={cn("max-h-screen overflow-y-auto", className)}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
