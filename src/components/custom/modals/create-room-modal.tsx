@@ -86,7 +86,7 @@ const CreateRoomModal: FC = () => {
       method: "POST",
       body: JSON.stringify({
         roomName: values.roomName,
-        userName: values.userName,
+        type: values.interviewType
       }),
     });
 

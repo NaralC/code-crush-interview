@@ -19,7 +19,7 @@ export default async function handler(
 
   // Creating a new room
   if (req.method === "POST") {
-    const { roomName, userName } = JSON.parse(req.body);
+    const { roomName, type } = JSON.parse(req.body);
     const roomId = uuidv4();
 
     const { data, error } = await supabaseServerClient
@@ -31,7 +31,7 @@ export default async function handler(
         participants: {},
         description: generateRoomDescription(),
         name: roomName,
-        type: "ds_algo",
+        type,
       })
       .select();
 
