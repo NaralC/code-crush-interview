@@ -23,6 +23,8 @@ import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
 import { useUsersStore } from "@/stores/users-store";
 import { initialCodeState } from "@/lib/reducers";
+import SackpackEditor from "@/components/custom/editors/sandpack-editor";
+import MySandpack from "@/components/custom/editors/sandpack-monaco-test";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -42,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const { code_state, room_id, name, participants } = data[0];
+  const { code_state, room_id, name, participants, type } = data[0];
 
   if (participants) {
     const userCount = Object.keys(participants!).length;
@@ -63,6 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       roomId: room_id,
       roomName: name,
       userName,
+      type,
     },
   };
 };
@@ -72,7 +75,14 @@ const CodingPage: NextPage<{
   roomId: string;
   roomName: string;
   userName: string;
-}> = ({ initialCodeState, roomId, roomName: initialRoomName, userName }) => {
+  type: "front_end" | "ds_algo";
+}> = ({
+  initialCodeState,
+  roomId,
+  roomName: initialRoomName,
+  userName,
+  type,
+}) => {
   // States
   const [roomName, setRoomName] = useState<string>(initialRoomName);
   const { realTimeRef, userId } = useRealTime(roomId, userName, (newName) =>
@@ -104,31 +114,41 @@ const CodingPage: NextPage<{
         <title>Interview Time!</title>
         <meta name="Code Crush" content="Code Crush" />
       </Head>
+
       <main
         className="flex flex-col w-full h-screen"
         onMouseMove={sendMousePosition}
       >
-        <Cursors realTimeRef={realTimeRef} />
-        <UtilityBar
-          realTimeRef={realTimeRef}
-          roomName={roomName}
-          roomId={roomId}
-        />
-        <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
-          <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-            <MonacoEditor realTimeRef={realTimeRef} name={userName} />
-          </div>
-          <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-            <NotionLikeEditor realTimeRef={realTimeRef} />
-          </div>
-        </Split>
-        <OutputConsole />
-        {/* <AudioVideoCall
-          isMuted={isMuted}
-          setIsMuted={setIsMuted}
-          myVideo={myVideo}
-          partnerVideo={partnerVideo}
-        /> */}
+        {type === "ds_algo" ? (
+          <>
+            <Cursors realTimeRef={realTimeRef} />
+            <UtilityBar
+              realTimeRef={realTimeRef}
+              roomName={roomName}
+              roomId={roomId}
+            />
+            <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
+              <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
+                <MonacoEditor realTimeRef={realTimeRef} name={userName} />
+              </div>
+              <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
+                <NotionLikeEditor realTimeRef={realTimeRef} />
+              </div>
+            </Split>
+            <OutputConsole />
+            {/* <AudioVideoCall
+            isMuted={isMuted}
+            setIsMuted={setIsMuted}
+            myVideo={myVideo}
+            partnerVideo={partnerVideo}
+          /> */}
+          </>
+        ) : (
+          <>
+            <SackpackEditor />
+            {/* <MySandpack /> */}
+          </>
+        )}
       </main>
 
       <HintsSolutionModal />

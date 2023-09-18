@@ -37,7 +37,7 @@ export default async function handler(
 
     const { token, message } = await response.json();
 
-    // TODO: Exceeded API call quota
+    // TODO: Handle exceeded API call quota
     if (message) {
       return res.status(500).json({ content: z.string().parse(message) });
     }
