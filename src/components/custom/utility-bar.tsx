@@ -41,7 +41,8 @@ const UtilityBar: FC<{
   roomName: string;
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
   roomId: string;
-}> = ({ roomName, realTimeRef, roomId }) => {
+  finished: boolean
+}> = ({ roomName, realTimeRef, roomId, finished }) => {
   const supaClient = supabaseClient;
   const [roomNameInput, setRoomNameInput] = useState<string>("");
   const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore();
@@ -181,7 +182,7 @@ const UtilityBar: FC<{
           </SelectContent>
         </Select>
         <Button
-          // disabled={asyncState.isCompiling}
+          disabled={finished}
           variant="secondary"
           onClick={() => {
             setRole(role === "interviewee" ? "interviewer" : "interviewee");
@@ -226,7 +227,7 @@ const UtilityBar: FC<{
           onClick={() => {
             handleSave();
           }}
-          disabled={asyncState.isSaving}
+          disabled={asyncState.isSaving || finished}
         >
           <div className="hidden md:block">Save</div>
           {asyncState.isSaving ? (

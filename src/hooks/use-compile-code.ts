@@ -3,6 +3,20 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
+const outputSchema = z
+.object({
+  memory: z.number(),
+  memory_limit: z.number(),
+  status: z.object({
+    id: z.number(),
+    description: z.string(),
+  }),
+  stdout: z.string().nullable(),
+  time: z.string(),
+})
+
+export type Output = z.infer<typeof outputSchema>
+
 const useCompileCode = () => {
   const { codeState, dispatchConsole, dispatchAsync } = useCodeStore();
 
@@ -54,18 +68,7 @@ const useCompileCode = () => {
       });
       const { content } = await response.json();
 
-      const parsedContent = z
-        .object({
-          memory: z.number(),
-          memory_limit: z.number(),
-          status: z.object({
-            id: z.number(),
-            description: z.string(),
-          }),
-          stdout: z.string().nullable(),
-          time: z.string(),
-        })
-        .parse(content);
+      const parsedContent = outputSchema.parse(content);
 
       if (![1, 2, 3].includes(parsedContent.status.id)) throw new Error();
 
@@ -88,10 +91,14 @@ const useCompileCode = () => {
 
       dispatchConsole({
         type: "SET_CONSOLE_OUTPUT",
-        payload: JSON.stringify({
+        // payload: JSON.stringify({
+        //   ...data,
+        //   stdout: data.stdout ? window.atob(data.stdout) : "",
+        // }),
+        payload: {
           ...data,
           stdout: data.stdout ? window.atob(data.stdout) : "",
-        }),
+        }
       });
 
       dispatchConsole({

@@ -16,7 +16,8 @@ const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 const MonacoEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
   name: string;
-}> = ({ realTimeRef, name }) => {
+  finished: boolean;
+}> = ({ realTimeRef, name, finished }) => {
   // Code state
   const { codeState, dispatchCode, dispatchConsole } = useCodeStore(
     (state) => ({
@@ -73,6 +74,7 @@ const MonacoEditor: FC<{
       <Editor
         className={cn(
           "m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto",
+          finished ? "hover:cursor-not-allowed" : "",
           jetBrainsMono.className
         )}
         height="100%"
@@ -95,6 +97,7 @@ const MonacoEditor: FC<{
           cursorSmoothCaretAnimation: "on",
           cursorBlinking: "smooth",
           fontSize: 15,
+          readOnly: finished // TODO: Read only here
         }}
         onChange={handleEditorChange}
         onMount={(editor, monaco) => {

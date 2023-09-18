@@ -14,6 +14,7 @@ interface Database {
           code_state: Json | null
           created_at: string | null
           description: string | null
+          finished: boolean
           name: string | null
           participants: Json | null
           room_id: string
@@ -23,6 +24,7 @@ interface Database {
           code_state?: Json | null
           created_at?: string | null
           description?: string | null
+          finished: boolean
           name?: string | null
           participants?: Json | null
           room_id: string
@@ -32,6 +34,7 @@ interface Database {
           code_state?: Json | null
           created_at?: string | null
           description?: string | null
+          finished?: boolean
           name?: string | null
           participants?: Json | null
           room_id?: string

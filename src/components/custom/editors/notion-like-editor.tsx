@@ -13,10 +13,12 @@ import { getAlgoQuestionById, getAllAlgoQuestions } from "@/lib/questions";
 import { CornerDownRight, FileQuestion } from "lucide-react";
 import { useUsersStore } from "@/stores/users-store";
 import useModalStore from "@/stores/modal-store";
+import { cn } from "@/lib/utils";
 
 const NotionLikeEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
-}> = ({ realTimeRef }) => {
+  finished: boolean;
+}> = ({ realTimeRef, finished }) => {
   // Modal
   // const { setBody, setOpen, setType } = useHintsSolutionModal();
   const { hintsSolutionModal: { setBody, setOpen, setType } } = useModalStore();
@@ -110,7 +112,7 @@ const NotionLikeEditor: FC<{
           // table: Table,
           embed: Embed,
         },
-        readOnly: false, // TODO: Change this when a room's finished
+        readOnly: finished,
       });
     }
   }, [editorRef]);
@@ -234,7 +236,8 @@ const NotionLikeEditor: FC<{
       <div className="prose text-white prose-stone dark:prose-invert">
         <div
           id="editor"
-          className="p-3 max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white min-h-"
+          className={cn("p-3 max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white min-h-", finished ? "hover:cursor-not-allowed" : "",)}
+          
         />
       </div>
     </div>

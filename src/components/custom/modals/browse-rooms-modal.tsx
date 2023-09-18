@@ -81,7 +81,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
     router.push({
       pathname: `/code/${selectedRoomId}`,
       query: {
-        userName: "Posty",
+        userName: values.username,
       },
     });
   };
@@ -89,7 +89,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
   const Card: FC<{ room: Room }> = ({ room }) => (
     <div
       className={cn(
-        "px-4 py-2 border-2 rounded-lg shadow hover:cursor-pointer border-gray-500/25 ring-zinc-500 active:scale-[99%] transition-all hover:shadow-lg last:mb-0 mb-2 grid grid-cols-6 grid-rows-2",
+        "pl-4 py-2 border-2 rounded-lg shadow hover:cursor-pointer border-gray-500/25 ring-zinc-500 active:scale-[99%] transition-all hover:shadow-lg last:mb-0 mb-2 grid grid-cols-6 grid-rows-2",
         selectedRoomId === room.room_id ? "bg-black text-white" : ""
       )}
       key={room.room_id}
@@ -122,15 +122,17 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
         {room.description}
       </div>
       <div className="col-span-3 grid-rows-1 pr-5 text-xs text-right">
-        <div>Created</div>
-        <div>{room.created_at}</div>{" "}
+        <div className={room.finished ? "text-red-500" : ""}>
+          Status: {room.finished ? "Finished" : "Ongoing"}
+        </div>
+        <div>Created {room.created_at}</div>
       </div>
     </div>
   );
 
   return (
     <Modal
-      title={"Browse Rooms"}
+      title={"Browse Rooms (sorted by recent activity)"}
       isOpen={isOpen}
       setClose={setClose}
       className="max-h-[75vh] overflow-x-clip"

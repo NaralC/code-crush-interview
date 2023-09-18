@@ -22,7 +22,7 @@ import throttle from "lodash.throttle";
 import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
 import SackpackEditor from "@/components/custom/editors/sandpack-editor";
-import MySandpack from "@/components/custom/editors/sandpack-monaco-test";
+import MySandpack from "../../components/custom/editors/sandpack-monaco-test";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const { code_state, room_id, name, participants, type } = data[0];
+  const { code_state, room_id, name, participants, type, finished } = data[0];
 
   if (participants) {
     const userCount = Object.keys(participants!).length;
@@ -64,6 +64,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       roomName: name,
       userName,
       type,
+      finished
     },
   };
 };
@@ -74,12 +75,14 @@ const CodingPage: NextPage<{
   roomName: string;
   userName: string;
   type: "front_end" | "ds_algo";
+  finished: boolean;
 }> = ({
   initialCodeState,
   roomId,
   roomName: initialRoomName,
   userName,
   type,
+  finished
 }) => {
   // States
   const [roomName, setRoomName] = useState<string>(initialRoomName);
@@ -124,13 +127,14 @@ const CodingPage: NextPage<{
               realTimeRef={realTimeRef}
               roomName={roomName}
               roomId={roomId}
+              finished={finished}
             />
             <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
               <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-                <MonacoEditor realTimeRef={realTimeRef} name={userName} />
+                <MonacoEditor realTimeRef={realTimeRef} name={userName} finished={finished} />
               </div>
               <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-                <NotionLikeEditor realTimeRef={realTimeRef} />
+                <NotionLikeEditor realTimeRef={realTimeRef} finished={finished} />
               </div>
             </Split>
             <OutputConsole />

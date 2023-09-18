@@ -1,10 +1,12 @@
+import { Output } from "@/hooks/use-compile-code";
+
 export type CodeState = {
   code: string;
   language: string;
 };
 
 export type ConsoleState = {
-  consoleOutput: string;
+  consoleOutput: Output | null;
   isConsoleVisible: boolean;
 };
 
@@ -25,7 +27,7 @@ export type ConsoleAction =
     }
   | {
       type: "SET_CONSOLE_OUTPUT";
-      payload: string;
+      payload: Output | null;
     };
 
 export type AsyncAction = {
@@ -41,7 +43,7 @@ export const initialCodeState = (): CodeState => {
 };
 
 export const initialConsoleState = (): ConsoleState => ({
-  consoleOutput: "",
+  consoleOutput: null,
   isConsoleVisible: false,
 });
 

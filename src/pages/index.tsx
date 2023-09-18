@@ -5,6 +5,7 @@ import {
   TbBrandNextjs,
   TbBrandSupabase,
   TbBrandGithubFilled,
+  TbBrandTailwind,
 } from "react-icons/tb";
 import BackgroundParticles from "@/components/custom/background-particles";
 import CreateRoomModal from "@/components/custom/modals/create-room-modal";
@@ -27,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { data, error } = await supabaseClient
     .from("interview_rooms")
-    .select("room_id, created_at, name, description, participants, type");
+    .select("room_id, created_at, name, description, participants, type, finished");
 
   if (error) {
     return {
@@ -128,8 +129,18 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           </Link>
           <div className="flex flex-row items-center justify-center gap-2 text-center">
             Powered By
-            <TbBrandNextjs className="text-3xl" />
-            <TbBrandSupabase className="text-3xl" />
+            <TbBrandNextjs
+              className={cn("text-3xl", animation ? "" : "text-black")}
+            />
+            <TbBrandTailwind
+              className={cn("text-3xl", animation ? "text-sky-500" : "")}
+            />
+            <TbBrandSupabase
+              className={cn(
+                "text-3xl",
+                animation ? "text-emerald-500" : "text-black"
+              )}
+            />
           </div>
         </div>
 

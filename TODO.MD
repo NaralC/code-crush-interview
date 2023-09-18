@@ -18,16 +18,17 @@ Essential:
 
 Should haves:
 - Browse and join a room ✅
-- Question pool:
-    - Put questions in DB ▶
-    - Functionality to CRUD questions ▶
+- Functionality to CRUD the question pool ▶
 - Coding page:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file
     - Interview timer
     - Edit room name ✅
     - Live cursors ✅
-    - Being able to end an interview (status: ongoing/finished)
+    - Interview Status (ongoing/finished) ✅
+    - Being able to end an interview ▶
     - Password lock
 - FE interview
 - Video/audio device settings
+
+- Fix infinite refetch when 'Compilation Error'
