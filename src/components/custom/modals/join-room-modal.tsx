@@ -23,17 +23,18 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import supabaseClient from "@/lib/supa-client";
 import useModalStore from "@/stores/modal-store";
+import { generateRoomName } from "@/lib/faker";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
     message: "Room ID cannot be empty.",
   }),
-  userName: z.string({
-    required_error: "Name cannot be empty",
+  userName: z.string().min(1, {
+    message: "Name cannot be empty",
   }),
 });
 
-const JoinRoomModal: FC = () => {
+const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     joinRoomModal: { isOpen, setOpen, setClose },
@@ -138,7 +139,7 @@ const JoinRoomModal: FC = () => {
                           onClick={() => {
                             form.setValue(
                               "userName",
-                              faker.internet.userName()
+                              generateRoomName()
                             );
                           }}
                         />

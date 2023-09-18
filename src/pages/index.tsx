@@ -113,7 +113,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         </div>
 
         <CreateRoomModal />
-        <JoinRoomModal />
+        <JoinRoomModal rooms={rooms}/>
         <BrowseRoomsModal rooms={rooms} />
         <BackgroundParticles />
       </main>

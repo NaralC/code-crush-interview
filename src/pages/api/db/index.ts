@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { DEFAULT_ROOM_ID } from "@/lib/constant";
 import { v4 as uuidv4 } from "uuid";
-import { faker } from "@faker-js/faker";
+import { generateRoomDescription } from "@/lib/faker";
 
 type Data = {
   content: string;
@@ -29,7 +29,7 @@ export default async function handler(
         code_state: "",
         created_at: new Date().toISOString(),
         participants: {},
-        description: faker.company.catchPhrase(),
+        description: generateRoomDescription(),
         name: roomName,
         type: "ds_algo",
       })

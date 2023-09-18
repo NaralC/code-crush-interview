@@ -35,6 +35,7 @@ import { Dices, Loader2 } from "lucide-react";
 import { faker } from "@faker-js/faker";
 import { useRouter } from "next/router";
 import useModalStore from "@/stores/modal-store";
+import { generateRoomName, generateUsername } from "@/lib/faker";
 
 const createRoomSchemaFrontend = z.object({
   roomName: z.string().min(1, {
@@ -133,7 +134,7 @@ const CreateRoomModal: FC = () => {
                         <Dices
                           className="ml-4 cursor-pointer w-7 h-7"
                           onClick={() => {
-                            form.setValue("roomName", faker.company.name());
+                            form.setValue("roomName", generateRoomName());
                           }}
                         />
                       </div>
@@ -162,7 +163,7 @@ const CreateRoomModal: FC = () => {
                           onClick={() => {
                             form.setValue(
                               "userName",
-                              faker.internet.userName()
+                              generateUsername()
                             );
                           }}
                         />
