@@ -4,13 +4,7 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 
 const useCompileCode = () => {
-  const { codeState, dispatchConsole, dispatchAsync, dispatchCode } =
-    useCodeStore((state) => ({
-      codeState: state.codeState,
-      dispatchAsync: state.dispatchAsync,
-      dispatchConsole: state.dispatchConsole,
-      dispatchCode: state.dispatchCode,
-    }));
+  const { codeState, dispatchConsole, dispatchAsync } = useCodeStore();
 
   // Getting a token
   const { data: token, mutate: handleCompile } = useMutation({
@@ -46,7 +40,6 @@ const useCompileCode = () => {
         payload: false,
       });
     },
-    // onSuccess: (data) => console.log(data),
   });
 
   // Using the token to check fetch submission result
@@ -60,7 +53,6 @@ const useCompileCode = () => {
         }),
       });
       const { content } = await response.json();
-      // console.log(content);
 
       const parsedContent = z
         .object({

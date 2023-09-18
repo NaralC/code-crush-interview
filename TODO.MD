@@ -17,7 +17,7 @@ Essential:
     - Pick questions/hints/follow-ups ✅
 
 Should haves:
-- Browse and join a room ▶
+- Browse and join a room ✅
 - Question pool:
     - Put questions in DB ▶
     - Functionality to CRUD questions ▶

@@ -1,6 +1,11 @@
 // Components and UI
 import { Button } from "@/components/ui/button";
 import { Code2, Globe2, Paperclip } from "lucide-react";
+import {
+  TbBrandNextjs,
+  TbBrandSupabase,
+  TbBrandGithubFilled,
+} from "react-icons/tb";
 import BackgroundParticles from "@/components/custom/background-particles";
 import CreateRoomModal from "@/components/custom/modals/create-room-modal";
 import JoinRoomModal from "@/components/custom/modals/join-room-modal";
@@ -15,6 +20,7 @@ import Head from "next/head";
 import { cn } from "@/lib/utils";
 import BrowseRoomsModal from "@/components/custom/modals/browse-rooms-modal";
 import useModalStore from "@/stores/modal-store";
+import Link from "next/link";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -112,8 +118,23 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           </Button>
         </div>
 
+        <div className="fixed flex flex-col items-center justify-center text-lg text-shadow-2xl bottom-5">
+          <Link
+            className="flex flex-row items-center justify-center gap-2 text-center"
+            href={"https://github.com/NaralC/code-crush-interview"}
+          >
+            Link to
+            <TbBrandGithubFilled className="text-3xl" />
+          </Link>
+          <div className="flex flex-row items-center justify-center gap-2 text-center">
+            Powered By
+            <TbBrandNextjs className="text-3xl" />
+            <TbBrandSupabase className="text-3xl" />
+          </div>
+        </div>
+
         <CreateRoomModal />
-        <JoinRoomModal rooms={rooms}/>
+        <JoinRoomModal rooms={rooms} />
         <BrowseRoomsModal rooms={rooms} />
         <BackgroundParticles />
       </main>

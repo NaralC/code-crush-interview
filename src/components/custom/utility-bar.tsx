@@ -1,3 +1,4 @@
+// Components and UI
 import {
   Select,
   SelectContent,
@@ -10,7 +11,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { FC, FormEvent, MutableRefObject, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   CornerDownRight,
@@ -20,17 +20,22 @@ import {
   Save,
   Users2,
 } from "lucide-react";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { SiCsharp, SiPython, SiTypescript } from "react-icons/si";
+import toast from "react-hot-toast";
+
+// Next.js/React Stuff
+import { FC, FormEvent, MutableRefObject, useEffect, useState } from "react";
 import useCompileCode from "@/hooks/use-compile-code";
+
+// Hooks and Utility
 import { RealtimeChannel } from "@supabase/supabase-js";
 import useSaveCode from "@/hooks/use-save-code";
 import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import supabaseClient from "@/lib/supa-client";
-import toast from "react-hot-toast";
 import { useUsersStore } from "@/stores/users-store";
-import { SiCsharp, SiPython, SiTypescript } from "react-icons/si";
+import supabaseClient from "@/lib/supa-client";
 
 const UtilityBar: FC<{
   roomName: string;

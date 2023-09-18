@@ -14,7 +14,6 @@ const useRealTime = (
   name: string,
   setRoomName: (newName: string) => void,
 ) => {
-  // const { setOpen, setType, setBody } = useHintsSolutionModal();
   const { hintsSolutionModal: { setOpen, setType, setBody } } = useModalStore();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
   const supaClient = supabaseClient;
@@ -22,8 +21,6 @@ const useRealTime = (
   // States
   const { latestCodeRef, dispatchConsole, dispatchAsync, dispatchCode } =
     useCodeStore();
-
-  // States
   const { setOtherUsers, latestRoleRef } = useUsersStore();
   const editorRef = useNoteStore((state) => state.editorRef);
 

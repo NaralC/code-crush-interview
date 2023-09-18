@@ -1,7 +1,7 @@
 import { FC, Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { Expand, PictureInPicture2, X } from "lucide-react";
-import Draggable from "react-draggable"; // The default
+import Draggable from "react-draggable";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { useCodeStore } from "@/stores/code-store";

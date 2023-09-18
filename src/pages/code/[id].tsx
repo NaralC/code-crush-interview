@@ -1,4 +1,4 @@
-// Components
+// Components and UI
 import Cursors from "@/components/custom/cursors";
 import MonacoEditor from "@/components/custom/editors/monaco-editor";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
@@ -9,7 +9,7 @@ import HintsSolutionModal from "@/components/custom/modals/hints-solution-modal"
 import AudioVideoCall from "@/components/custom/audio-video-call";
 
 // Next.js/React Stuff
-import { MutableRefObject, createRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
@@ -21,8 +21,6 @@ import useWebRTC from "@/hooks/use-webrtc";
 import throttle from "lodash.throttle";
 import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
-import { useUsersStore } from "@/stores/users-store";
-import { initialCodeState } from "@/lib/reducers";
 import SackpackEditor from "@/components/custom/editors/sandpack-editor";
 import MySandpack from "@/components/custom/editors/sandpack-monaco-test";
 
