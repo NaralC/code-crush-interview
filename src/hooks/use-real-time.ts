@@ -8,6 +8,7 @@ import { useUsersStore } from "@/stores/users-store";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 import useModalStore from "../stores/modal-store";
+import { Output } from "./use-compile-code";
 
 const useRealTime = (
   roomId: string,
@@ -93,7 +94,7 @@ const useRealTime = (
           payload,
         }: Payload<{
           status: boolean;
-          output: string;
+          output: Output | null;
         }>) => {
           const { status, output } = payload!;
 

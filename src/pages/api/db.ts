@@ -32,6 +32,7 @@ export default async function handler(
         description: generateRoomDescription(),
         name: roomName,
         type,
+        finished: false
       })
       .select();
 

@@ -1,4 +1,4 @@
-// Components and UI
+// UI
 import { Button } from "@/components/ui/button";
 import { Code2, Globe2, Paperclip } from "lucide-react";
 import {
@@ -10,18 +10,16 @@ import {
 import BackgroundParticles from "@/components/custom/background-particles";
 import CreateRoomModal from "@/components/custom/modals/create-room-modal";
 import JoinRoomModal from "@/components/custom/modals/join-room-modal";
+import BrowseRoomsModal from "@/components/custom/modals/browse-rooms-modal";
+import useModalStore from "@/stores/modal-store";
+import Link from "next/link";
 
-// Next.js/React Stuff
+// Logic
 import { useEffect, useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import Head from "next/head";
-
-// Hooks and Utility
 import { cn } from "@/lib/utils";
-import BrowseRoomsModal from "@/components/custom/modals/browse-rooms-modal";
-import useModalStore from "@/stores/modal-store";
-import Link from "next/link";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -130,7 +128,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           <div className="flex flex-row items-center justify-center gap-2 text-center">
             Powered By
             <TbBrandNextjs
-              className={cn("text-3xl", animation ? "" : "text-black")}
+              className={cn("text-3xl", animation ? "text-white" : "text-black")}
             />
             <TbBrandTailwind
               className={cn("text-3xl", animation ? "text-sky-500" : "")}

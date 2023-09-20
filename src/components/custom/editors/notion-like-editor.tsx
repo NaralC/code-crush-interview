@@ -16,12 +16,13 @@ import useModalStore from "@/stores/modal-store";
 import { cn } from "@/lib/utils";
 
 const NotionLikeEditor: FC<{
-  realTimeRef: MutableRefObject<RealtimeChannel | null>;
-  finished: boolean;
+  realTimeRef?: MutableRefObject<RealtimeChannel | null>;
+  finished?: boolean;
 }> = ({ realTimeRef, finished }) => {
   // Modal
-  // const { setBody, setOpen, setType } = useHintsSolutionModal();
-  const { hintsSolutionModal: { setBody, setOpen, setType } } = useModalStore();
+  const {
+    hintsSolutionModal: { setBody, setOpen, setType },
+  } = useModalStore();
 
   // Editor State
   const { editorRef, editorIsMounted, setEditorIsMounted } = useNoteStore(
@@ -57,13 +58,15 @@ const NotionLikeEditor: FC<{
           const noteData = await editorRef.current?.save();
           // if (!noteData?.blocks.length) return;
 
-          realTimeRef.current?.send({
-            type: "broadcast",
-            event: EVENT.NOTE_UPDATE,
-            payload: {
-              message: { ...noteData },
-            },
-          });
+          if (realTimeRef) {
+            realTimeRef.current?.send({
+              type: "broadcast",
+              event: EVENT.NOTE_UPDATE,
+              payload: {
+                message: { ...noteData },
+              },
+            });
+          }
         },
         placeholder: "Write your solution outline here...",
         inlineToolbar: true,
@@ -126,19 +129,35 @@ const NotionLikeEditor: FC<{
     const init = async () => {
       await initializeEditor();
 
-      realTimeRef.current?.on(
-        "broadcast",
-        { event: EVENT.NOTE_UPDATE }, // Filtering events
-        (payload) => {
-          try {
-            if (payload.payload.message.blocks.length < 1) return;
-            // toast("notes changed!");
-            editorRef.current?.render(payload.payload.message);
-          } catch (error) {
-            toast.error((error as Error).message);
+      // message: {
+      //   blocks: [ { data: { text: 'y' }, id: 'COowlmPfhw', type: 'paragraph' } ],
+      //   time: 1695208914704,
+      //   version: '2.27.2'
+      // }
+
+      if (realTimeRef) {
+        realTimeRef.current?.on(
+          "broadcast",
+          { event: EVENT.NOTE_UPDATE }, // Filtering events
+          (
+            payload
+            : Payload<{
+              message: {
+                blocks: Question['body']
+              }
+            }>
+          ) => {
+            try {
+              if (payload.payload!.message.blocks.length < 1) return;
+              // toast("notes changed!");
+              console.log(payload.payload?.message);
+              editorRef.current?.render(payload.payload!.message);
+            } catch (error) {
+              toast.error((error as Error).message);
+            }
           }
-        }
-      );
+        );
+      }
     };
 
     if (editorIsMounted && effectRan.current === false) {
@@ -160,84 +179,98 @@ const NotionLikeEditor: FC<{
     }
 
     editorRef.current!.render(question?.body);
-    realTimeRef.current?.send({
-      type: "broadcast",
-      event: EVENT.NOTE_UPDATE,
-      payload: {
-        message: { ...question?.body },
-      },
-    });
+
+    if (realTimeRef) {
+      realTimeRef.current?.send({
+        type: "broadcast",
+        event: EVENT.NOTE_UPDATE,
+        payload: {
+          message: { ...question?.body },
+        },
+      });
+    }
   };
 
   return (
     <div className="w-full h-full overflow-y-auto grow">
-      {latestRoleRef.current === "interviewer" && <Popover>
-        <PopoverTrigger className="z-40" asChild>
-          <Button className="fixed shadow bottom-6 right-40 shadow-white">
-            Questions
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow">
-          <ul>
-            {getAllAlgoQuestions().map((question) => (
-              <li key={question.id} className="px-2 rounded-lg">
-                <div className="flex flex-row">
-                  <FileQuestion />
-                  {question.title}
-                </div>
-                <div
-                  className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
-                  onClick={() => {
-                    handleChangeQuestion(question.id);
-                  }}
-                >
-                  <CornerDownRight className="p-1" />
-                  Put Question in Editor
-                </div>
-                <div
-                  className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
-                  onClick={() => {
-                    setType("hints");
-                    setBody(question.hints);
-                    setOpen();
+      {latestRoleRef.current === "interviewer" && (
+        <Popover>
+          <PopoverTrigger className="z-40" asChild>
+            <Button className="fixed shadow bottom-6 right-40 shadow-white">
+              Questions
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow">
+            <ul>
+              {getAllAlgoQuestions().map((question) => (
+                <li key={question.id} className="px-2 rounded-lg">
+                  <div className="flex flex-row">
+                    <FileQuestion />
+                    {question.title}
+                  </div>
+                  <div
+                    className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                    onClick={() => {
+                      handleChangeQuestion(question.id);
+                    }}
+                  >
+                    <CornerDownRight className="p-1" />
+                    Put Question in Editor
+                  </div>
+                  <div
+                    className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                    onClick={() => {
+                      setType("hints");
+                      setBody(question.hints);
+                      setOpen();
 
-                    realTimeRef.current?.send({
-                      type: "broadcast",
-                      event: EVENT.HINT_SOLUTION_SHOW,
-                      payload: { type: "hints", body: question.hints },
-                    });
-                  }}
-                >
-                  <CornerDownRight className="p-1" />
-                  Show Hint(s)
-                </div>
-                <div
-                  className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
-                  onClick={() => {
-                    setType("solution");
-                    setBody(question.solution);
-                    setOpen();
+                      if (realTimeRef) {
+                        realTimeRef.current?.send({
+                          type: "broadcast",
+                          event: EVENT.HINT_SOLUTION_SHOW,
+                          payload: { type: "hints", body: question.hints },
+                        });
+                      }
+                    }}
+                  >
+                    <CornerDownRight className="p-1" />
+                    Show Hint(s)
+                  </div>
+                  <div
+                    className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                    onClick={() => {
+                      setType("solution");
+                      setBody(question.solution);
+                      setOpen();
 
-                    realTimeRef.current?.send({
-                      type: "broadcast",
-                      event: EVENT.HINT_SOLUTION_SHOW,
-                      payload: { type: "solution", body: question.solution },
-                    });
-                  }}
-                >
-                  <CornerDownRight className="p-1" />
-                  Show Solution
-                </div>
-              </li>
-            ))}
-          </ul>
-        </PopoverContent>
-      </Popover>}
+                      if (realTimeRef) {
+                        realTimeRef.current?.send({
+                          type: "broadcast",
+                          event: EVENT.HINT_SOLUTION_SHOW,
+                          payload: {
+                            type: "solution",
+                            body: question.solution,
+                          },
+                        });
+                      }
+                    }}
+                  >
+                    <CornerDownRight className="p-1" />
+                    Show Solution
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </PopoverContent>
+        </Popover>
+      )}
       <div className="prose text-white prose-stone dark:prose-invert">
         <div
           id="editor"
-          className={cn("p-3 max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white min-h-", finished ? "hover:cursor-not-allowed" : "",)}
-          
+          className={cn(
+            "p-3 max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white min-h-",
+            finished ? "hover:cursor-not-allowed" : ""
+          )}
         />
       </div>
     </div>

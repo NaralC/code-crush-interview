@@ -132,7 +132,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
 
   return (
     <Modal
-      title={"Browse Rooms (sorted by recent activity)"}
+      title={"Browse Rooms"}
       isOpen={isOpen}
       setClose={setClose}
       className="max-h-[75vh] overflow-x-clip"

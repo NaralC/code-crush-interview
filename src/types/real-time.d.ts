@@ -17,16 +17,16 @@ type UsersList = {
 };
 
 type Question = {
-  id: string;
+  id: number;
   title: string;
   body: any;
   hints: string;
   solution: string;
-  // body: {
-  //   time: string,
-  //   version: string,
-  //   blocks: any[]
-  // }
+  body: {
+    time: string,
+    version: string,
+    blocks: any[]
+  }
 };
 
 type HintsOrSolution = "hints" | "solution";
@@ -36,4 +36,6 @@ type HintsOrSolution = "hints" | "solution";
 type Roles = "interviewer" | "interviewee" | null
 
 type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
+
+type QuestionFromDB = Database["public"]["Tables"]["questions"]["Row"];
 

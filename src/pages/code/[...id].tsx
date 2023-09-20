@@ -9,7 +9,7 @@ import HintsSolutionModal from "@/components/custom/modals/hints-solution-modal"
 import AudioVideoCall from "@/components/custom/audio-video-call";
 
 // Next.js/React Stuff
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
@@ -23,6 +23,7 @@ import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
 import SackpackEditor from "@/components/custom/editors/sandpack-editor";
 import MySandpack from "../../components/custom/editors/sandpack-monaco-test";
+import toast from "react-hot-toast";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -64,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       roomName: name,
       userName,
       type,
-      finished
+      finished,
     },
   };
 };
@@ -82,7 +83,7 @@ const CodingPage: NextPage<{
   roomName: initialRoomName,
   userName,
   type,
-  finished
+  finished,
 }) => {
   // States
   const [roomName, setRoomName] = useState<string>(initialRoomName);
@@ -102,11 +103,26 @@ const CodingPage: NextPage<{
     });
   }, 200);
 
+  const effectRan = useRef(false);
   useEffect(() => {
-    dispatchCode({
-      type: "UPDATE_CODE",
-      payload: initialCodeState,
-    });
+    if (effectRan.current === false) {
+      dispatchCode({
+        type: "UPDATE_CODE",
+        payload: initialCodeState,
+      });
+
+      if (finished)
+        toast(
+          "This interview is marked as finished. Editing text is no longer allowed.",
+          {
+            duration: 4000,
+          }
+        );
+    }
+
+    return () => {
+      effectRan.current = true;
+    };
   }, []);
 
   return (
@@ -131,10 +147,17 @@ const CodingPage: NextPage<{
             />
             <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
               <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-                <MonacoEditor realTimeRef={realTimeRef} name={userName} finished={finished} />
+                <MonacoEditor
+                  realTimeRef={realTimeRef}
+                  name={userName}
+                  finished={finished}
+                />
               </div>
               <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-                <NotionLikeEditor realTimeRef={realTimeRef} finished={finished} />
+                <NotionLikeEditor
+                  realTimeRef={realTimeRef}
+                  finished={finished}
+                />
               </div>
             </Split>
             <OutputConsole />

@@ -49,6 +49,7 @@ interface Database {
           id: number
           solution: string | null
           title: string | null
+          type: Database["public"]["Enums"]["room_type"]
         }
         Insert: {
           body?: Json | null
@@ -56,6 +57,7 @@ interface Database {
           id?: number
           solution?: string | null
           title?: string | null
+          type: Database["public"]["Enums"]["room_type"]
         }
         Update: {
           body?: Json | null
@@ -63,6 +65,7 @@ interface Database {
           id?: number
           solution?: string | null
           title?: string | null
+          type?: Database["public"]["Enums"]["room_type"]
         }
         Relationships: []
       }
