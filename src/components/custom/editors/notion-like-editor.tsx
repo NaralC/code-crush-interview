@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { EVENT } from "@/lib/constant";
 import { useNoteStore } from "@/stores/note-store";
 import { Button } from "@/components/ui/button";
-import { getAlgoQuestionById, getAllAlgoQuestions } from "@/lib/questions";
 import { CornerDownRight, FileQuestion } from "lucide-react";
 import { useUsersStore } from "@/stores/users-store";
 import useModalStore from "@/stores/modal-store";
@@ -18,7 +17,8 @@ import { cn } from "@/lib/utils";
 const NotionLikeEditor: FC<{
   realTimeRef?: MutableRefObject<RealtimeChannel | null>;
   finished?: boolean;
-}> = ({ realTimeRef, finished }) => {
+  questions?: Question[]
+}> = ({ realTimeRef, finished, questions }) => {
   // Modal
   const {
     hintsSolutionModal: { setBody, setOpen, setType },
@@ -171,21 +171,21 @@ const NotionLikeEditor: FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorIsMounted, initializeEditor]);
 
-  const handleChangeQuestion = async (id: string) => {
-    const question = getAlgoQuestionById(id);
+  const handleChangeQuestion = async (id: number) => {
+    const question = questions?.filter(q => q.id === id)[0]
 
     if (!question) {
-      toast.error("Question not found.");
+      toast.error("Question not found");
     }
 
-    editorRef.current!.render(question?.body);
+    editorRef.current!.render(question?.body.body);
 
     if (realTimeRef) {
       realTimeRef.current?.send({
         type: "broadcast",
         event: EVENT.NOTE_UPDATE,
         payload: {
-          message: { ...question?.body },
+          message: { ...question?.body.body },
         },
       });
     }
@@ -202,7 +202,7 @@ const NotionLikeEditor: FC<{
           </PopoverTrigger>
           <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow">
             <ul>
-              {getAllAlgoQuestions().map((question) => (
+              {questions?.map((question) => (
                 <li key={question.id} className="px-2 rounded-lg">
                   <div className="flex flex-row">
                     <FileQuestion />
@@ -211,7 +211,7 @@ const NotionLikeEditor: FC<{
                   <div
                     className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
                     onClick={() => {
-                      handleChangeQuestion(String(question.id));
+                      handleChangeQuestion(question.id);
                     }}
                   >
                     <CornerDownRight className="p-1" />

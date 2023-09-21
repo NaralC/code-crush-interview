@@ -26,7 +26,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { data, error } = await supabaseClient
     .from("interview_rooms")
-    .select("room_id, created_at, name, description, participants, type, finished");
+    .select(
+      "room_id, created_at, name, description, participants, type, finished"
+    )
+    .order("name", { ascending: true });
 
   if (error) {
     return {
@@ -128,7 +131,10 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           <div className="flex flex-row items-center justify-center gap-2 text-center">
             Powered By
             <TbBrandNextjs
-              className={cn("text-3xl", animation ? "text-white" : "text-black")}
+              className={cn(
+                "text-3xl",
+                animation ? "text-white" : "text-black"
+              )}
             />
             <TbBrandTailwind
               className={cn("text-3xl", animation ? "text-sky-500" : "")}

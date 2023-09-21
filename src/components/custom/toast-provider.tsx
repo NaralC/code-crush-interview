@@ -2,7 +2,7 @@ import {
   Toast,
   ToastClose,
   ToastDescription,
-  ToastProvider as CustomToastProvider,
+  ToastProvider as RadixToastProvider,
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast";
@@ -15,13 +15,12 @@ export function ToastProvider() {
   return (
     <>
       <Toaster
-        position="top-center"
+        position="bottom-left"
         reverseOrder={false}
         gutter={8}
         containerClassName=""
         containerStyle={{}}
         toastOptions={{
-          // Define default options
           className: "",
           duration: 2000,
           style: {
@@ -30,7 +29,7 @@ export function ToastProvider() {
           },
         }}
       />
-      <CustomToastProvider>
+      <RadixToastProvider>
         {toasts.map(function ({ id, title, description, action, ...props }) {
           return (
             <Toast key={id} {...props}>
@@ -46,7 +45,7 @@ export function ToastProvider() {
           );
         })}
         <ToastViewport />
-      </CustomToastProvider>
+      </RadixToastProvider>
     </>
   );
 }

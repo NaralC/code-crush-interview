@@ -29,12 +29,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
 
   const { id: roomId, userName } = ctx.query;
-  const { data, error } = await supabaseClient
+  const { data: rooms, error: roomsError } = await supabaseClient
     .from("interview_rooms")
     .select("*")
     .eq("room_id", roomId);
 
-  if (error || !roomId || !userName) {
+  if (roomsError || !roomId || !userName) {
     return {
       redirect: {
         destination: "/",
@@ -43,7 +43,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const { code_state, room_id, name, participants, type, finished } = data[0];
+  const { code_state, room_id, name, participants, type, finished } = rooms[0];
+
+  const { data: questions, error: questionsError } = await supabaseClient
+    .from("questions")
+    .select("title, body, hints, solution, id")
+    .eq("type", type);
 
   if (participants) {
     const userCount = Object.keys(participants!).length;
@@ -66,6 +71,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       userName,
       type,
       finished,
+      questions,
     },
   };
 };
@@ -77,6 +83,7 @@ const CodingPage: NextPage<{
   userName: string;
   type: "front_end" | "ds_algo";
   finished: boolean;
+  questions: Question[];
 }> = ({
   initialCodeState,
   roomId,
@@ -84,6 +91,7 @@ const CodingPage: NextPage<{
   userName,
   type,
   finished,
+  questions,
 }) => {
   // States
   const [roomName, setRoomName] = useState<string>(initialRoomName);
@@ -157,16 +165,19 @@ const CodingPage: NextPage<{
                 <NotionLikeEditor
                   realTimeRef={realTimeRef}
                   finished={finished}
+                  questions={questions}
                 />
               </div>
             </Split>
             <OutputConsole />
-            {/* <AudioVideoCall
-            isMuted={isMuted}
-            setIsMuted={setIsMuted}
-            myVideo={myVideo}
-            partnerVideo={partnerVideo}
-          /> */}
+            {/* {!!finished && (
+              <AudioVideoCall
+                isMuted={isMuted}
+                setIsMuted={setIsMuted}
+                myVideo={myVideo}
+                partnerVideo={partnerVideo}
+              />
+            )} */}
           </>
         ) : (
           <>

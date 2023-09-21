@@ -172,8 +172,9 @@ const useRealTime = (
           })
           .eq("room_id", roomId)
           .select();
+        console.log(data, error)
       })
-      .on("presence", { event: "join" }, ({ newPresences }) => {
+      .on("presence", { event: "join" }, async ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
 
         channel.send({
@@ -183,6 +184,24 @@ const useRealTime = (
             role: latestRoleRef.current,
           },
         });
+
+        const presenceState = channel.presenceState();
+        const transformedState: Record<string, any> = {};
+
+        for (const key in presenceState) {
+          if (presenceState[key].length > 0) {
+            transformedState[key] = presenceState[key][0];
+          }
+        }
+
+        const { data, error } = await supaClient
+          .from("interview_rooms")
+          .update({
+            participants: transformedState,
+          })
+          .eq("room_id", roomId)
+          .select();
+          console.log(data, error)
       })
       .on("presence", { event: "leave" }, async ({ leftPresences }) => {
         toast.error(`${leftPresences[0]["name"]} just left!`);
@@ -203,6 +222,7 @@ const useRealTime = (
           })
           .eq("room_id", roomId)
           .select();
+          console.log(data, error)
       });
 
     // Postgres changes
