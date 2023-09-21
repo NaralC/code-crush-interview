@@ -34,7 +34,6 @@ Should haves:
 
 Clean-ups:
 - Make AV control (on coding page) actually work
-- Joining doesn't update room participants
 - Being able to create FE questions
 - Fix infinite refetch when 'Compilation Error'
 - Save notes data to DB
