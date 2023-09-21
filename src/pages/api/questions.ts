@@ -20,13 +20,15 @@ export default async function handler(
 
     const { data, error } = await supabaseServerClient
       .from("questions")
-      .insert({
-        title,
-        body: { body },
-        hints,
-        solution,
-        type,
-      })
+      .insert([
+        {
+          title,
+          body: { body },
+          hints,
+          solution,
+          type,
+        },
+      ])
       .select();
 
     if (!data || error) {
@@ -38,7 +40,7 @@ export default async function handler(
   }
 
   // Editing a question
-  if (req.method === "PATCH") {
+  else if (req.method === "PATCH") {
     const { title, body, hints, solution, id } = JSON.parse(req.body);
 
     const { data, error } = await supabaseServerClient
@@ -58,5 +60,22 @@ export default async function handler(
     }
 
     return res.status(200).json({ content: "Question edited!" });
+  }
+
+  // Deleting a question
+  else if (req.method === "DELETE") {
+    const { id } = JSON.parse(req.body);
+
+    const { error } = await supabaseServerClient
+      .from("questions")
+      .delete()
+      .eq("id", id)
+
+    if (error) {
+      res.status(500).json({ content: "Failed to delete question" });
+      return;
+    }
+
+    return res.status(200).json({ content: "Question deleted!" });
   }
 }

@@ -4,16 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FaPython, FaReact } from "react-icons/fa";
-import toast from "react-hot-toast";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 
 // Logic
 import { NextPage } from "next";
-import { Fragment, useState } from "react";
+import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNoteStore } from "@/stores/note-store";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import supabaseClient from "@/lib/supa-client";
+import useQuestionsMutation from "@/hooks/use-questions-mutation";
 
 const Questions: NextPage = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(
@@ -38,33 +38,36 @@ const Questions: NextPage = () => {
       return data;
     },
   });
+  
+  const refetchFn = useCallback(() => {
+    refetch();
+  }, []);
 
-  const { mutate } = useMutation({
-    mutationKey: ["edit-question"],
-    mutationFn: async (body: Question) => {
-      const response = await fetch("/api/questions", {
-        method: "PATCH",
-        body: JSON.stringify(body),
-      });
+  const { mutate: createQuestion } = useQuestionsMutation<
+    Omit<QuestionFromDB, "id">
+  >(["create-question"], "POST", refetchFn);
 
-      const { content } = await response.json();
-      return content;
-    },
-    onSuccess: (data) => {
-      refetch();
-      toast(data);
-    },
-  });
+  const { mutate: editQuestion } = useQuestionsMutation<Question>(
+    ["edit-question"],
+    "PATCH",
+    refetchFn
+  );
+
+  const { mutate: deleteQuestion } = useQuestionsMutation<{ id: number }>(
+    ["delete-question"],
+    "DELETE",
+    refetchFn
+  );
 
   return (
-    <main className="flex flex-col justify-center h-screen gap-5 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800 selection:text-black">
+    <main className="flex flex-col justify-center min-h-screen gap-5 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800 selection:text-black">
       <div className="text-2xl font-semibold">Question Pool</div>
-      <ScrollArea className="text-white h-[450px] px-3">
+      <ScrollArea className="text-white max-h-[450px] px-3">
         {questions?.map((question) => (
-          <Fragment key={question.id}>
+          <div className="flex" key={question.id}>
             <div
               className={cn(
-                "pl-4 py-2 border-2 rounded-lg shadow hover:cursor-pointer border-gray-500/25 ring-zinc-500 active:scale-[99%] transition-all hover:shadow-lg last:mb-0 mb-2 grid grid-cols-2 h-12",
+                "pl-4 py-2 border-2 rounded-lg shadow hover:cursor-pointer border-gray-500/25 ring-zinc-500 active:scale-[99%] transition-all hover:shadow-lg last:mb-0 mb-2 grid grid-cols-6 h-12 w-4/5",
                 selectedQuestionId === question.id
                   ? "bg-black text-white"
                   : "bg-white/75 text-black"
@@ -74,14 +77,13 @@ const Questions: NextPage = () => {
                 const { id, body, title, hints, solution } = question;
                 setSelectedQuestionId(id);
                 setTextInputs({ hints, title, solution });
-                console.log(body);
                 // @ts-ignore
                 editorRef.current?.render(body!.body);
               }}
             >
-              <div className="col-span-1 truncate">{question.title}</div>
-              <div className="col-span-1 text-right">
-                <div className="flex flex-col items-center">
+              <div className="col-span-4 truncate">{question.title}</div>
+              <div className="col-span-2 text-right">
+                <div className="flex flex-row items-center gap-3">
                   {question.type === "front_end" ? (
                     <FaReact
                       className={cn(
@@ -104,7 +106,13 @@ const Questions: NextPage = () => {
                 </div>
               </div>
             </div>
-          </Fragment>
+            <div
+              className="w-1/5 my-auto text-sm text-center text-red-500 transition-transform cursor-pointer hover:scale-105"
+              onClick={() => deleteQuestion({ id: question.id })}
+            >
+              Delete Question
+            </div>
+          </div>
         ))}
       </ScrollArea>
 
@@ -155,37 +163,39 @@ const Questions: NextPage = () => {
           }
         />
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-3">
+        <Button
+          variant="secondary"
+          onClick={async () => {
+            const noteData = await editorRef.current?.save();
+
+            createQuestion({
+              title: textInputs.title ?? "",
+              body: noteData as any,
+              hints: textInputs.hints ?? "",
+              solution: textInputs.solution ?? "",
+              type: "ds_algo",
+            });
+          }}
+          className="px-16 shadow shadow-white w-fit"
+        >
+          Create Question
+        </Button>
         <Button
           onClick={async () => {
             const noteData = await editorRef.current?.save();
 
-            mutate({
+            editQuestion({
               title: textInputs.title ?? "",
               body: noteData,
               hints: textInputs.hints ?? "",
               solution: textInputs.solution ?? "",
               id: selectedQuestionId!,
             });
-
-            // const response = await fetch("/api/questions", {
-            //   method: "PATCH",
-            //   body: JSON.stringify({
-            //     title: textInputs.title,
-            //     body: noteData,
-            //     hints: textInputs.hints,
-            //     solution: textInputs.solution,
-            //     id: selectedQuestionId,
-            //   }),
-            // });
-
-            // const { content } = await response.json();
-            // if (response.ok) toast.success(content);
-            // else toast.error(content);
           }}
           className="px-16 shadow shadow-white w-fit"
         >
-          Save
+          Edit Question
         </Button>
       </div>
     </main>

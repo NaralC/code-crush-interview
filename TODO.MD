@@ -18,7 +18,7 @@ Essential:
 
 Should haves:
 - Browse and join a room ✅
-- Functionality to CRUD the question pool ▶
+- Functionality to CRUD the question pool ✅
 - Fetch question from DB (on coding page/questions change page)
 - Coding page:
     - New tabs/pages (language dropdown) for code editor
@@ -34,5 +34,6 @@ Should haves:
 
 Clean-ups:
 - Make AV control (on coding page) actually work
+- Being able to create FE questions
 - Fix infinite refetch when 'Compilation Error'
 - Save notes data to DB

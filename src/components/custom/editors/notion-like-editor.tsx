@@ -211,7 +211,7 @@ const NotionLikeEditor: FC<{
                   <div
                     className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
                     onClick={() => {
-                      handleChangeQuestion(question.id);
+                      handleChangeQuestion(String(question.id));
                     }}
                   >
                     <CornerDownRight className="p-1" />
