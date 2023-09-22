@@ -31,7 +31,11 @@ export const useCodeStore = create<State & Action>()((set, get) => ({
   ...initialState,
   dispatchCode: (payload) =>
     set((state) => {
-      latestCodeRef.current = state.codeState.code;
+      const language = state.codeState.language;
+      const code = state.codeState.code[language];
+
+      if (code) latestCodeRef.current = code.value;
+      else latestCodeRef.current = "";
 
       return {
         codeState: Reducer.codeReducer(state.codeState, payload),

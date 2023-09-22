@@ -1,7 +1,7 @@
 import { Output } from "@/hooks/use-compile-code";
 
 export type CodeState = {
-  code: string;
+  code: Record<string, { value: string }>;
   language: string;
 };
 
@@ -37,7 +37,7 @@ export type AsyncAction = {
 
 export const initialCodeState = (): CodeState => {
   return {
-    code: "",
+    code: {},
     language: "typescript",
   };
 };
@@ -52,10 +52,16 @@ export const initialAsyncState = (): AsyncState => ({
   isSaving: false,
 });
 
-export const codeReducer = (state: CodeState, action: CodeAction): CodeState => {
+export const codeReducer = (
+  state: CodeState,
+  action: CodeAction
+): CodeState => {
   switch (action.type) {
     case "UPDATE_CODE":
-      return { ...state, code: action.payload };
+      return {
+        ...state,
+        code: { ...state.code, [state.language]: { value: action.payload } },
+      };
     case "SET_LANGUAGE":
       return { ...state, language: action.payload };
     default:
@@ -77,7 +83,10 @@ export const consoleReducer = (
   }
 };
 
-export const asyncReducer = (state: AsyncState, action: AsyncAction): AsyncState => {
+export const asyncReducer = (
+  state: AsyncState,
+  action: AsyncAction
+): AsyncState => {
   switch (action.type) {
     case "SET_IS_COMPILING":
       return { ...state, isCompiling: action.payload };
@@ -87,4 +96,3 @@ export const asyncReducer = (state: AsyncState, action: AsyncAction): AsyncState
       return state;
   }
 };
-

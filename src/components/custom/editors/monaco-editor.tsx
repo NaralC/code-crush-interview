@@ -89,7 +89,11 @@ const MonacoEditor: FC<{
         // value={value[fileName]}
         defaultLanguage={"typescript"}
         language={codeState.language}
-        value={codeState.code}
+        value={
+          codeState.code[codeState.language]
+            ? codeState.code[codeState.language].value
+            : ""
+        }
         options={{
           // fontLigatures: true,
           selectOnLineNumbers: true,
