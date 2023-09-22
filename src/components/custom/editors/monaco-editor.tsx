@@ -9,7 +9,6 @@ import throttle from "lodash.throttle";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCodeStore } from "@/stores/code-store";
-import { useUsersStore } from "@/stores/users-store";
 
 const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
@@ -97,7 +96,7 @@ const MonacoEditor: FC<{
           cursorSmoothCaretAnimation: "on",
           cursorBlinking: "smooth",
           fontSize: 15,
-          readOnly: finished // TODO: Read only here
+          readOnly: finished
         }}
         onChange={handleEditorChange}
         onMount={(editor, monaco) => {

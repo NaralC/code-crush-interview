@@ -13,6 +13,7 @@ function MonacoEditor() {
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
  
+  // Refer to https://github.com/suren-atoyan/monaco-loader#for-nextjs-users for package management
   return (
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
       <FileTabs />

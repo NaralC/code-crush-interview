@@ -21,8 +21,8 @@ Should haves:
 - Functionality to CRUD the question pool ✅
 - Fetch question from DB (on coding page) ✅
 - Coding page:
-    - New tabs/pages (language dropdown) for code editor
-    - Indicator of who's on which file
+    - New tabs/pages (language dropdown) for code editor ▶
+    - Indicator of who's on which file ▶
     - Interview stopwatch
     - Edit room name ✅
     - Live cursors ✅
@@ -38,3 +38,4 @@ Clean-ups:
 - Abstract away "Supabase on client-side to api routes"
 - Fix infinite refetch when 'Compilation Error'
 - Save notes data to DB
+- Try the "real-time hilighter" by switching to App Router
