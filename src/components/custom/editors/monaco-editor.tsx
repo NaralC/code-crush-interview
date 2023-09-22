@@ -55,6 +55,7 @@ const MonacoEditor: FC<{
     [codeState.code]
   );
 
+  // TODO: Make it autofocus on monaco when a language is changed
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
     <>
