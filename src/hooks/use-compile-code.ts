@@ -32,7 +32,7 @@ const useCompileCode = () => {
       const response = await fetch("/api/compile/token", {
         method: "POST",
         body: JSON.stringify({
-          code: window.btoa(codeState.code),
+          code: window.btoa(codeState.code[codeState.language].value),
           language: codeState.language,
         }),
       });
