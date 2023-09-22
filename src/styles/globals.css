@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  .inter-font {
+    font-family: "Inter", sans-serif;
+  }
+
   .ce-toolbar__actions {
     background-color: #ffffff;
     border-radius: 5px;

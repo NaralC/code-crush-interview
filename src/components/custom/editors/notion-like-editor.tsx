@@ -200,7 +200,7 @@ const NotionLikeEditor: FC<{
               Questions
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow">
+          <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow inter-font">
             <ul>
               {questions?.map((question) => (
                 <li key={question.id} className="px-2 rounded-lg">

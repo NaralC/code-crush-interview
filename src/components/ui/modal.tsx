@@ -38,7 +38,7 @@ const Modal: FC<{
         }}
       >
         <DialogContent
-          className={cn("max-h-screen overflow-y-auto", className)}
+          className={cn("max-h-screen overflow-y-auto inter-font", className)}
         >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

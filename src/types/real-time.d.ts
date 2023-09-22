@@ -39,3 +39,4 @@ type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
 
 type QuestionFromDB = Database["public"]["Tables"]["questions"]["Row"];
 
+type CodeUpdate = { language: string; value: string; }

@@ -18,12 +18,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { DEFAULT_ROOM_ID } from "@/lib/constant";
 import { Dices, Loader2 } from "lucide-react";
-import { faker } from "@faker-js/faker";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import supabaseClient from "@/lib/supa-client";
 import useModalStore from "@/stores/modal-store";
-import { generateRoomName } from "@/lib/faker";
+import { generateUsername } from "@/lib/faker";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
@@ -139,7 +138,7 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
                           onClick={() => {
                             form.setValue(
                               "userName",
-                              generateRoomName()
+                              generateUsername()
                             );
                           }}
                         />

@@ -15,13 +15,7 @@ const MonacoEditor: FC<{
   finished: boolean;
 }> = ({ realTimeRef, name, finished }) => {
   // Code state
-  const { codeState, dispatchCode, dispatchConsole } = useCodeStore(
-    (state) => ({
-      dispatchCode: state.dispatchCode,
-      dispatchConsole: state.dispatchConsole,
-      codeState: state.codeState,
-    })
-  );
+  const { codeState, dispatchCode, dispatchConsole, latestLanguageRef } = useCodeStore();
 
   // Editor refs
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null); // for editor text
@@ -37,13 +31,16 @@ const MonacoEditor: FC<{
         payload: value,
       });
 
+      const payload: CodeUpdate = {
+        language: latestLanguageRef.current!,
+        value,
+      };
+
       const broadcastCodeUpdate = throttle(() => {
         realTimeRef.current?.send({
           type: "broadcast",
           event: EVENT.CODE_UPDATE,
-          payload: {
-            message: value,
-          },
+          payload
         });
       });
 
@@ -70,7 +67,7 @@ const MonacoEditor: FC<{
       <Editor
         className={cn(
           "m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto font-jetbrains",
-          finished ? "hover:cursor-not-allowed" : "",
+          finished ? "hover:cursor-not-allowed" : ""
         )}
         height="100%"
         loading={
@@ -88,7 +85,7 @@ const MonacoEditor: FC<{
             : ""
         }
         options={{
-          fontFamily: 'JetBrains Mono', // Controls the editor font
+          fontFamily: "JetBrains Mono", // Controls the editor font
           fontLigatures: true,
           selectOnLineNumbers: true,
           cursorSmoothCaretAnimation: "on",

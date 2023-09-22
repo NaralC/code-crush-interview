@@ -15,10 +15,15 @@ export type AsyncState = {
   isSaving: boolean;
 };
 
-export type CodeAction = {
-  type: "UPDATE_CODE" | "SET_LANGUAGE";
-  payload: string;
-};
+export type CodeAction =
+  | {
+      type: "UPDATE_CODE" | "SET_LANGUAGE";
+      payload: string;
+    }
+  | {
+      type: "UPDATE_CODE_BY_LANGUAGE";
+      payload: { language: string; value: string };
+    };
 
 export type ConsoleAction =
   | {
@@ -64,6 +69,14 @@ export const codeReducer = (
       };
     case "SET_LANGUAGE":
       return { ...state, language: action.payload };
+    case "UPDATE_CODE_BY_LANGUAGE":
+      return {
+        ...state,
+        code: {
+          ...state.code,
+          [action.payload.language]: { value: action.payload.value },
+        },
+      };
     default:
       return state;
   }

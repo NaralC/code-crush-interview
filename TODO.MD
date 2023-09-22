@@ -21,8 +21,7 @@ Should haves:
 - Functionality to CRUD the question pool ✅
 - Fetch question from DB (on coding page) ✅
 - Coding page:
-    - New tabs/pages (language dropdown) for code editor ▶
-    - Indicator of who's on which file ▶
+    - Multiple-languages dropdown for code editor ▶
     - Interview stopwatch
     - Edit room name ✅
     - Live cursors ✅
@@ -38,4 +37,7 @@ Clean-ups:
 - Abstract away "Supabase on client-side to api routes"
 - Fix infinite refetch when 'Compilation Error'
 - Save notes data to DB
+- Async state sync for new joiners
 - Try the "real-time hilighter" by switching to App Router
+- ~~New tabs for Monaco~~
+- ~~Indicator of who's on which file~~

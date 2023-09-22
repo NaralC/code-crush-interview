@@ -132,7 +132,7 @@ const UtilityBar: FC<{
           <FolderEdit />
           <div>{roomName}</div>
         </PopoverTrigger>
-        <PopoverContent className="space-y-2 translate-x-5 drop-shadow-md shadow-black">
+        <PopoverContent className="space-y-2 translate-x-5 drop-shadow-md shadow-black inter-font">
           <Label className="text-base" htmlFor="roomName">
             Change room name?
           </Label>
@@ -162,7 +162,7 @@ const UtilityBar: FC<{
           <SelectTrigger className="w-[130px] md:w-[180px] bg-slate-900">
             <SelectValue placeholder="Pick a language..." />
           </SelectTrigger>
-          <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white">
+          <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white inter-font">
             {[
               { language: "TypeScript", icon: <SiTypescript /> },
               { language: "Python", icon: <SiPython /> },

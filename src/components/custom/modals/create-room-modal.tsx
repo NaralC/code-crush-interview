@@ -25,14 +25,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FaPython, FaReact } from "react-icons/fa";
-import { GiTalk } from "react-icons/gi";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
 import { Dices, Loader2 } from "lucide-react";
-import { faker } from "@faker-js/faker";
 import { useRouter } from "next/router";
 import useModalStore from "@/stores/modal-store";
 import { generateRoomName, generateUsername } from "@/lib/faker";
