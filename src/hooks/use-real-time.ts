@@ -1,7 +1,7 @@
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { MutableRefObject, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
@@ -9,15 +9,22 @@ import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 import useModalStore from "../stores/modal-store";
 import { Output } from "./use-compile-code";
+import type { OutputData } from "@editorjs/editorjs";
+import { useRouter } from "next/navigation";
 
 const useRealTime = (
   roomId: string,
   name: string,
   setRoomName: (newName: string) => void,
+  finished: boolean,
+  setFinishedTrue: () => void
 ) => {
-  const { hintsSolutionModal: { setOpen, setType, setBody } } = useModalStore();
+  const {
+    hintsSolutionModal: { setOpen, setType, setBody },
+  } = useModalStore();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
   const supaClient = supabaseClient;
+  const router = useRouter();
 
   // States
   const { latestCodeRef, dispatchConsole, dispatchAsync, dispatchCode } =
@@ -51,8 +58,6 @@ const useRealTime = (
             message: string;
           }>
         ) => {
-          // toast(String(payload.payload?.message));
-
           // Send the latest code and note state to the new comer
           channel.send({
             type: "broadcast",
@@ -62,7 +67,8 @@ const useRealTime = (
             },
           });
 
-          const noteData = await editorRef.current?.save();
+          let noteData: OutputData | undefined
+          if (!finished) noteData = await editorRef.current?.save();
           if (!noteData?.blocks.length) return;
 
           setTimeout(() => {
@@ -149,8 +155,8 @@ const useRealTime = (
           setType(type);
           setBody(body);
         }
-      )
-      
+      );
+
     // Presence
     channel
       .on("presence", { event: "sync" }, async () => {
@@ -172,7 +178,7 @@ const useRealTime = (
           })
           .eq("room_id", roomId)
           .select();
-        console.log(data, error)
+        console.log(data, error);
       })
       .on("presence", { event: "join" }, async ({ newPresences }) => {
         toast.success(`${newPresences[0]["name"]} just joined!`);
@@ -201,7 +207,7 @@ const useRealTime = (
           })
           .eq("room_id", roomId)
           .select();
-          console.log(data, error)
+        console.log(data, error);
       })
       .on("presence", { event: "leave" }, async ({ leftPresences }) => {
         toast.error(`${leftPresences[0]["name"]} just left!`);
@@ -222,24 +228,31 @@ const useRealTime = (
           })
           .eq("room_id", roomId)
           .select();
-          console.log(data, error)
+        console.log(data, error);
       });
 
     // Postgres changes
-    channel.on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "interview_rooms",
-        filter: `room_id=eq.${roomId}`,
-      },
-      (payload) => {
-        // @ts-ignore
-        const { name } = payload["new"];
-        setRoomName(name);
-      }
-    );
+    channel
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "interview_rooms",
+          filter: `room_id=eq.${roomId}`,
+        },
+        (payload) => {
+          // @ts-ignore
+          const { name, finished } = payload["new"];
+          setRoomName(name);
+
+          // TODO: This triggers when someone exits an ended session
+          if (finished) {
+            toast("The interview is being wrapped up... \nEnding interview session.")
+            setTimeout(() => setFinishedTrue(), 1000)
+          }
+        }
+      )
 
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {

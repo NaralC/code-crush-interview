@@ -7,15 +7,16 @@ type BasicModal = {
 };
 
 type ModalStore = {
-  createRoomModal: BasicModal & {};
+  createRoomModal: BasicModal;
   hintsSolutionModal: BasicModal & {
     body: string;
     setBody: (newBody: any) => void;
     type: HintsOrSolution;
     setType: (newType: HintsOrSolution) => void;
   };
-  joinRoomModal: BasicModal & {};
-  browseRoomsModal: BasicModal & {};
+  joinRoomModal: BasicModal;
+  browseRoomsModal: BasicModal;
+  endInterviewModal: BasicModal;
 };
 
 const useModalStore = create<ModalStore>((set) => ({
@@ -74,6 +75,17 @@ const useModalStore = create<ModalStore>((set) => ({
     setClose: () =>
       set((state) => ({
         browseRoomsModal: { ...state.browseRoomsModal, isOpen: false },
+      })),
+  },
+  endInterviewModal: {
+    isOpen: false,
+    setOpen: () =>
+      set((state) => ({
+        endInterviewModal: { ...state.endInterviewModal, isOpen: true },
+      })),
+    setClose: () =>
+      set((state) => ({
+        endInterviewModal: { ...state.endInterviewModal, isOpen: false },
       })),
   },
 }));

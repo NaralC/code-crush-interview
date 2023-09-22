@@ -16,14 +16,30 @@ const Modal: FC<{
   children: JSX.Element;
   isOpen: boolean;
   setClose: () => void;
-  className?: string
-}> = ({ title, description, children: content, isOpen, setClose, className }) => {
+  className?: string;
+  hideX?: boolean;
+}> = ({
+  title,
+  description,
+  children: content,
+  isOpen,
+  setClose,
+  className,
+  hideX,
+}) => {
   // Controlling Radix dialog state manually: https://github.com/shadcn/ui/issues/386
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={() => { setClose() }}>
-        <DialogContent className={cn("max-h-screen overflow-y-auto", className)}>
+      <Dialog
+        open={isOpen}
+        onOpenChange={() => {
+          setClose();
+        }}
+      >
+        <DialogContent
+          className={cn("max-h-screen overflow-y-auto", className)}
+        >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
@@ -33,7 +49,7 @@ const Modal: FC<{
               onClick={setClose}
               size="closeDialog"
             >
-              <X className="w-4 h-4" />
+              {!hideX && <X className="w-4 h-4" />}
               <span className="sr-only">Close</span>
             </Button>
             {content}

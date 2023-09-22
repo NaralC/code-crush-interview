@@ -23,11 +23,11 @@ Should haves:
 - Coding page:
     - New tabs/pages (language dropdown) for code editor
     - Indicator of who's on which file
-    - Interview timer
+    - Interview stopwatch
     - Edit room name ✅
     - Live cursors ✅
     - Interview Status (ongoing/finished) ✅
-    - Being able to end an interview ▶
+    - Being able to end an interview ✅
     - Password lock
 - FE interview
 - Video/audio device settings
@@ -35,5 +35,6 @@ Should haves:
 Clean-ups:
 - Make AV control (on coding page) actually work
 - Being able to create FE questions
+- Abstract away "Supabase on client-side to api routes"
 - Fix infinite refetch when 'Compilation Error'
 - Save notes data to DB

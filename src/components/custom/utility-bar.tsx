@@ -128,7 +128,7 @@ const UtilityBar: FC<{
   return (
     <div className="z-10 flex flex-row justify-between w-full px-5 py-2 text-white border-b-2 border-zinc-500 bg-slate-900 h-14">
       <Popover>
-        <PopoverTrigger className="flex flex-row items-center gap-2">
+        <PopoverTrigger className="flex-row items-center hidden gap-2 md:flex">
           <FolderEdit />
           <div>{roomName}</div>
         </PopoverTrigger>

@@ -28,7 +28,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       return;
     }
 
-    // TODO:
+    // 
     realTimeRef.current.on("presence", { event: "sync" }, () => {
       const userCount = Object.values(
         realTimeRef.current!.presenceState()
@@ -46,7 +46,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       handleRoomJoined();
     });
 
-    // TODO:
+    // 
     // For the host to accept call
     realTimeRef.current.on(
       "broadcast",
@@ -57,7 +57,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       }
     );
 
-    // TODO:
+    // 
     // For the non-host to accept call
     realTimeRef.current.on(
       "broadcast",
@@ -76,7 +76,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       }
     );
 
-    // TODO:
+    // 
     // When receiving this event, the non-host user will call the handleReceivedOffer method and pass it the Offer object
     realTimeRef.current.on(
       "broadcast",
@@ -96,7 +96,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       }
     );
 
-    // TODO:
+    // 
     // Once the non-host sends the answer, the host is listening for the client-answer event and calls the handleAnswerReceived method
     realTimeRef.current.on(
       "broadcast",
@@ -116,7 +116,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       }
     );
 
-    // TODO:
+    // 
     // When we create the RTCPeerConnection, it provides us with two (among others) events to subscribe to
     realTimeRef.current.on(
       "broadcast",
@@ -134,7 +134,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       }
     );
 
-    // TODO:
+    // 
     // when a member leaves the chat
     realTimeRef.current.on(
       "presence",
@@ -166,7 +166,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
         };
         if (!host.current) {
           // the 2nd peer joining will tell to host they are ready
-          // TODO:
+          // 
           realTimeRef.current?.send({
             type: "broadcast",
             event: EVENT.CLIENT_READY,
@@ -210,7 +210,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
           // 4. Send offer to other peer via pusher
           // Note: 'client-' prefix means this event is not being sent directly from the client
           // This options needs to be turned on in Pusher app settings
-          // TODO:
+          // 
           realTimeRef.current?.send({
             type: "broadcast",
             event: EVENT.CLIENT_OFFER,
@@ -243,7 +243,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
       .createAnswer()
       .then((answer) => {
         rtcConnection.current!.setLocalDescription(answer);
-        // TODO:
+        // 
         realTimeRef.current?.send({
           type: "broadcast",
           event: EVENT.CLIENT_ANSWER,
@@ -270,7 +270,7 @@ const useWebRTC = (realTimeRef: MutableRefObject<RealtimeChannel | null>) => {
   const handleICECandidateEvent = async (event: RTCPeerConnectionIceEvent) => {
     if (event.candidate) {
       // return sentToPusher('ice-candidate', event.candidate)
-      // TODO:
+      // 
       realTimeRef.current?.send({
         type: "broadcast",
         event: EVENT.CLIENT_ICE_CANDIDATE,

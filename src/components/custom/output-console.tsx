@@ -58,7 +58,7 @@ const OutputConsole: FC = () => {
               <>
                 <div className="flex items-center mb-2 space-x-1">
                   <MemoryStick />
-                  <strong>Memory Used:</strong>
+                  <strong>Memory Used — </strong>
                   <div>{consoleState.consoleOutput.memory} KB</div>
                   {/* <div className="text-sm">
                     <strong>(out of</strong>
@@ -67,18 +67,18 @@ const OutputConsole: FC = () => {
                 </div>
                 <div className="flex items-center mb-2 space-x-1">
                   <TimerReset />
-                  <strong>Execution Time:</strong>
+                  <strong>Execution Time — </strong>
                   <div>{consoleState.consoleOutput.time} seconds</div>
                 </div>
                 <div className="flex items-center mb-2 space-x-1">
                   <BadgeCheck />
-                  <strong>Status:</strong>
+                  <strong>Status — </strong>
                   <div>{consoleState.consoleOutput.status.description}</div>
                 </div>
                 <div className="items-center mb-2 space-x-1">
                   <div className="flex space-x-1">
                     <ArrowUp01 />
-                    <strong>Standard Output:</strong>
+                    <strong>Standard Output</strong>
                   </div>
                   <pre className="p-2 whitespace-pre-wrap bg-gray-700 rounded-lg">
                     {consoleState.consoleOutput.stdout}
