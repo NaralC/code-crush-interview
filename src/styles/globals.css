@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    font-family: "Inter", sans-serif;
-  }
-
   .ce-toolbar__actions {
     background-color: #ffffff;
     border-radius: 5px;
@@ -32,6 +28,7 @@
   .ce-paragraph {
     color: white;
   }
+
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -60,10 +57,6 @@
 
   ::-webkit-scrollbar-thumb:horizontal:hover {
     background: #b1b1b1;
-  }
-
-  .font-jetbrains {
-    font-family: "JetBrains Mono", monospace;
   }
 }
 

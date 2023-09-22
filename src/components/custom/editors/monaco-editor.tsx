@@ -4,13 +4,10 @@ import { Position, editor, Range } from "monaco-editor";
 import { FC, MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { EVENT } from "@/lib/constant";
-import { JetBrains_Mono } from "next/font/google";
 import throttle from "lodash.throttle";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCodeStore } from "@/stores/code-store";
-
-const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
 const MonacoEditor: FC<{
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
@@ -72,9 +69,8 @@ const MonacoEditor: FC<{
       </Button>
       <Editor
         className={cn(
-          "m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto",
+          "m-0 overflow-hidden font-jetbrains p-0 overflow-y-auto font-jetbrains",
           finished ? "hover:cursor-not-allowed" : "",
-          jetBrainsMono.className
         )}
         height="100%"
         loading={
@@ -84,9 +80,6 @@ const MonacoEditor: FC<{
           </div>
         }
         theme={"vs-dark"}
-        // path={fileName}
-        // language={files[fileName].language}
-        // value={value[fileName]}
         defaultLanguage={"typescript"}
         language={codeState.language}
         value={
@@ -95,11 +88,12 @@ const MonacoEditor: FC<{
             : ""
         }
         options={{
-          // fontLigatures: true,
+          fontFamily: 'JetBrains Mono', // Controls the editor font
+          fontLigatures: true,
           selectOnLineNumbers: true,
           cursorSmoothCaretAnimation: "on",
           cursorBlinking: "smooth",
-          fontSize: 15,
+          fontSize: 14,
           readOnly: finished,
         }}
         onChange={handleEditorChange}

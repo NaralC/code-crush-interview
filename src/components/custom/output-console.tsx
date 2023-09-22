@@ -23,7 +23,7 @@ const OutputConsole: FC = () => {
       <div
         className={cn(
           "fixed inset-x-0 bottom-0 z-50 text-white bg-stone-950 border-t-2 border-zinc-50 ring-1 ring-zinc-500 duration-700 shadow-white rounded-t-md max-h-fit transition-all overflow-y-auto",
-          !isExpanded ? "h-40" : "h-[85vh]"
+          !isExpanded ? "h-56" : "h-[65vh]"
         )}
       >
         <div className="flex justify-between px-4 py-2 mt-2">

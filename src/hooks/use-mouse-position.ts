@@ -15,14 +15,14 @@ const useMousePosition = <T extends HTMLElement = any>(
       const x = Math.max(
         0,
         Math.round(
-          event.pageX - rect.left - (window.pageXOffset || window.scrollX)
+          event.pageX - rect.left - (window.screenX || window.scrollX)
         )
       );
 
       const y = Math.max(
         0,
         Math.round(
-          event.pageY - rect.top - (window.pageYOffset || window.scrollY)
+          event.pageY - rect.top - (window.screenY || window.scrollY)
         )
       );
 
