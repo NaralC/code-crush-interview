@@ -52,7 +52,6 @@ const MonacoEditor: FC<{
 
       broadcastCodeUpdate();
     },
-
     [codeState.code]
   );
 
@@ -96,7 +95,7 @@ const MonacoEditor: FC<{
           cursorSmoothCaretAnimation: "on",
           cursorBlinking: "smooth",
           fontSize: 15,
-          readOnly: finished
+          readOnly: finished,
         }}
         onChange={handleEditorChange}
         onMount={(editor, monaco) => {

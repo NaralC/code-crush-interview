@@ -1,102 +1,71 @@
 import React, { useState, useEffect, useRef } from "react";
 import type { editor } from "monaco-editor";
-
 import Editor from "@monaco-editor/react";
-import files from "./files";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SiTypescript, SiPython, SiCsharp } from "react-icons/si";
+type CodeState = {
+  [fileName: string]: {
+    name: string;
+    language: string;
+    value: string;
+  };
+};
+
+const initialState: CodeState = {
+  "script.js": {
+    name: "script.js",
+    language: "javascript",
+    value: `
+    console.log('This is JS');
+  `
+  },
+  "style.css": {
+    name: "style.css",
+    language: "css",
+    value: `
+    * {
+      margin: 0;
+    }
+  `
+  },
+  "index.html": {
+    name: "index.html",
+    language: "html",
+    value: `
+    <!DOCTYPE html>
+    <html lang="en">
+    </html>
+  `
+  }
+};
 
 export default function MultiModelEditor() {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-  const [fileName, setFileName] = useState("script.js");
+  const [codeState, setCodeState] = useState<CodeState>(initialState)
+  const [language, setFileName] = useState<string>(Object.keys(initialState)[0]);
 
-  const file = files[fileName];
+  // This is static
+  const file = codeState[language];
 
-  useEffect(() => {
-    editorRef.current?.focus();
-  }, [file.name]);
-
-  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
-    setFileName(event.target.value);
+  useEffect(() => editorRef.current?.focus(), [file.name]);
 
   return (
     <>
-      <strong>{fileName}</strong>
-
-      <div>
-        <button
-          className="p-2 bg-blue-300 rounded-lg"
-          disabled={fileName === "script.js"}
-          onClick={() => setFileName("script.js")}
-        >
-          script.js
-        </button>
-        <button
-          className="p-2 bg-blue-300 rounded-lg"
-          disabled={fileName === "style.css"}
-          onClick={() => setFileName("style.css")}
-        >
-          style.css
-        </button>
-        <button
-          className="p-2 bg-blue-300 rounded-lg"
-          disabled={fileName === "index.html"}
-          onClick={() => setFileName("index.html")}
-        >
-          index.html
-        </button>
-      </div>
+      <strong>{language}</strong>
+      <div>{JSON.stringify(codeState)}</div>
 
       <div>
         <label htmlFor="langs">Choose a lang:</label>
         <select
           name="langs"
           id="langs"
-          onChange={handleLanguageChange}
-          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+          value={language}
         >
           <option value="script.js">js</option>
           <option value="style.css">css</option>
           <option value="index.html">html</option>
         </select>
       </div>
-
-      {/* Somewhat working code with Radix-Select */}
-      {/* <Select
-        value={file.value}
-        onValueChange={(newLanguage: string) =>
-          setFileName("style.css")
-        }
-      >
-        <SelectTrigger className="w-[130px] md:w-[180px] bg-slate-900 text-white">
-          <SelectValue placeholder="Pick a language..." />
-        </SelectTrigger>
-        <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white">
-          {[
-            { language: "TypeScript", icon: <SiTypescript /> },
-            { language: "Python", icon: <SiPython /> },
-            { language: "C#", icon: <SiCsharp /> },
-          ].map(({ language, icon }) => (
-            <SelectItem
-              className="cursor-pointer"
-              key={language}
-              value={language.toLowerCase()}
-            >
-              <div className="flex flex-row gap-3">
-                <div>{icon}</div>
-                <div>{language}</div>
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select> */}
 
       <Editor
         height="80vh"
@@ -105,6 +74,16 @@ export default function MultiModelEditor() {
         defaultLanguage={file.language}
         defaultValue={file.value}
         onMount={(editor) => (editorRef.current = editor)}
+        onChange={(value, _) => {
+          setCodeState(prev => ({
+            ...prev,
+            [language]: {
+              language: file.language,
+              name: file.name,
+              value: value!
+            }
+          }))
+        }}
       />
     </>
   );
