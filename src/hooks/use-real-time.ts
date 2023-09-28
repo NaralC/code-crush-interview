@@ -10,7 +10,6 @@ import { useNoteStore } from "@/stores/note-store";
 import useModalStore from "../stores/modal-store";
 import { Output } from "./use-compile-code";
 import type { OutputData } from "@editorjs/editorjs";
-import { useRouter } from "next/navigation";
 import { getTransformedPresenceState } from "@/lib/utils";
 
 const useRealTime = (
@@ -25,7 +24,6 @@ const useRealTime = (
   } = useModalStore();
   const userId = useMemo(() => `user-${nanoid(4)}`, []);
   const supaClient = supabaseClient;
-  const router = useRouter();
 
   // States
   const {
@@ -70,13 +68,13 @@ const useRealTime = (
               value,
             };
 
-            console.log(newPayload)
-
-            channel.send({
-              type: "broadcast",
-              event: EVENT.CODE_UPDATE,
-              payload: newPayload,
-            });
+            setTimeout(() => {
+              channel.send({
+                type: "broadcast",
+                event: EVENT.CODE_UPDATE,
+                payload: newPayload,
+              });
+            }, 1000);
           }
 
           let noteData: OutputData | undefined;
@@ -97,18 +95,19 @@ const useRealTime = (
       .on(
         "broadcast",
         { event: EVENT.CODE_UPDATE }, // Filtering events
-        (payload: Payload<CodeUpdate>) => {
+        (payload: Payload<{ language: string; value: string; }>) => {
           const { language, value } = payload.payload!;
 
           console.log(language, value);
-
-          dispatchCode({
-            type: "UPDATE_CODE_BY_LANGUAGE",
-            payload: {
-              language,
-              value,
-            },
-          });
+          setTimeout(() => {
+            dispatchCode({
+              type: "UPDATE_CODE_BY_LANGUAGE",
+              payload: {
+                language,
+                value,
+              },
+            });
+          }, 100);
         }
       )
       .on(

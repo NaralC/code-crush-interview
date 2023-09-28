@@ -49,17 +49,19 @@ export default async function handler(
     const { code } = JSON.parse(req.body);
 
     const { data, error } = await supabaseServerClient
-      .from("interview_rooms")
-      .update({
-        code_state: code,
-      })
-      .eq("room_id", DEFAULT_ROOM_ID)
-      .select();
-
+    .from("interview_rooms")
+    .update({
+      code_state: code,
+    })
+    .eq("room_id", DEFAULT_ROOM_ID)
+    .select();
+    
     if (error || data.length < 1) {
       console.log(error);
       throw new Error("Could not save code to DB");
     }
+    
+    console.log(code, data)
 
     return res.status(200).json({ content: "Saved!" });
   }

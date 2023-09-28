@@ -22,7 +22,7 @@ export type CodeAction =
     }
   | {
       type: "UPDATE_CODE_BY_LANGUAGE";
-      payload: { language: string; value: string };
+      payload: CodeUpdate;
     };
 
 export type ConsoleAction =

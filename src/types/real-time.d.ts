@@ -39,4 +39,6 @@ type Room = Database["public"]["Tables"]["interview_rooms"]["Row"];
 
 type QuestionFromDB = Database["public"]["Tables"]["questions"]["Row"];
 
+type CodeFromDB = Database["public"]["Tables"]["interview_rooms"]["Row"]["code_state"];
+
 type CodeUpdate = { language: string; value: string; }

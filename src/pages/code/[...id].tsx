@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const CodingPage: NextPage<{
-  initialCodeState: string;
+  initialCodeState: Record<string, { value: string }>;
   roomId: string;
   roomName: string;
   userName: string;
@@ -111,7 +111,9 @@ const CodingPage: NextPage<{
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const { dispatchCode } = useCodeStore();
   const { x, y } = useMousePosition();
-  const { endInterviewModal: { setOpen, setClose } } = useModalStore();
+  const {
+    endInterviewModal: { setOpen, setClose },
+  } = useModalStore();
   const supa = supabaseClient;
 
   const sendMousePosition = throttle(() => {
@@ -125,10 +127,17 @@ const CodingPage: NextPage<{
   const effectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
-      dispatchCode({
-        type: "UPDATE_CODE",
-        payload: initialCodeState,
-      });
+      for (const language in initialCodeState) {
+        const value = initialCodeState[language].value
+        
+        dispatchCode({
+          type: "UPDATE_CODE_BY_LANGUAGE",
+          payload: {
+            language,
+            value
+          },
+        });
+      }
 
       if (isFinished)
         toast(
@@ -153,7 +162,7 @@ const CodingPage: NextPage<{
       .eq("room_id", roomId)
       .select();
 
-    if (error) toast.error("Could not end interview.")
+    if (error) toast.error("Could not end interview.");
     setClose();
   };
 

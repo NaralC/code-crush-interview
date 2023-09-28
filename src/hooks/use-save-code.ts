@@ -4,10 +4,7 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 
 const useSaveCode = () => {
-  const { latestCodeRef, dispatchAsync } = useCodeStore((state) => ({
-    latestCodeRef: state.latestCodeRef,
-    dispatchAsync: state.dispatchAsync,
-  }));
+  const { latestWholeCodeStateRef, dispatchAsync,  } = useCodeStore();
 
   const { isLoading: isSaving, mutate: handleSave } = useMutation({
     mutationKey: ["saveCode"],
@@ -20,7 +17,7 @@ const useSaveCode = () => {
       const response = await fetch("/api/db", {
         method: "PATCH",
         body: JSON.stringify({
-          code: latestCodeRef.current,
+          code: latestWholeCodeStateRef.current ? latestWholeCodeStateRef.current.code : {},
         }),
       });
 
@@ -28,7 +25,7 @@ const useSaveCode = () => {
       return z.string().parse(content);
     },
     onSuccess: (data) => toast.success(data),
-    onError: (error) => toast.error("Failed to save"),
+    onError: (error) => toast.error((error as Error).message),
     onSettled: () =>
       dispatchAsync({
         type: "SET_IS_SAVING",
