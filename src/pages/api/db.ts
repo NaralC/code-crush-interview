@@ -46,12 +46,13 @@ export default async function handler(
 
   // Editing room data
   if (req.method === "PATCH") {
-    const { code } = JSON.parse(req.body);
+    const { code, note } = JSON.parse(req.body);
 
     const { data, error } = await supabaseServerClient
     .from("interview_rooms")
     .update({
       code_state: code,
+      note_state: note
     })
     .eq("room_id", DEFAULT_ROOM_ID)
     .select();
@@ -60,8 +61,6 @@ export default async function handler(
       console.log(error);
       throw new Error("Could not save code to DB");
     }
-    
-    console.log(code, data)
 
     return res.status(200).json({ content: "Saved!" });
   }

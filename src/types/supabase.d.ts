@@ -16,6 +16,7 @@ interface Database {
           description: string | null
           finished: boolean
           name: string | null
+          note_state: Json | null
           participants: Json | null
           room_id: string
           type: Database["public"]["Enums"]["room_type"] | null
@@ -26,6 +27,7 @@ interface Database {
           description?: string | null
           finished: boolean
           name?: string | null
+          note_state?: Json | null
           participants?: Json | null
           room_id: string
           type?: Database["public"]["Enums"]["room_type"] | null
@@ -36,6 +38,7 @@ interface Database {
           description?: string | null
           finished?: boolean
           name?: string | null
+          note_state?: Json | null
           participants?: Json | null
           room_id?: string
           type?: Database["public"]["Enums"]["room_type"] | null

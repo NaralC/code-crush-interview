@@ -9,7 +9,7 @@ Essential:
     - Text ✅
     - Images ▶
     - Links ▶
-    - Note save to Supa ▶
+    - Note save to Supa ✅
 - Voice/audio call: ✅
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
@@ -37,6 +37,7 @@ Should haves:
 - Authentication via Git and upload code to Git repo
 
 Clean-ups:
+- Fixed timeouts don't work well with slow internet
 - Cursor name doesn't show up and no initial code sync for a new tab first time
 - Make AV control (on coding page) actually work
 - Being able to create FE questions

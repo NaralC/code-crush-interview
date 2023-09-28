@@ -13,12 +13,14 @@ import { CornerDownRight, FileQuestion } from "lucide-react";
 import { useUsersStore } from "@/stores/users-store";
 import useModalStore from "@/stores/modal-store";
 import { cn } from "@/lib/utils";
+import type { OutputData } from "@editorjs/editorjs";
 
 const NotionLikeEditor: FC<{
   realTimeRef?: MutableRefObject<RealtimeChannel | null>;
   finished?: boolean;
   questions?: Question[]
-}> = ({ realTimeRef, finished, questions }) => {
+  initialNoteData?: OutputData
+}> = ({ realTimeRef, finished, questions, initialNoteData }) => {
   // Modal
   const {
     hintsSolutionModal: { setBody, setOpen, setType },
@@ -71,8 +73,7 @@ const NotionLikeEditor: FC<{
         placeholder: "Write your solution outline here...",
         inlineToolbar: true,
         // @ts-ignore
-        // data: { blocks: initialCodeState["sharedNote"]["blocks"] },
-        data: [],
+        data: { blocks: initialNoteData?.blocks },
         tools: {
           header: Header,
           // linkTool: {
@@ -128,12 +129,6 @@ const NotionLikeEditor: FC<{
   useEffect(() => {
     const init = async () => {
       await initializeEditor();
-
-      // message: {
-      //   blocks: [ { data: { text: 'y' }, id: 'COowlmPfhw', type: 'paragraph' } ],
-      //   time: 1695208914704,
-      //   version: '2.27.2'
-      // }
 
       if (realTimeRef) {
         realTimeRef.current?.on(

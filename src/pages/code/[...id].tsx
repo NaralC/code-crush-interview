@@ -22,12 +22,13 @@ import throttle from "lodash.throttle";
 import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
 import SackpackEditor from "@/components/custom/editors/sandpack-editor";
-import MySandpack from "../../components/custom/editors/sandpack-monaco-test";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import supabaseClient from "@/lib/supa-client";
 import EndInterviewModal from "@/components/custom/modals/end-interview-modal";
 import useModalStore from "@/stores/modal-store";
+import { useNoteStore } from "@/stores/note-store";
+import type { OutputData } from "@editorjs/editorjs";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -47,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const { code_state, room_id, name, participants, type, finished } = rooms[0];
+  const { code_state, room_id, name, participants, type, finished, note_state } = rooms[0];
 
   const { data: questions, error: questionsError } = await supabaseClient
     .from("questions")
@@ -76,12 +77,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       type,
       finished,
       questions,
+      initialNoteState: note_state
     },
   };
 };
 
 const CodingPage: NextPage<{
   initialCodeState: Record<string, { value: string }>;
+  initialNoteState: OutputData;
   roomId: string;
   roomName: string;
   userName: string;
@@ -90,6 +93,7 @@ const CodingPage: NextPage<{
   questions: Question[];
 }> = ({
   initialCodeState,
+  initialNoteState,
   roomId,
   roomName: initialRoomName,
   userName,
@@ -114,6 +118,7 @@ const CodingPage: NextPage<{
   const {
     endInterviewModal: { setOpen, setClose },
   } = useModalStore();
+  const { editorRef, editorIsMounted } = useNoteStore();
   const supa = supabaseClient;
 
   const sendMousePosition = throttle(() => {
@@ -152,6 +157,14 @@ const CodingPage: NextPage<{
       effectRan.current = true;
     };
   }, []);
+
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     editorRef.current?.render(initialNoteState)
+  //   }, 1000);
+
+  //   return () => clearTimeout(timeout)
+  // }, [editorIsMounted]);
 
   const handleEndInterview = async () => {
     const { error } = await supa
@@ -199,6 +212,7 @@ const CodingPage: NextPage<{
                   realTimeRef={realTimeRef}
                   questions={questions}
                   finished={isFinished}
+                  initialNoteData={initialNoteState}
                 />
               </div>
             </Split>
