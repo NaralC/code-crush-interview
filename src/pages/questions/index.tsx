@@ -60,7 +60,7 @@ const Questions: NextPage = () => {
   );
 
   return (
-    <main className="flex flex-col justify-center min-h-screen gap-5 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800 selection:text-black">
+    <main className="universal-bg selection:text-black">
       <div className="text-2xl font-semibold">Question Pool</div>
       <ScrollArea className="text-white max-h-[450px] px-3">
         {questions?.map((question) => (

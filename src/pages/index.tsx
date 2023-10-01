@@ -20,6 +20,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import Head from "next/head";
 import { cn } from "@/lib/utils";
+import AuthPopover from "@/components/custom/auth-popover";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -152,6 +153,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <JoinRoomModal rooms={rooms} />
         <BrowseRoomsModal rooms={rooms} />
         <BackgroundParticles />
+        <AuthPopover />
       </main>
     </>
   );

@@ -34,7 +34,8 @@ Should haves:
     - Password lock
 - FE interview
 - Video/audio device settings
-- Authentication via Git and upload code to Git repo
+- Authentication via Git ✅
+- Upload code to Git repo
 
 Clean-ups:
 - Fixed timeouts don't work well with slow internet
