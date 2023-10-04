@@ -76,12 +76,12 @@ const NotionLikeEditor: FC<{
         data: { blocks: initialNoteData?.blocks },
         tools: {
           header: Header,
-          // linkTool: {
-          //   class: LinkTool,
-          //   config: {
-          //     endpoint: "/api/link"
-          //   },
-          // },
+          linkTool: {
+            class: LinkTool,
+            config: {
+              endpoint: "/api/link"
+            },
+          },
           // image: {
           //   class: ImageTool,
           //   config: {
