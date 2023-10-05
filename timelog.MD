@@ -1,0 +1,11 @@
+- 20/09: 1.5 hrs added read/update to question pool
+- 21/09: 2 hrs added create/delete to question pool + fetch questions from db instead of pre-made + 1 hrs being able to end interviews
+- 22/09: 4 hrs added multi-language to monaco 
+- 23/09: 5 hrs followed the 'AI Quiz' tutorial
+- 25/09: 0.5 hrs met supervisior + find out whether the code can be public/on YT + 3 hrs finished the 'AI Quiz tutorial'
+- 26/09: '6' hrs working for Actify, fixing visual/CSS bugs
+- 27/09: 3 hrs of going thru MiniZinc/Haskell notes + FP Exercise 1
+- 28/09: 3 hrs save/load + join sync for multi-lang code + shared note
+- 01/10: 3 hrs authentication (log in/out) via GitHub
+- 02/10: 4 hrs of attempting CP coursework 1
+- 03/10: 8 hrs of coding for Actify. Got started on the new SAMH website

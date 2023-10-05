@@ -4,7 +4,6 @@ import { FC, useEffect, useState } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import {
   Popover,
