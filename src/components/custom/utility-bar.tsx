@@ -22,7 +22,14 @@ import {
 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { SiCsharp, SiPython, SiTypescript } from "react-icons/si";
+import {
+  SiAngular,
+  SiCsharp,
+  SiPython,
+  SiReact,
+  SiTypescript,
+  SiVuedotjs,
+} from "react-icons/si";
 import toast from "react-hot-toast";
 
 // Next.js/React Stuff
@@ -37,12 +44,25 @@ import { useCodeStore } from "@/stores/code-store";
 import { useUsersStore } from "@/stores/users-store";
 import supabaseClient from "@/lib/supa-client";
 
+const DsAlgoDropdownContent: DropdownContent[] = [
+  { language: "TypeScript", icon: <SiTypescript /> },
+  { language: "Python", icon: <SiPython /> },
+  { language: "C#", icon: <SiCsharp /> },
+];
+
+const FrontEndDropdownContent: DropdownContent[] = [
+  { language: "React", icon: <SiReact /> },
+  { language: "Angular", icon: <SiAngular /> },
+  { language: "Vue", icon: <SiVuedotjs /> },
+];
+
 const UtilityBar: FC<{
   roomName: string;
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
   roomId: string;
-  finished: boolean
-}> = ({ roomName, realTimeRef, roomId, finished }) => {
+  finished: boolean;
+  type: InterviewType; // this hides "Compile" btn and switches out the language dropdown to FE
+}> = ({ roomName, realTimeRef, roomId, finished, type }) => {
   const supaClient = supabaseClient;
   const [roomNameInput, setRoomNameInput] = useState<string>("");
   const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore();
@@ -125,6 +145,15 @@ const UtilityBar: FC<{
     if (error) toast.error("Could not change room name :(");
   };
 
+  useEffect(() => {
+    dispatchCode({
+      type: "SET_LANGUAGE",
+      payload: (type === "ds_algo"
+        ? DsAlgoDropdownContent
+        : FrontEndDropdownContent)[0].language.toLowerCase(),
+    });
+  }, []);
+
   return (
     <div className="z-10 flex flex-row justify-between w-full px-5 py-2 text-white border-b-2 border-zinc-500 bg-slate-900 h-14">
       <Popover>
@@ -163,11 +192,10 @@ const UtilityBar: FC<{
             <SelectValue placeholder="Pick a language..." />
           </SelectTrigger>
           <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white inter-font">
-            {[
-              { language: "TypeScript", icon: <SiTypescript /> },
-              { language: "Python", icon: <SiPython /> },
-              { language: "C#", icon: <SiCsharp /> },
-            ].map(({ language, icon }) => (
+            {(type === "ds_algo"
+              ? DsAlgoDropdownContent
+              : FrontEndDropdownContent
+            ).map(({ language, icon }) => (
               <SelectItem
                 className="cursor-pointer"
                 key={language}
@@ -208,20 +236,22 @@ const UtilityBar: FC<{
             <Users2 className="md:ml-1 md:-mr-1" />
           )}
         </Button>
-        <Button
-          disabled={asyncState.isCompiling}
-          variant="secondary"
-          onClick={() => {
-            handleCompile();
-          }}
-        >
-          <div className="hidden md:block">Compile</div>
-          {asyncState.isCompiling ? (
-            <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
-          ) : (
-            <PlayCircle className="md:ml-1 md:-mr-1" />
-          )}
-        </Button>
+        {type === "ds_algo" && (
+          <Button
+            disabled={asyncState.isCompiling}
+            variant="secondary"
+            onClick={() => {
+              handleCompile();
+            }}
+          >
+            <div className="hidden md:block">Compile</div>
+            {asyncState.isCompiling ? (
+              <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
+            ) : (
+              <PlayCircle className="md:ml-1 md:-mr-1" />
+            )}
+          </Button>
+        )}
         <Button
           variant="secondary"
           onClick={() => {

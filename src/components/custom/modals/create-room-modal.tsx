@@ -97,7 +97,7 @@ const CreateRoomModal: FC = () => {
 
     toast.success("Wallah! Redirecting you to it!");
     router.push({
-      pathname: `/code/${roomId}`,
+      pathname: `/code/${values.interviewType === "ds_algo" ? "ds-algo" : "front-end"}/${roomId}`,
       query: {
         userName: values.userName,
       },
