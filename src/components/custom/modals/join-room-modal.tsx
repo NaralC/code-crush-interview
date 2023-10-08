@@ -70,7 +70,7 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
       return;
     }
 
-    const { participants } = data[0];
+    const { participants, type } = data[0];
 
     if (participants) {
       const userCount = Object.keys(participants!).length;
@@ -83,7 +83,7 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
 
     toast.success("Wallah! Redirecting you to it!");
     router.push({
-      pathname: `/code/${values.roomId}`,
+      pathname: `/code/${type === "ds_algo" ? "ds-algo" : "front-end"}/${values.roomId}`,
       query: {
         userName: values.userName,
       },
