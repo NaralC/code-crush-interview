@@ -76,8 +76,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  console.log(rooms)
-
   return {
     props: {
       initialCodeState: code_state,

@@ -3,7 +3,6 @@ import UtilityBar from "@/components/custom/utility-bar";
 import useRealTime from "@/hooks/use-real-time";
 import { useCodeStore } from "@/stores/code-store";
 import type { NextPage } from "next";
-import React, { useEffect } from "react";
 
 const FrontEndPage: NextPage = ({}) => {
   const { realTimeRef, userId } = useRealTime(
@@ -13,10 +12,10 @@ const FrontEndPage: NextPage = ({}) => {
     false,
     () => {}
   );
-  const { codeState: { language } } = useCodeStore();
-
-  useEffect(() => { console.log(language) }, [language])
-
+  const {
+    codeState: { language },
+  } = useCodeStore();
+  
   return (
     <main className="flex flex-col w-full h-screen">
       <UtilityBar
@@ -27,7 +26,15 @@ const FrontEndPage: NextPage = ({}) => {
         type={"front_end"}
       />
       <div className="flex flex-col justify-center h-full px-5 bg-gradient-to-b from-black via-slate-900 to-slate-800">
-        <SackpackEditor />
+        <SackpackEditor
+          template={
+            language === "react"
+              ? "vite-react-ts"
+              : language === "angular"
+              ? "angular"
+              : "vite-vue-ts"
+          }
+        />
       </div>
     </main>
   );
