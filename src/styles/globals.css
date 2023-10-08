@@ -4,7 +4,7 @@
 
 @layer base {
   .universal-bg {
-    @apply flex flex-col justify-center min-h-screen gap-2 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800
+    @apply flex flex-col justify-center min-h-screen gap-2 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800;
   }
 
   .inter-font {
@@ -65,6 +65,16 @@
 
   ::-webkit-scrollbar-thumb:horizontal:hover {
     background: #b1b1b1;
+  }
+
+  .sandpack-custom-layout {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 75vh;
+  }
+
+  .sandpack-custom-stack {
+    width: 100% !important;
   }
 }
 

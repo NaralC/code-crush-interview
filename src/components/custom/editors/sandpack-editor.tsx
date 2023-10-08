@@ -1,15 +1,43 @@
+import { Button } from "@/components/ui/button";
 import { Sandpack } from "@codesandbox/sandpack-react";
+import { atomDark, monokaiPro } from "@codesandbox/sandpack-themes";
 import { FC } from "react";
 
 const SackpackEditor: FC<{
   template: "vite-react-ts" | "vite-vue-ts" | "angular";
-}> = ({ template }) => {
-  // Options to pick between React, Angular, Vue
-
+  finished: boolean;
+}> = ({ template, finished }) => {
+  // TODO: Try integrateion with Monaco https://sandpack.codesandbox.io/docs/guides/integrate-monaco-editor
+  // TODO: Implement real-time stuff
   return (
-    <div className="border-2 shadow-lg border-zinc-500/30 shadow-white">
-      <Sandpack theme="dark" template={template} />
-    </div>
+    <>
+      <Button
+        className="fixed z-40 shadow bottom-6 right-6 shadow-white"
+        onClick={() => {}}
+      >
+        Placeholder
+      </Button>
+      <Sandpack
+        theme={atomDark}
+        template={template}
+        options={{
+          layout: "preview",
+          showConsoleButton: true,
+          showNavigator: true,
+          readOnly: finished,
+          showInlineErrors: true,
+          showLineNumbers: true,
+          wrapContent: true,
+          recompileMode: "delayed",
+          recompileDelay: 500,
+          resizablePanels: true,
+          classes: {
+            "sp-layout": "sandpack-custom-layout",
+            "sp-stack": "sandpack-custom-stack"
+          },
+        }}
+      />
+    </>
   );
 };
 

@@ -32,18 +32,23 @@ Should haves:
     - Interview Status (ongoing/finished) ✅
     - Being able to end an interview ✅
     - Password lock
-- FE interview
+- FE interview: ▶
+    - Being able to create FE questions
+    - Multi-language support
+    - Save code to DB
+    - Real-time sync
+    - Initial join sync
 - Video/audio device settings
 - Authentication via Git ✅
 - Upload code to Git repo
 - Amongus background (https://codepen.io/matteobruni/pen/rNmMVEx)
 
 Clean-ups:
+- Make a "shared layout" component for the 2 coding pages
 - Code sync only works for 1 language
 - Fixed timeouts don't work well with slow internet
 - Cursor name doesn't show up and no initial code sync for a new tab first time
 - Make AV control (on coding page) actually work
-- Being able to create FE questions
 - Abstract away "Supabase on client-side to api routes"
 - Fix infinite refetch when 'Compilation Error'
 - Code ref is one step behind actual thing
