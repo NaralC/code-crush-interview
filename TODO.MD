@@ -33,15 +33,20 @@ Should haves:
     - Being able to end an interview ✅
     - Password lock
 - FE interview: ▶
-    - Being able to create FE questions
+    - Being able to create FE questions ✅
     - Multi-language support
     - Save code to DB
     - Real-time sync
     - Initial join sync
+    - JS/CSS split
 - Video/audio device settings
 - Authentication via Git ✅
 - Upload code to Git repo
 - Amongus background (https://codepen.io/matteobruni/pen/rNmMVEx)
+
+Nice to have:
+- Text hilighting to both editors
+- User acceptance test
 
 Clean-ups:
 - Make a "shared layout" component for the 2 coding pages
