@@ -22,7 +22,7 @@ const useCompileCode = () => {
 
   // Getting a token
   const { data: token, mutate: handleCompile } = useMutation({
-    mutationKey: ["token"],
+    mutationKey: ["get-token"],
     mutationFn: async () => {
       dispatchAsync({
         type: "SET_IS_COMPILING",

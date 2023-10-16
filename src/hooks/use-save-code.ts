@@ -9,7 +9,7 @@ const useSaveCode = (roomId: string) => {
   const { editorRef } = useNoteStore();
 
   const { isLoading: isSaving, mutate: handleSave } = useMutation({
-    mutationKey: ["saveCode"],
+    mutationKey: ["save-code"],
     mutationFn: async () => {
       dispatchAsync({
         type: "SET_IS_SAVING",

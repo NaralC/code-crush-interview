@@ -34,7 +34,7 @@ Should haves:
     - Password lock
 - FE interview: ▶
     - Being able to create FE questions ✅
-    - Multi-language support (local persistence between React/Vue/Angular) ▶
+    - Create a room-specific framework ✅
     - Save code to DB ✅
     - Real-time sync
     - Initial join sync
@@ -49,6 +49,7 @@ Nice to have:
 - User acceptance test
 
 Clean-ups:
+- Toggle landing particle bg
 - Make a "shared layout" component for the 2 coding pages
 - Code sync only works for 1 language
 - Fixed timeouts don't work well with slow internet

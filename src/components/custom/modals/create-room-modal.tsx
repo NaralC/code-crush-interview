@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -27,6 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FaPython, FaReact } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Transition } from "@headlessui/react";
 
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
@@ -34,80 +42,105 @@ import { Dices, Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 import useModalStore from "@/stores/modal-store";
 import { generateRoomName, generateUsername } from "@/lib/faker";
+import { useMutation } from "@tanstack/react-query";
 
-const createRoomSchemaFrontend = z.object({
-  roomName: z.string().min(1, {
-    message: "Room name cannot be empty",
-  }),
-  interviewType: z.enum(["front_end", "ds_algo", "behavioral"], {
-    required_error: "You need to select an interview type.",
-  }),
-  options: z
-    .array(z.string())
-    .refine((value) => true, {
-      message: "You have to select at least one item.",
-    })
-    .optional(),
-  userName: z.string({
-    required_error: "Name cannot be empty",
-  }),
-});
+const createRoomSchema = z
+  .object({
+    roomName: z.string().min(1, {
+      message: "Room name cannot be empty",
+    }),
+    interviewType: z.enum(["front_end", "ds_algo"], {
+      required_error: "You need to select an interview type.",
+    }),
+    frontEndType: z.enum(["react", "angular", "vue"]).optional(),
+    options: z
+      .array(z.string())
+      .refine((value) => true, {
+        message: "You have to select at least one item.",
+      })
+      .optional(),
+    userName: z.string({
+      required_error: "Name cannot be empty",
+    }),
+  })
+  .refine(
+    ({ interviewType, frontEndType }) => {
+      if (interviewType === "front_end") {
+        if (!frontEndType) return false;
+        return ["react", "angular", "vue"].includes(frontEndType);
+      }
+
+      return true;
+    },
+    {
+      message: "You need to select a front-end framework",
+      path: ["frontEndType"],
+    }
+  );
 
 const CreateRoomModal: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { createRoomModal: { isOpen, setClose } } = useModalStore();
+  const {
+    createRoomModal: { isOpen, setClose },
+  } = useModalStore();
   const { toast: debugToast } = useToast();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof createRoomSchemaFrontend>>({
-    resolver: zodResolver(createRoomSchemaFrontend),
+  const form = useForm<z.infer<typeof createRoomSchema>>({
+    resolver: zodResolver(createRoomSchema),
     defaultValues: {
       roomName: "",
       options: [],
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof createRoomSchemaFrontend>) => {
-    // debugToast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
+  const interviewType = form.watch("interviewType");
 
-    setIsLoading(true);
-    toast.loading("Creating a room for you...");
+  const { mutate: createRoom, isLoading: isCreatingRoom } = useMutation({
+    mutationKey: ["create-room"],
+    mutationFn: async (values: z.infer<typeof createRoomSchema>) => {
+      // debugToast({
+      //   title: "You submitted the following values:",
+      //   description: (
+      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //       <code className="text-white">
+      //         {JSON.stringify(values, null, 2)}
+      //       </code>
+      //     </pre>
+      //   ),
+      // });
 
-    const response = await fetch("/api/db", {
-      method: "POST",
-      body: JSON.stringify({
-        roomName: values.roomName,
-        type: values.interviewType
-      }),
-    });
+      const response = await fetch("/api/db", {
+        method: "POST",
+        body: JSON.stringify({
+          roomName: values.roomName,
+          type: values.interviewType,
+          frontEndType: interviewType === "front_end" ? values.frontEndType : null
+        }),
+      });
 
-    if (!response.ok) {
-      toast.error("Error creating a room :(");
-      return;
-    }
+      if (!response.ok) {
+        toast.error("Error creating a room :(");
+        return;
+      }
 
-    const { content: roomId } = await response.json();
-
-    toast.success("Wallah! Redirecting you to it!");
-    router.push({
-      pathname: `/code/${values.interviewType === "ds_algo" ? "ds-algo" : "front-end"}/${roomId}`,
-      query: {
-        userName: values.userName,
-      },
-    });
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setClose();
-    }, 500);
-  };
+      const { content: roomId } = await response.json();
+      return roomId as string;
+    },
+    onMutate: () => toast.loading("Creating a room for you..."),
+    onSuccess: (roomId) => {
+      toast(roomId!)
+      // toast.success("Wallah! Redirecting you to it!");
+      // router.push({
+      //   pathname: `/code/${
+      //     interviewType === "ds_algo" ? "ds-algo" : "front-end"
+      //   }/${roomId}`,
+      //   query: {
+      //     userName: form.getValues().userName,
+      //   },
+      // });
+    },
+  });
 
   return (
     <Modal
@@ -117,7 +150,10 @@ const CreateRoomModal: FC = () => {
       setClose={setClose}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit((values) => createRoom(values))}
+          className="space-y-8"
+        >
           <div className="grid items-center w-full gap-5">
             <FormField
               control={form.control}
@@ -159,10 +195,7 @@ const CreateRoomModal: FC = () => {
                         <Dices
                           className="ml-4 cursor-pointer w-7 h-7"
                           onClick={() => {
-                            form.setValue(
-                              "userName",
-                              generateUsername()
-                            );
+                            form.setValue("userName", generateUsername());
                           }}
                         />
                       </div>
@@ -205,6 +238,68 @@ const CreateRoomModal: FC = () => {
                                   </div>
                                 </FormLabel>
                               </FormItem>
+
+                              <Transition
+                                show={interviewType === "front_end"}
+                                enter="transition-all duration-400 ease-out"
+                                enterFrom="opacity-75 translate-y-full"
+                                enterTo="opacity-100 translate-y-0"
+                                leave="transition-all ease-in duration-400"
+                                leaveFrom="opacity-75"
+                                leaveTo="opacity-25"
+                              >
+                                <FormField
+                                  control={form.control}
+                                  name="frontEndType"
+                                  render={({ field }) => (
+                                    <FormItem className="px-1">
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        disabled={
+                                          !(interviewType === "front_end")
+                                        }
+                                      >
+                                        <FormControl>
+                                          <SelectTrigger className="capitalize">
+                                            <SelectValue placeholder="Select a framework" />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="inter-font">
+                                          {[
+                                            {
+                                              value: "react",
+                                            },
+                                            {
+                                              value: "angular",
+                                            },
+                                            {
+                                              value: "vue",
+                                            },
+                                          ].map(({ value }, idx) => (
+                                            <SelectItem
+                                              key={idx}
+                                              value={value}
+                                              className="capitalize"
+                                            >
+                                              {value}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                      <FormDescription>
+                                        Comes with TypeScript and Tailwind.
+                                      </FormDescription>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </Transition>
+
+                              {/* {frontEndType === "front_end" ? (
+                                
+                              ) : null} */}
+
                               <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
                                   <RadioGroupItem value="ds_algo" />
@@ -283,8 +378,8 @@ const CreateRoomModal: FC = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <Button type="submit" disabled={isLoading}>
-              Proceed {!!isLoading && <Loader2 className="ml-2 animate-spin" />}
+            <Button type="submit" disabled={isCreatingRoom}>
+              Proceed {!!isCreatingRoom && <Loader2 className="ml-2 animate-spin" />}
             </Button>
           </div>
         </form>

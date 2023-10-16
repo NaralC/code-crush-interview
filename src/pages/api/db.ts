@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { DEFAULT_ROOM_ID } from "@/lib/constant";
 import { v4 as uuidv4 } from "uuid";
 import { generateRoomDescription } from "@/lib/faker";
 
@@ -19,7 +18,7 @@ export default async function handler(
 
   // Creating a new room
   if (req.method === "POST") {
-    const { roomName, type } = JSON.parse(req.body);
+    const { roomName, type, frontEndType } = JSON.parse(req.body);
     const roomId = uuidv4();
 
     const { data, error } = await supabaseServerClient
@@ -32,7 +31,8 @@ export default async function handler(
         description: generateRoomDescription(),
         name: roomName,
         type,
-        finished: false
+        finished: false,
+        front_end_type: frontEndType
       })
       .select();
 
