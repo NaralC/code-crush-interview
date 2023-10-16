@@ -67,7 +67,7 @@ const UtilityBar: FC<{
   const [roomNameInput, setRoomNameInput] = useState<string>("");
   const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore();
   const { handleCompile } = useCompileCode();
-  const { handleSave } = useSaveCode();
+  const { handleSave } = useSaveCode(roomId);
   const { setRole, role, latestRoleRef } = useUsersStore();
 
   useEffect(() => {

@@ -23,6 +23,14 @@ export type CodeAction =
   | {
       type: "UPDATE_CODE_BY_LANGUAGE";
       payload: CodeUpdate;
+    }
+  | {
+      type: "CLEAR_CODE_STORE";
+      payload: null;
+    }
+  | {
+      type: "SET_CODE_STORE";
+      payload: Record<string, { value: string }>;
     };
 
 export type ConsoleAction =
@@ -76,6 +84,16 @@ export const codeReducer = (
           ...state.code,
           [action.payload.language]: { value: action.payload.value },
         },
+      };
+    case "CLEAR_CODE_STORE":
+      return {
+        ...state,
+        code: {},
+      };
+    case "SET_CODE_STORE":
+      return {
+        code: action.payload,
+        language: "",
       };
     default:
       return state;

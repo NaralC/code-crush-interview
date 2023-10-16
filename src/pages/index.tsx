@@ -21,6 +21,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import Head from "next/head";
 import { cn } from "@/lib/utils";
 import AuthPopover from "@/components/custom/auth-popover";
+import { useCodeStore } from "@/stores/code-store";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -50,10 +51,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
   // Modals
   const { createRoomModal, joinRoomModal, browseRoomsModal } = useModalStore();
+  const { dispatchCode } = useCodeStore();
 
   // Initial load animation
   const [animation, setAnimation] = useState(false);
   useEffect(() => {
+    dispatchCode({
+      type: "CLEAR_CODE_STORE",
+      payload: null,
+    });
+
     const timeout = setTimeout(() => {
       setAnimation(true);
     }, 500);

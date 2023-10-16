@@ -34,11 +34,11 @@ Should haves:
     - Password lock
 - FE interview: ▶
     - Being able to create FE questions ✅
-    - Multi-language support
-    - Save code to DB
+    - Multi-language support (local persistence between React/Vue/Angular) ▶
+    - Save code to DB ✅
     - Real-time sync
     - Initial join sync
-    - JS/CSS split
+    - Tailwind Integration ▶
 - Video/audio device settings
 - Authentication via Git ✅
 - Upload code to Git repo

@@ -24,6 +24,12 @@ import AudioVideoCall from "@/components/custom/audio-video-call";
 import Split from "react-split";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 
+// Sandpacks
+import ExperimentalSandpack from "./experimental-sandpack";
+import { SandpackProvider } from "@codesandbox/sandpack-react";
+import { atomDark } from "@codesandbox/sandpack-themes";
+import { SandpackWithLiveCodeState } from "@/pages/code/front-end/test-sanpack-live-state";
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
 
@@ -69,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       };
     }
   }
-
+  
   return {
     props: {
       initialCodeState: code_state,
@@ -131,17 +137,22 @@ const FrontEndPage: NextPage<{
   const effectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
-      for (const language in initialCodeState) {
-        const value = initialCodeState[language].value;
+      dispatchCode({
+        type: "SET_CODE_STORE",
+        payload: initialCodeState
+      })
 
-        dispatchCode({
-          type: "UPDATE_CODE_BY_LANGUAGE",
-          payload: {
-            language,
-            value,
-          },
-        });
-      }
+      // for (const language in initialCodeState) {
+      //   const value = initialCodeState[language].value;
+
+      //   dispatchCode({
+      //     type: "UPDATE_CODE_BY_LANGUAGE",
+      //     payload: {
+      //       language,
+      //       value,
+      //     },
+      //   });
+      // }
 
       if (isFinished)
         toast(
@@ -186,7 +197,7 @@ const FrontEndPage: NextPage<{
       </Head>
 
       <main className="flex flex-col w-full h-screen">
-        <Cursors realTimeRef={realTimeRef} />
+        {/* <Cursors realTimeRef={realTimeRef} /> */}
         <UtilityBar
           realTimeRef={realTimeRef}
           roomName={roomName}
@@ -196,16 +207,21 @@ const FrontEndPage: NextPage<{
         />
         <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
           <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-            <SackpackEditor
-              finished={isFinished}
-              template={
-                codeState.language === "react"
-                  ? "vite-react-ts"
-                  : codeState.language === "angular"
-                  ? "angular"
-                  : "vite-vue-ts"
-              }
-            />
+            {/* <SandpackWithLiveCodeState /> */}
+              <SackpackEditor
+                template={
+                  codeState.language === "react"
+                    ? "react-ts"
+                    : codeState.language === "angular"
+                    ? "angular"
+                    : "vue-ts"
+                }
+                finished={isFinished}
+              />
+              {/* <ExperimentalSandpack
+                template={"vite-react-ts"}
+                finished={false}
+              /> */}
           </div>
           <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor

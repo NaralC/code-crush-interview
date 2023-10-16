@@ -226,7 +226,7 @@ const QuestionsPage: NextPage = () => {
                 body: noteData as any,
                 hints: textInputs.hints ?? "",
                 solution: textInputs.solution ?? "",
-                type: "ds_algo",
+                type: selectedQuestionType,
               });
             }}
             className="px-16 shadow shadow-white w-fit"

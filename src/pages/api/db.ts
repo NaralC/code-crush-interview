@@ -46,7 +46,7 @@ export default async function handler(
 
   // Editing room data
   if (req.method === "PATCH") {
-    const { code, note } = JSON.parse(req.body);
+    const { code, note, roomId } = JSON.parse(req.body);
 
     const { data, error } = await supabaseServerClient
     .from("interview_rooms")
@@ -54,7 +54,7 @@ export default async function handler(
       code_state: code,
       note_state: note
     })
-    .eq("room_id", DEFAULT_ROOM_ID)
+    .eq("room_id", roomId)
     .select();
     
     if (error || data.length < 1) {
