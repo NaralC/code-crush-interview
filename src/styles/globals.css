@@ -69,13 +69,9 @@
 
   .sandpack-custom-layout {
     flex-direction: column;
-    flex-wrap: nowrap;
-    height: 75vh;
+    height: 100%;
   }
 
-  .sandpack-custom-stack {
-    width: 100% !important;
-  }
 }
 
 @layer utilities {

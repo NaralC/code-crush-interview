@@ -79,7 +79,6 @@ const createRoomSchema = z
   );
 
 const CreateRoomModal: FC = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     createRoomModal: { isOpen, setClose },
   } = useModalStore();
@@ -99,16 +98,16 @@ const CreateRoomModal: FC = () => {
   const { mutate: createRoom, isLoading: isCreatingRoom } = useMutation({
     mutationKey: ["create-room"],
     mutationFn: async (values: z.infer<typeof createRoomSchema>) => {
-      // debugToast({
-      //   title: "You submitted the following values:",
-      //   description: (
-      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-      //       <code className="text-white">
-      //         {JSON.stringify(values, null, 2)}
-      //       </code>
-      //     </pre>
-      //   ),
-      // });
+      debugToast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(values, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
 
       const response = await fetch("/api/db", {
         method: "POST",
@@ -129,16 +128,15 @@ const CreateRoomModal: FC = () => {
     },
     onMutate: () => toast.loading("Creating a room for you..."),
     onSuccess: (roomId) => {
-      toast(roomId!)
-      // toast.success("Wallah! Redirecting you to it!");
-      // router.push({
-      //   pathname: `/code/${
-      //     interviewType === "ds_algo" ? "ds-algo" : "front-end"
-      //   }/${roomId}`,
-      //   query: {
-      //     userName: form.getValues().userName,
-      //   },
-      // });
+      toast.success("Wallah! Redirecting you to it!");
+      router.push({
+        pathname: `/code/${
+          interviewType === "ds_algo" ? "ds-algo" : "front-end"
+        }/${roomId}`,
+        query: {
+          userName: form.getValues().userName,
+        },
+      });
     },
   });
 
@@ -241,12 +239,12 @@ const CreateRoomModal: FC = () => {
 
                               <Transition
                                 show={interviewType === "front_end"}
-                                enter="transition-all duration-400 ease-out"
-                                enterFrom="opacity-75 translate-y-full"
-                                enterTo="opacity-100 translate-y-0"
-                                leave="transition-all ease-in duration-400"
-                                leaveFrom="opacity-75"
-                                leaveTo="opacity-25"
+                                enter="transition-all duration-200 ease-out"
+                                enterFrom="translate-y-2"
+                                enterTo="translate-y-0"
+                                leave="transition-all ease-in duration-100"
+                                leaveFrom="translate-y-0"
+                                leaveTo="translate-y-2"
                               >
                                 <FormField
                                   control={form.control}
@@ -296,10 +294,6 @@ const CreateRoomModal: FC = () => {
                                 />
                               </Transition>
 
-                              {/* {frontEndType === "front_end" ? (
-                                
-                              ) : null} */}
-
                               <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
                                   <RadioGroupItem value="ds_algo" />
@@ -323,7 +317,7 @@ const CreateRoomModal: FC = () => {
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>Password (optional)</AccordionTrigger>
+                <AccordionTrigger>Options</AccordionTrigger>
                 <AccordionContent>
                   <FormField
                     control={form.control}
@@ -334,6 +328,10 @@ const CreateRoomModal: FC = () => {
                           {
                             id: "password_protection",
                             label: "Protect this room with a password.",
+                          },
+                          {
+                            id: "enable_voice_call",
+                            label: "Enable voice call (limits the room to 2 players)",
                           },
                         ].map((item) => (
                           <FormField

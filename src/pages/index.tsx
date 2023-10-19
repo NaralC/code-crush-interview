@@ -15,13 +15,14 @@ import useModalStore from "@/stores/modal-store";
 import Link from "next/link";
 
 // Logic
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import Head from "next/head";
 import { cn } from "@/lib/utils";
 import AuthPopover from "@/components/custom/auth-popover";
 import { useCodeStore } from "@/stores/code-store";
+import { useLocalSettingsStore } from "@/stores/local-settings-store";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -49,9 +50,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
-  // Modals
+  // State
   const { createRoomModal, joinRoomModal, browseRoomsModal } = useModalStore();
   const { dispatchCode } = useCodeStore();
+  const { particleBgVisible, toggleParticleBgVisiblity } =
+    useLocalSettingsStore();
 
   // Initial load animation
   const [animation, setAnimation] = useState(false);
@@ -76,10 +79,22 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <title>Code Crush</title>
         <meta name="Code Crush" content="Become an interview pro!" />
       </Head>
+      <Button
+        className="absolute text-xs shadow-none opacity-0 hover:opacity-100 bottom-5 right-5"
+        variant="ghost"
+        onClick={() => toggleParticleBgVisiblity()}
+      >
+        Toggle BG Particles
+        <br />
+        (Helps with Load Time)
+      </Button>
       <main
         className={cn(
           "flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100 xl:container selection:text-black selection:bg-white",
-          animation ? "text-white" : ""
+          animation ? "text-white" : "",
+          particleBgVisible
+            ? ""
+            : "bg-gradient-to-b from-slate-900 via-zinc-400 to-slate-600"
         )}
       >
         <p className="text-6xl font-bold text-center md:text-8xl text-shadow-2xl ">
@@ -92,7 +107,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
           <Button
             className={cn(
-              "ring-1 ring-zinc-50/25 filter",
+              "ring-1 ring-zinc-50/25 filter w-48 md:w-52",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
             onClick={() => {
@@ -104,7 +119,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           </Button>
           <Button
             className={cn(
-              "ring-1 ring-zinc-50/25 filter",
+              "ring-1 ring-zinc-50/25 filter w-48 md:w-52",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
             onClick={() => {
@@ -116,7 +131,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           </Button>
           <Button
             className={cn(
-              "ring-1 ring-zinc-50/25 filter",
+              "ring-1 ring-zinc-50/25 filter w-48 md:w-52",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
             onClick={() => {
@@ -159,7 +174,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <CreateRoomModal />
         <JoinRoomModal rooms={rooms} />
         <BrowseRoomsModal rooms={rooms} />
-        <BackgroundParticles />
+        {!!particleBgVisible && <BackgroundParticles />}
         <AuthPopover />
       </main>
     </>

@@ -43,6 +43,4 @@ type CodeFromDB = Database["public"]["Tables"]["interview_rooms"]["Row"]["code_s
 
 type CodeUpdate = { language: string; value: string; }
 
-type DropdownContent = { language: string; icon: JSX.Element };
-
 type InterviewType = "front_end" | "ds_algo"

@@ -44,16 +44,10 @@ import { useCodeStore } from "@/stores/code-store";
 import { useUsersStore } from "@/stores/users-store";
 import supabaseClient from "@/lib/supa-client";
 
-const DsAlgoDropdownContent: DropdownContent[] = [
+const DsAlgoDropdownContent = [
   { language: "TypeScript", icon: <SiTypescript /> },
   { language: "Python", icon: <SiPython /> },
   { language: "C#", icon: <SiCsharp /> },
-];
-
-const FrontEndDropdownContent: DropdownContent[] = [
-  { language: "React", icon: <SiReact /> },
-  { language: "Angular", icon: <SiAngular /> },
-  { language: "Vue", icon: <SiVuedotjs /> },
 ];
 
 const UtilityBar: FC<{
@@ -148,9 +142,7 @@ const UtilityBar: FC<{
   useEffect(() => {
     dispatchCode({
       type: "SET_LANGUAGE",
-      payload: (type === "ds_algo"
-        ? DsAlgoDropdownContent
-        : FrontEndDropdownContent)[0].language.toLowerCase(),
+      payload: DsAlgoDropdownContent[0].language.toLowerCase(),
     });
   }, []);
 
@@ -177,38 +169,36 @@ const UtilityBar: FC<{
           </form>
         </PopoverContent>
       </Popover>
-
       <div className="flex gap-3">
-        <Select
-          value={codeState.language}
-          onValueChange={(newLanguage: string) =>
-            dispatchCode({
-              type: "SET_LANGUAGE",
-              payload: newLanguage,
-            })
-          }
-        >
-          <SelectTrigger className="w-[130px] md:w-[180px] bg-slate-900">
-            <SelectValue placeholder="Pick a language..." />
-          </SelectTrigger>
-          <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white inter-font">
-            {(type === "ds_algo"
-              ? DsAlgoDropdownContent
-              : FrontEndDropdownContent
-            ).map(({ language, icon }) => (
-              <SelectItem
-                className="cursor-pointer"
-                key={language}
-                value={language.toLowerCase()}
-              >
-                <div className="flex flex-row gap-3">
-                  <div>{icon}</div>
-                  <div>{language}</div>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {type === "ds_algo" && (
+          <Select
+            value={codeState.language}
+            onValueChange={(newLanguage: string) =>
+              dispatchCode({
+                type: "SET_LANGUAGE",
+                payload: newLanguage,
+              })
+            }
+          >
+            <SelectTrigger className="w-[130px] md:w-[180px] bg-slate-900">
+              <SelectValue placeholder="Pick a language..." />
+            </SelectTrigger>
+            <SelectContent className="text-white shadow-md bg-gradient-to-b from-black to-slate-700 shadow-white inter-font">
+              {DsAlgoDropdownContent.map(({ icon, language }) => (
+                <SelectItem
+                  className="cursor-pointer"
+                  key={language}
+                  value={language.toLowerCase()}
+                >
+                  <div className="flex flex-row gap-3">
+                    <div>{icon}</div>
+                    <div>{language}</div>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         <Button
           disabled={finished}
           variant="secondary"

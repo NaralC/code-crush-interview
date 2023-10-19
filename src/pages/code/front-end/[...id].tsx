@@ -24,12 +24,6 @@ import AudioVideoCall from "@/components/custom/audio-video-call";
 import Split from "react-split";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
 
-// Sandpacks
-import ExperimentalSandpack from "./experimental-sandpack";
-import { SandpackProvider } from "@codesandbox/sandpack-react";
-import { atomDark } from "@codesandbox/sandpack-themes";
-import { SandpackWithLiveCodeState } from "@/pages/code/front-end/test-sanpack-live-state";
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
 
@@ -56,6 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     type,
     finished,
     note_state,
+    front_end_type
   } = rooms[0];
 
   const { data: questions, error: questionsError } = await supabaseClient
@@ -85,6 +80,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       finished,
       questions,
       initialNoteState: note_state,
+      frontEndType: front_end_type
     },
   };
 };
@@ -97,6 +93,7 @@ const FrontEndPage: NextPage<{
   userName: string;
   finished: boolean;
   questions: Question[];
+  frontEndType: "react" | "angular" | "vue"
 }> = ({
   initialCodeState,
   initialNoteState,
@@ -105,6 +102,7 @@ const FrontEndPage: NextPage<{
   userName,
   finished,
   questions,
+  frontEndType
 }) => {
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
@@ -141,19 +139,7 @@ const FrontEndPage: NextPage<{
         type: "SET_CODE_STORE",
         payload: initialCodeState
       })
-
-      // for (const language in initialCodeState) {
-      //   const value = initialCodeState[language].value;
-
-      //   dispatchCode({
-      //     type: "UPDATE_CODE_BY_LANGUAGE",
-      //     payload: {
-      //       language,
-      //       value,
-      //     },
-      //   });
-      // }
-
+      
       if (isFinished)
         toast(
           "This interview is marked as finished. Editing text is no longer allowed.",
@@ -167,14 +153,6 @@ const FrontEndPage: NextPage<{
       effectRan.current = true;
     };
   }, []);
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     editorRef.current?.render(initialNoteState)
-  //   }, 1000);
-
-  //   return () => clearTimeout(timeout)
-  // }, [editorIsMounted]);
 
   const handleEndInterview = async () => {
     const { error } = await supa
@@ -206,22 +184,17 @@ const FrontEndPage: NextPage<{
           type={"front_end"}
         />
         <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
-          <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-            {/* <SandpackWithLiveCodeState /> */}
+          <div className="w-full overflow-y-auto bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
               <SackpackEditor
                 template={
-                  codeState.language === "react"
+                  frontEndType === "react"
                     ? "react-ts"
-                    : codeState.language === "angular"
+                    : frontEndType === "angular"
                     ? "angular"
                     : "vue-ts"
                 }
                 finished={isFinished}
               />
-              {/* <ExperimentalSandpack
-                template={"vite-react-ts"}
-                finished={false}
-              /> */}
           </div>
           <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor

@@ -15,6 +15,9 @@ interface Database {
           created_at: string | null
           description: string | null
           finished: boolean
+          front_end_type:
+            | Database["public"]["Enums"]["front_end_frameworks"]
+            | null
           name: string | null
           note_state: Json | null
           participants: Json | null
@@ -26,6 +29,9 @@ interface Database {
           created_at?: string | null
           description?: string | null
           finished: boolean
+          front_end_type?:
+            | Database["public"]["Enums"]["front_end_frameworks"]
+            | null
           name?: string | null
           note_state?: Json | null
           participants?: Json | null
@@ -37,6 +43,9 @@ interface Database {
           created_at?: string | null
           description?: string | null
           finished?: boolean
+          front_end_type?:
+            | Database["public"]["Enums"]["front_end_frameworks"]
+            | null
           name?: string | null
           note_state?: Json | null
           participants?: Json | null
@@ -102,17 +111,8 @@ interface Database {
       [_ in never]: never
     }
     Enums: {
-      pricing_plan_interval: "day" | "week" | "month" | "year"
-      pricing_type: "one_time" | "recurring"
+      front_end_frameworks: "react" | "angular" | "vue"
       room_type: "front_end" | "ds_algo" | "behavioral"
-      subscription_status:
-        | "trialing"
-        | "active"
-        | "canceled"
-        | "incomplete"
-        | "incomplete_expired"
-        | "past_due"
-        | "unpaid"
     }
     CompositeTypes: {
       [_ in never]: never
