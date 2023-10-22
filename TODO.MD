@@ -38,7 +38,7 @@ Should haves:
     - Create a room-specific framework ✅
     - Save code to DB ⌛
     - Real-time sync ✅
-    - Initial join sync ▶
+    - Initial join sync ✅
     - Tailwind Integration ✅
     - Info for which framework a room's using
 - Video/audio device settings
