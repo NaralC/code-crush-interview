@@ -90,7 +90,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
       </Button>
       <main
         className={cn(
-          "flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100 xl:container selection:text-black selection:bg-white",
+          "flex flex-col items-center justify-center min-h-screen p-24 transition-all duration-200 delay-100  selection:text-black selection:bg-white",
           animation ? "text-white" : "",
           particleBgVisible
             ? ""

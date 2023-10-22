@@ -74,11 +74,11 @@ const QuestionsPage: NextPage = () => {
 
   // TODO: Make this page responsive
   return (
-    <main className="universal-bg selection:text-black">
-      {/* <div className="absolute w-4/6 -translate-x-1/2 -translate-y-1/2 max-w-7xl top-1/2 left-1/2"> */}
+    <main className="flex flex-col items-center justify-center min-h-screen gap-2 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800 selection:text-black">
+      <div className="w-full max-w-screen-md space-y-5">
         <div className="flex gap-6 text-2xl font-semibold">
           <p>Question Pool</p>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             <div
               className={cn(
                 "flex gap-2",
@@ -250,7 +250,7 @@ const QuestionsPage: NextPage = () => {
             Edit Question
           </Button>
         </div>
-      {/* </div> */}
+      </div>
     </main>
   );
 };
