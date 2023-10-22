@@ -114,7 +114,8 @@ const DsAlgoPage: NextPage<{
     userName,
     (newName) => setRoomName(newName),
     isFinished,
-    () => setIsFinished(true)
+    () => setIsFinished(true),
+    "ds_algo"
   );
   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   const [isMuted, setIsMuted] = useState<boolean>(false);

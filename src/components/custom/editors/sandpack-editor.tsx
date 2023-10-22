@@ -10,67 +10,60 @@ import {
   useActiveCode,
   useSandpack,
 } from "@codesandbox/sandpack-react";
-import { atomDark } from "@codesandbox/sandpack-themes";
-import { FC } from "react";
-
-const reactTailwindStartingCode = {
-  "/App.tsx": {
-    active: true,
-    code: `export default function Example() {
-      return (
-      <div className="bg-gray-50">
-      <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          <span className="block">Ready to dive in?</span>
-          <span className="block text-indigo-600">Start your free trial today.</span>
-        </h2>
-        <div className="flex mt-8 lg:mt-0 lg:flex-shrink-0">
-          <div className="inline-flex rounded-md shadow">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700"
-            >
-              Get started
-            </a>
-          </div>
-          <div className="inline-flex ml-3 rounded-md shadow">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-indigo-600 bg-white border border-transparent rounded-md hover:bg-indigo-50"
-            >
-              Learn more
-            </a>
-          </div>
-        </div>
-      </div>
-      </div>
-      )
-      }`,
-  },
-};
-
-const visibleFilesByFramework = {
-  "react-ts": ["App.tsx", "styles.css", "/public/index.html"],
-  "vue-ts": ["/src/App.vue", "/src/styles.css"],
-  angular: ["/src/app/app.component.html", "/src/app/app.component.css", "/src/app/app.component.ts"],
-};
+import {
+  Dispatch,
+  FC,
+  MutableRefObject,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import throttle from "lodash.throttle";
+import { EVENT } from "@/lib/constant";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 // TODO: Real-time cursors? Refer to https://sandpack.codesandbox.io/docs/advanced-usage/components
 // TODO: Try integration with Monaco https://sandpack.codesandbox.io/docs/guides/integrate-monaco-editor
-// TODO: Implement real-time stuff
 
-const CodeEditor = ({ finished }: { finished: boolean }) => {
-  const { code, updateCode } = useActiveCode();
-  const { sandpack } = useSandpack();
+type Props = {
+  finished: boolean;
+  realTimeRef: MutableRefObject<RealtimeChannel | null>;
+  isLocalChange: boolean;
+  setIsLocalChange: Dispatch<SetStateAction<boolean>>;
+};
+
+const CodeEditor = ({
+  finished,
+  realTimeRef,
+  isLocalChange,
+  setIsLocalChange,
+}: Props) => {
+  const { code } = useActiveCode();
+
+  // Broadcast code updates if they are local
+  useEffect(() => {
+    if (isLocalChange) {
+      const broadcastCodeUpdate = throttle(() => {
+        realTimeRef.current?.send({
+          type: "broadcast",
+          event: EVENT.CODE_UPDATE,
+          payload: { value: code },
+        });
+      }, 300);
+
+      broadcastCodeUpdate();
+    } else {
+      setIsLocalChange(true);
+    }
+  }, [code]);
 
   return (
     <>
-      {/* <pre>{code}</pre> */}
       <Button
         className="fixed z-40 shadow bottom-6 right-6 shadow-white inter-font"
-        onClick={() => {
-          updateCode("yo");
-        }}
+        onClick={() => {}}
       >
         Placeholder
       </Button>
@@ -93,37 +86,23 @@ const CodeEditor = ({ finished }: { finished: boolean }) => {
               Report bug
             </button>
           }
+          style={{ width: "50%" }}
         />
-        <SandpackConsole showHeader showSetupProgress showSyntaxError />
+        <SandpackConsole
+          showHeader
+          showSetupProgress
+          showSyntaxError
+          style={{ overflowY: "auto", width: "50%" }}
+        />
       </div>
     </>
   );
 };
 
-const SackpackEditor: FC<{
-  template: "react-ts" | "vue-ts" | "angular";
-  finished: boolean;
-}> = ({ template, finished }) => {
-  return (
-    <SandpackProvider
-      // files={reactTailwindStartingCode}
-      template={template}
-      theme={atomDark}
-      options={{
-        externalResources: ["https://cdn.tailwindcss.com"],
-        visibleFiles: visibleFilesByFramework[template],
-        classes: {
-          "sp-layout": "sandpack-custom-layout",
-          "sp-stack": "sandpack-custom-stack",
-        },
-      }}
-      style={{ height: "100%" }}
-    >
-      <SandpackLayout>
-        <CodeEditor finished={finished} />
-      </SandpackLayout>
-    </SandpackProvider>
-  );
-};
+const SackpackEditor: FC<Props> = (props) => (
+  <SandpackLayout>
+    <CodeEditor {...props} />
+  </SandpackLayout>
+);
 
 export default SackpackEditor;

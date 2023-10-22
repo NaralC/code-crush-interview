@@ -42,5 +42,8 @@ type QuestionFromDB = Database["public"]["Tables"]["questions"]["Row"];
 type CodeFromDB = Database["public"]["Tables"]["interview_rooms"]["Row"]["code_state"];
 
 type CodeUpdate = { language: string; value: string; }
+// type CodeUpdate =
+//   | { type: "ds_algo"; language: string; value: string }
+//   | { type: "front_end"; value: string };
 
 type InterviewType = "front_end" | "ds_algo"

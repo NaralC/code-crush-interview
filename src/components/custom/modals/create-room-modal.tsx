@@ -331,7 +331,7 @@ const CreateRoomModal: FC = () => {
                           },
                           {
                             id: "enable_voice_call",
-                            label: "Enable voice call (limits the room to 2 players)",
+                            label: "Enable voice call (experimental)",
                           },
                         ].map((item) => (
                           <FormField

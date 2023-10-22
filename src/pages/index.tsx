@@ -1,6 +1,6 @@
 // UI
 import { Button } from "@/components/ui/button";
-import { Code2, Globe2, Paperclip } from "lucide-react";
+import { Code2, FileQuestion, Globe2, Paperclip } from "lucide-react";
 import {
   TbBrandNextjs,
   TbBrandSupabase,
@@ -107,7 +107,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
           <Button
             className={cn(
-              "ring-1 ring-zinc-50/25 filter w-48 md:w-52",
+              "ring-1 ring-zinc-50/25 filter w-full md:w-auto",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
             onClick={() => {
@@ -119,7 +119,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           </Button>
           <Button
             className={cn(
-              "ring-1 ring-zinc-50/25 filter w-48 md:w-52",
+              "ring-1 ring-zinc-50/25 filter w-full md:w-auto",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
             onClick={() => {
@@ -131,7 +131,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           </Button>
           <Button
             className={cn(
-              "ring-1 ring-zinc-50/25 filter w-48 md:w-52",
+              "ring-1 ring-zinc-50/25 filter w-full md:w-auto",
               animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
             )}
             onClick={() => {
@@ -140,6 +140,17 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           >
             <Globe2 className="mr-2" />
             Browse Rooms
+          </Button>
+          <Button
+            className={cn(
+              "ring-1 ring-zinc-50/25 filter w-full md:w-auto",
+              animation ? "shadow-lg shadow-white blur-none" : "blur-sm"
+            )}
+          >
+            <Link className="flex items-center" href={"/questions"}>
+              <FileQuestion className="mr-2" />
+              Edit Questions
+            </Link>
           </Button>
         </div>
 

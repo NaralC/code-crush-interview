@@ -1,7 +1,7 @@
 import { EVENT } from "@/lib/constant";
 import supabaseClient from "@/lib/supa-client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useMemo, useRef } from "react";
+import { Dispatch, MutableRefObject, SetStateAction, useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { nanoid } from "nanoid";
 import { useUsersStore } from "@/stores/users-store";
@@ -11,13 +11,16 @@ import useModalStore from "../stores/modal-store";
 import { Output } from "./use-compile-code";
 import type { OutputData } from "@editorjs/editorjs";
 import { getTransformedPresenceState } from "@/lib/utils";
+import { useActiveCode } from "@codesandbox/sandpack-react";
 
 const useRealTime = (
   roomId: string,
   name: string,
   setRoomName: (newName: string) => void,
   finished: boolean,
-  setFinishedTrue: () => void
+  setFinishedTrue: () => void,
+  type: InterviewType,
+  setIsLocalChange?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const {
     hintsSolutionModal: { setOpen, setType, setBody },
@@ -35,6 +38,7 @@ const useRealTime = (
   } = useCodeStore();
   const { setOtherUsers, latestRoleRef } = useUsersStore();
   const editorRef = useNoteStore((state) => state.editorRef);
+  const { code, updateCode } = useActiveCode();
 
   // Refs and Utils
   const realTimeRef = useRef<RealtimeChannel | null>(null);
@@ -58,6 +62,9 @@ const useRealTime = (
         "broadcast",
         { event: EVENT.NEW_JOIN }, // Filtering events
         async () => {
+          // if (type === "ds_algo") {}
+          // else if (type === "front_end") {}
+
           for (const key in latestWholeCodeStateRef.current?.code) {
             const value = latestWholeCodeStateRef.current.code[key]
               ? latestWholeCodeStateRef.current.code[key].value
@@ -95,19 +102,28 @@ const useRealTime = (
       .on(
         "broadcast",
         { event: EVENT.CODE_UPDATE }, // Filtering events
-        (payload: Payload<{ language: string; value: string; }>) => {
+        (payload: Payload<CodeUpdate>) => {
           const { language, value } = payload.payload!;
 
-          console.log(language, value);
-          setTimeout(() => {
-            dispatchCode({
-              type: "UPDATE_CODE_BY_LANGUAGE",
-              payload: {
-                language,
-                value,
-              },
-            });
-          }, 100);
+          if (value === code) return;
+
+          if (!language) {
+            if (setIsLocalChange) setIsLocalChange(false);
+            setTimeout(() => updateCode(value), 0);
+            return;
+          } 
+          
+          else {
+            setTimeout(() => {
+              dispatchCode({
+                type: "UPDATE_CODE_BY_LANGUAGE",
+                payload: {
+                  language,
+                  value,
+                },
+              });
+            }, 100);
+          }
         }
       )
       .on(

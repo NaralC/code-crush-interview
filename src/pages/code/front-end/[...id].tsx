@@ -5,7 +5,7 @@ import { useCodeStore } from "@/stores/code-store";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import type { OutputData } from "@editorjs/editorjs";
 import type { NextPage, GetServerSideProps } from "next";
-import { useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import useWebRTC from "@/hooks/use-webrtc";
 import useMousePosition from "@/hooks/use-mouse-position";
 import useModalStore from "@/stores/modal-store";
@@ -23,6 +23,8 @@ import Head from "next/head";
 import AudioVideoCall from "@/components/custom/audio-video-call";
 import Split from "react-split";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
+import { SandpackProvider, useActiveCode } from "@codesandbox/sandpack-react";
+import { atomDark } from "@codesandbox/sandpack-themes";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -50,7 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     type,
     finished,
     note_state,
-    front_end_type
+    front_end_type,
   } = rooms[0];
 
   const { data: questions, error: questionsError } = await supabaseClient
@@ -70,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       };
     }
   }
-  
+
   return {
     props: {
       initialCodeState: code_state,
@@ -80,12 +82,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       finished,
       questions,
       initialNoteState: note_state,
-      frontEndType: front_end_type
+      frontEndType: front_end_type,
     },
   };
 };
 
-const FrontEndPage: NextPage<{
+type PageProps = {
   initialCodeState: Record<string, { value: string }>;
   initialNoteState: OutputData;
   roomId: string;
@@ -93,8 +95,51 @@ const FrontEndPage: NextPage<{
   userName: string;
   finished: boolean;
   questions: Question[];
-  frontEndType: "react" | "angular" | "vue"
-}> = ({
+  frontEndType: "react" | "angular" | "vue";
+};
+
+type SandPackTemplates = "angular" | "react-ts" | "vue-ts"
+
+const visibleFilesByFramework: Record<SandPackTemplates, string[]> = {
+  "react-ts": ["App.tsx", 
+  // "styles.css"
+],
+  "vue-ts": ["/src/App.vue", 
+  // "/src/styles.css"
+],
+  angular: [
+    "/src/app/app.component.html",
+    "/src/app/app.component.css",
+    "/src/app/app.component.ts",
+  ],
+};
+
+const typeToFrameworkMap: Record<string, SandPackTemplates> = {
+  react: "react-ts",
+  angular: "angular",
+  vue: "vue-ts",
+};
+
+const FrontEndpage: NextPage<PageProps> = (props) => (
+  <SandpackProvider
+    template={typeToFrameworkMap[props.frontEndType]}
+    theme={atomDark}
+    options={{
+      externalResources: ["https://cdn.tailwindcss.com"],
+      visibleFiles:
+        visibleFilesByFramework[typeToFrameworkMap[props.frontEndType]],
+      classes: {
+        "sp-layout": "sandpack-custom-layout",
+        "sp-stack": "sandpack-custom-stack",
+      },
+    }}
+    style={{ height: "100%" }}
+  >
+    <InternalFrontEndPage {...props} />
+  </SandpackProvider>
+);
+
+const InternalFrontEndPage: NextPage<PageProps> = ({
   initialCodeState,
   initialNoteState,
   roomId,
@@ -102,8 +147,11 @@ const FrontEndPage: NextPage<{
   userName,
   finished,
   questions,
-  frontEndType
+  frontEndType,
 }) => {
+  // Front-end specific hooks
+  const [isLocalChange, setIsLocalChange] = useState(false);
+
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
   const [roomName, setRoomName] = useState<string>(initialRoomName);
@@ -112,17 +160,17 @@ const FrontEndPage: NextPage<{
     userName,
     (newName) => setRoomName(newName),
     isFinished,
-    () => setIsFinished(true)
+    () => setIsFinished(true),
+    "front_end",
+    setIsLocalChange
   );
-  const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-  const { dispatchCode, codeState } = useCodeStore();
   const { x, y } = useMousePosition();
-  const {
-    endInterviewModal: { setOpen, setClose },
-  } = useModalStore();
-  const { editorRef, editorIsMounted } = useNoteStore();
+  const { endInterviewModal: { setOpen, setClose } } = useModalStore();
   const supa = supabaseClient;
+  // const { editorRef, editorIsMounted } = useNoteStore();
+  // const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
+  // const [isMuted, setIsMuted] = useState<boolean>(false);
+
 
   const sendMousePosition = throttle(() => {
     realTimeRef.current?.send({
@@ -135,11 +183,8 @@ const FrontEndPage: NextPage<{
   const effectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
-      dispatchCode({
-        type: "SET_CODE_STORE",
-        payload: initialCodeState
-      })
-      
+      // TODO: Set code from getSSProps
+
       if (isFinished)
         toast(
           "This interview is marked as finished. Editing text is no longer allowed.",
@@ -174,8 +219,11 @@ const FrontEndPage: NextPage<{
         <meta name="Code Crush" content="Code Crush" />
       </Head>
 
-      <main className="flex flex-col w-full h-screen">
-        {/* <Cursors realTimeRef={realTimeRef} /> */}
+      <main
+        className="flex flex-col w-full h-screen inter-font"
+        onMouseMove={sendMousePosition}
+      >
+        <Cursors realTimeRef={realTimeRef} />
         <UtilityBar
           realTimeRef={realTimeRef}
           roomName={roomName}
@@ -185,16 +233,12 @@ const FrontEndPage: NextPage<{
         />
         <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
           <div className="w-full overflow-y-auto bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-              <SackpackEditor
-                template={
-                  frontEndType === "react"
-                    ? "react-ts"
-                    : frontEndType === "angular"
-                    ? "angular"
-                    : "vue-ts"
-                }
-                finished={isFinished}
-              />
+            <SackpackEditor
+              finished={isFinished}
+              realTimeRef={realTimeRef}
+              isLocalChange={isLocalChange}
+              setIsLocalChange={setIsLocalChange}
+            />
           </div>
           <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor
@@ -230,4 +274,4 @@ const FrontEndPage: NextPage<{
   );
 };
 
-export default FrontEndPage;
+export default FrontEndpage;

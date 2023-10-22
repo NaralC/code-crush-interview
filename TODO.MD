@@ -36,8 +36,8 @@ Should haves:
 - FE interview: ▶
     - Being able to create FE questions ✅
     - Create a room-specific framework ✅
-    - Save code to DB ✅
-    - Real-time sync ▶
+    - Save code to DB ⌛
+    - Real-time sync ✅
     - Initial join sync ▶
     - Tailwind Integration ✅
     - Info for which framework a room's using

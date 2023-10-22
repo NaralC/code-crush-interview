@@ -31,7 +31,7 @@ const AuthPopover: FC = ({}) => {
 
       setMyData(session);
       supa.auth.onAuthStateChange((event, session) => {
-        console.log(event, session);
+        // console.log(event, session);
       });
     };
 
@@ -41,7 +41,7 @@ const AuthPopover: FC = ({}) => {
   const [myData, setMyData] = useState<Session | null>(null);
 
   useEffect(() => {
-    console.log(myData);
+    // console.log(myData);
   }, [myData]);
 
   return (
