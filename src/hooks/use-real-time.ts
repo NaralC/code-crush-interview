@@ -46,6 +46,9 @@ const useRealTime = (
   const { setOtherUsers, latestRoleRef } = useUsersStore();
   const editorRef = useNoteStore((state) => state.editorRef);
   const { code, updateCode } = useActiveCode();
+  const latestFrontEndCodeRef = useRef<string>(code);
+
+  useEffect(() => { latestFrontEndCodeRef.current = code }, [code])
 
   // Refs and Utils
   const realTimeRef = useRef<RealtimeChannel | null>(null);
@@ -93,7 +96,7 @@ const useRealTime = (
               channel.send({
                 type: "broadcast",
                 event: EVENT.CODE_UPDATE,
-                payload: { language: "", value: code } as CodeUpdate,
+                payload: { language: "", value: latestFrontEndCodeRef.current } as CodeUpdate,
               });
             }, 1000);
           }
@@ -123,7 +126,7 @@ const useRealTime = (
 
           if (!language || language.length === 0) {
             if (setIsLocalChange) setIsLocalChange(false);
-            setTimeout(() => updateCode(value), 0);
+            setTimeout(() => updateCode(value), 10);
             return;
           } else {
             setTimeout(() => {

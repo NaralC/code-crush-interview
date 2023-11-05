@@ -41,10 +41,12 @@ const CodeEditor = ({
   setIsLocalChange,
 }: Props) => {
   const { code } = useActiveCode();
+  const initialMountRef = useRef(true);
 
-  // Broadcast code updates if they are local
   useEffect(() => {
-    if (isLocalChange) {
+    if (initialMountRef.current) {
+      initialMountRef.current = false;
+    } else if (isLocalChange) {
       const broadcastCodeUpdate = throttle(() => {
         realTimeRef.current?.send({
           type: "broadcast",

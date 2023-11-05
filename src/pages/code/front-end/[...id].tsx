@@ -88,7 +88,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 type PageProps = {
-  initialCodeState: Record<string, { value: string }>;
+  initialCodeState: string;
   initialNoteState: OutputData;
   roomId: string;
   roomName: string;
@@ -98,15 +98,17 @@ type PageProps = {
   frontEndType: "react" | "angular" | "vue";
 };
 
-type SandPackTemplates = "angular" | "react-ts" | "vue-ts"
+type SandPackTemplates = "angular" | "react-ts" | "vue-ts";
 
 const visibleFilesByFramework: Record<SandPackTemplates, string[]> = {
-  "react-ts": ["App.tsx", 
-  // "styles.css"
-],
-  "vue-ts": ["/src/App.vue", 
-  // "/src/styles.css"
-],
+  "react-ts": [
+    "App.tsx",
+    // "styles.css"
+  ],
+  "vue-ts": [
+    "/src/App.vue",
+    // "/src/styles.css"
+  ],
   angular: [
     "/src/app/app.component.html",
     "/src/app/app.component.css",
@@ -150,7 +152,8 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
   frontEndType,
 }) => {
   // Front-end specific hooks
-  const [isLocalChange, setIsLocalChange] = useState(false);
+  const [isLocalChange, setIsLocalChange] = useState(true);
+  const { updateCode } = useActiveCode();
 
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
@@ -165,12 +168,13 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
     setIsLocalChange
   );
   const { x, y } = useMousePosition();
-  const { endInterviewModal: { setOpen, setClose } } = useModalStore();
+  const {
+    endInterviewModal: { setOpen, setClose },
+  } = useModalStore();
   const supa = supabaseClient;
   // const { editorRef, editorIsMounted } = useNoteStore();
   // const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   // const [isMuted, setIsMuted] = useState<boolean>(false);
-
 
   const sendMousePosition = throttle(() => {
     realTimeRef.current?.send({
@@ -183,14 +187,13 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
   const effectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
-      // TODO: Set code from getSSProps
+      setTimeout(() => updateCode(initialCodeState), 100);
+      setIsLocalChange(false);
 
       if (isFinished)
         toast(
           "This interview is marked as finished. Editing text is no longer allowed.",
-          {
-            duration: 4000,
-          }
+          { duration: 4000 }
         );
     }
 

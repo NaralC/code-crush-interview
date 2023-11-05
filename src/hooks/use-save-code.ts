@@ -1,5 +1,7 @@
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
+import { useActiveCode } from "@codesandbox/sandpack-react";
+import type { OutputData } from "@editorjs/editorjs";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -7,6 +9,7 @@ import { z } from "zod";
 const useSaveCode = (roomId: string) => {
   const { latestWholeCodeStateRef, dispatchAsync, codeState } = useCodeStore();
   const { editorRef } = useNoteStore();
+  const { code } = useActiveCode();
 
   const { isLoading: isSaving, mutate: handleSave } = useMutation({
     mutationKey: ["save-code"],
@@ -18,13 +21,20 @@ const useSaveCode = (roomId: string) => {
 
       const note = await editorRef.current?.save();
 
+      const body: {
+        note?: OutputData;
+        roomId: string;
+        code: string | Record<string, { value: string }>;
+      } = { note, roomId, code: "" };
+
+      // TODO: Clean this up
+      // This indicates the room's front-end
+      if (JSON.stringify(codeState.code) === "{}") body.code = code;
+      else body.code = codeState.code;
+
       const response = await fetch("/api/db", {
         method: "PATCH",
-        body: JSON.stringify({
-          code: codeState.code,
-          note,
-          roomId
-        }),
+        body: JSON.stringify(body),
       });
 
       const { content } = await response.json();

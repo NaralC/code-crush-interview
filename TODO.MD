@@ -36,11 +36,11 @@ Should haves:
 - FE interview: ▶
     - Being able to create FE questions ✅
     - Create a room-specific framework ✅
-    - Save code to DB ⌛
+    - Save code + notes to DB ✅
     - Real-time sync ✅
     - Initial join sync ✅
     - Tailwind Integration ✅
-    - Info for which framework a room's using
+    - Info for which framework a room's using ⌛
 - Video/audio device settings
 - Authentication via Git ✅
 - Upload code to Git repo
@@ -51,7 +51,7 @@ Nice to have:
 - User acceptance test
 
 Clean-ups:
-- Toggle landing particle bg ✅
+- Right now dsalgo would say "no sandpack wrapper" cause of useActiveCode() ▶
 - Make a "shared layout" component for the 2 coding pages
 - Code sync only works for 1 language
 - Fixed timeouts don't work well with slow internet
