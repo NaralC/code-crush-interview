@@ -33,7 +33,14 @@ import {
 import toast from "react-hot-toast";
 
 // Next.js/React Stuff
-import { FC, FormEvent, MutableRefObject, useEffect, useState } from "react";
+import {
+  type FC,
+  FormEvent,
+  MutableRefObject,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 import useCompileCode from "@/hooks/use-compile-code";
 
 // Hooks and Utility
@@ -43,6 +50,15 @@ import { EVENT } from "@/lib/constant";
 import { useCodeStore } from "@/stores/code-store";
 import { useUsersStore } from "@/stores/users-store";
 import supabaseClient from "@/lib/supa-client";
+import { useActiveCode } from "@codesandbox/sandpack-react";
+
+type Props = {
+  roomName: string;
+  realTimeRef: MutableRefObject<RealtimeChannel | null>;
+  roomId: string;
+  finished: boolean;
+  type: InterviewType; // this hides "Compile" btn and switches out the language dropdown to FE
+};
 
 const DsAlgoDropdownContent = [
   { language: "TypeScript", icon: <SiTypescript /> },
@@ -50,18 +66,58 @@ const DsAlgoDropdownContent = [
   { language: "C#", icon: <SiCsharp /> },
 ];
 
-const UtilityBar: FC<{
-  roomName: string;
-  realTimeRef: MutableRefObject<RealtimeChannel | null>;
-  roomId: string;
-  finished: boolean;
-  type: InterviewType; // this hides "Compile" btn and switches out the language dropdown to FE
-}> = ({ roomName, realTimeRef, roomId, finished, type }) => {
+const SaveCodeBtnDsAlgo = ({ finished, roomId }: { finished: boolean; roomId: string; }) => {
+  const { asyncState, codeState } = useCodeStore();
+  const { handleSave } = useSaveCode(roomId, codeState);
+
+  return (
+    <Button
+      variant="secondary"
+      onClick={() => handleSave()}
+      disabled={asyncState.isSaving || finished}
+    >
+      <div className="hidden md:block">Save</div>
+      {asyncState.isSaving ? (
+        <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
+      ) : (
+        <Save className="md:ml-1 md:-mr-1" />
+      )}
+    </Button>
+  );
+};
+
+const SaveCodeBtnFrontEnd = ({ finished, roomId }: { finished: boolean; roomId: string; }) => {
+  const { asyncState } = useCodeStore();
+  const { code } = useActiveCode();
+  const { handleSave } = useSaveCode(roomId, code);
+
+  return (
+    <Button
+      variant="secondary"
+      onClick={() => handleSave()}
+      disabled={asyncState.isSaving || finished}
+    >
+      <div className="hidden md:block">Save</div>
+      {asyncState.isSaving ? (
+        <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
+      ) : (
+        <Save className="md:ml-1 md:-mr-1" />
+      )}
+    </Button>
+  );
+};
+
+const UtilityBar: FC<Props> = ({
+  roomName,
+  realTimeRef,
+  roomId,
+  finished,
+  type,
+}) => {
   const supaClient = supabaseClient;
   const [roomNameInput, setRoomNameInput] = useState<string>("");
   const { codeState, consoleState, asyncState, dispatchCode } = useCodeStore();
   const { handleCompile } = useCompileCode();
-  const { handleSave } = useSaveCode(roomId);
   const { setRole, role, latestRoleRef } = useUsersStore();
 
   useEffect(() => {
@@ -242,20 +298,8 @@ const UtilityBar: FC<{
             )}
           </Button>
         )}
-        <Button
-          variant="secondary"
-          onClick={() => {
-            handleSave();
-          }}
-          disabled={asyncState.isSaving || finished}
-        >
-          <div className="hidden md:block">Save</div>
-          {asyncState.isSaving ? (
-            <Loader2 className="md:ml-1 md:-mr-1 animate-spin" />
-          ) : (
-            <Save className="md:ml-1 md:-mr-1" />
-          )}
-        </Button>
+        {type === "ds_algo" && <SaveCodeBtnDsAlgo finished={finished} roomId={roomId} />}
+        {type === "front_end" && <SaveCodeBtnFrontEnd finished={finished} roomId={roomId} />}
       </div>
     </div>
   );

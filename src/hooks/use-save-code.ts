@@ -1,3 +1,4 @@
+import { CodeState } from "@/lib/reducers";
 import { useCodeStore } from "@/stores/code-store";
 import { useNoteStore } from "@/stores/note-store";
 import { useActiveCode } from "@codesandbox/sandpack-react";
@@ -6,10 +7,9 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-const useSaveCode = (roomId: string) => {
-  const { latestWholeCodeStateRef, dispatchAsync, codeState } = useCodeStore();
+const useSaveCode = (roomId: string, state: CodeState | string) => {
+  const { dispatchAsync } = useCodeStore();
   const { editorRef } = useNoteStore();
-  const { code } = useActiveCode();
 
   const { isLoading: isSaving, mutate: handleSave } = useMutation({
     mutationKey: ["save-code"],
@@ -27,10 +27,9 @@ const useSaveCode = (roomId: string) => {
         code: string | Record<string, { value: string }>;
       } = { note, roomId, code: "" };
 
-      // TODO: Clean this up
-      // This indicates the room's front-end
-      if (JSON.stringify(codeState.code) === "{}") body.code = code;
-      else body.code = codeState.code;
+      // Being type "object" indicates the room's ds-algo
+      if (typeof state === "object") body.code = state.code;
+      else if (typeof state === "string") body.code = state;
 
       const response = await fetch("/api/db", {
         method: "PATCH",
