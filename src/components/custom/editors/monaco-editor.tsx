@@ -9,11 +9,13 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCodeStore } from "@/stores/code-store";
 
-const MonacoEditor: FC<{
+type MonacoEditorProps = {
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
   name: string;
   finished: boolean;
-}> = ({ realTimeRef, name, finished }) => {
+}
+
+const MonacoEditor: FC<MonacoEditorProps> = ({ realTimeRef, name, finished }) => {
   // Code state
   const { codeState, dispatchCode, dispatchConsole, latestLanguageRef } = useCodeStore();
 

@@ -14,6 +14,7 @@ Essential:
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
     - Limit to 2 if voice call active ⌛
+    - Voice call only works on yourself ⌛
 - Interviewer/interviewee roles:
     - Role swap ✅
     - Pick questions/hints/follow-ups ✅
@@ -33,7 +34,7 @@ Should haves:
     - Interview Status (ongoing/finished) ✅
     - Being able to end an interview ✅
     - Password lock ⌛
-- FE interview: ▶
+- FE interview: 
     - Being able to create FE questions ✅
     - Create a room-specific framework ✅
     - Save code + notes to DB ✅
@@ -41,7 +42,7 @@ Should haves:
     - Initial join sync ✅
     - Tailwind Integration ✅
     - Info for which framework a room's using ✅
-- Video/audio device settings
+- Video/audio device settings ⌛
 - Authentication via Git ✅
 - Upload code to Git repo
 - Amongus background (https://codepen.io/matteobruni/pen/rNmMVEx)
@@ -51,8 +52,10 @@ Nice to have:
 - User acceptance test
 
 Clean-ups:
-- Make a "shared layout" component for the 2 coding pages
+- Initial join sometimes doesn't work (fe/notes) ⌛
+- Make a "shared layout" component for the 2 coding pages ⌛
 - Code sync only works for 1 language
+- Remove streaming in the note editor
 - Fixed timeouts don't work well with slow internet
 - Cursor name doesn't show up and no initial code sync for a new tab first time
 - Make AV control (on coding page) actually work

@@ -27,7 +27,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 // TODO: Real-time cursors? Refer to https://sandpack.codesandbox.io/docs/advanced-usage/components
 // TODO: Try integration with Monaco https://sandpack.codesandbox.io/docs/guides/integrate-monaco-editor
 
-type Props = {
+type SandpackEditorProps = {
   finished: boolean;
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
   isLocalChange: boolean;
@@ -39,7 +39,7 @@ const CodeEditor = ({
   realTimeRef,
   isLocalChange,
   setIsLocalChange,
-}: Props) => {
+}: SandpackEditorProps) => {
   const { code } = useActiveCode();
   const initialMountRef = useRef(true);
 
@@ -101,7 +101,7 @@ const CodeEditor = ({
   );
 };
 
-const SackpackEditor: FC<Props> = (props) => (
+const SackpackEditor: FC<SandpackEditorProps> = (props) => (
   <SandpackLayout>
     <CodeEditor {...props} />
   </SandpackLayout>
