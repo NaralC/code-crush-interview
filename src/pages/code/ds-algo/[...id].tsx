@@ -214,14 +214,14 @@ const DsAlgoPage: NextPage<{
             </div>
           </Split>
           <OutputConsole />
-          {/* {!!finished && (
+          {!finished && (
               <AudioVideoCall
                 isMuted={isMuted}
                 setIsMuted={setIsMuted}
                 myVideo={myVideo}
                 partnerVideo={partnerVideo}
               />
-            )} */}
+            )}
         </>
       </main>
 
