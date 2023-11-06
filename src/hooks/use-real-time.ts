@@ -296,8 +296,7 @@ export const useRealTimeFrontEnd = (
   setRoomName: (newName: string) => void,
   finished: boolean,
   setFinishedTrue: () => void,
-  type: InterviewType,
-  setIsLocalChange?: Dispatch<SetStateAction<boolean>>
+  setIsLocalChange: Dispatch<SetStateAction<boolean>>
 ) => {
   const {
     hintsSolutionModal: { setOpen, setType, setBody },
@@ -344,37 +343,16 @@ export const useRealTimeFrontEnd = (
         "broadcast",
         { event: EVENT.NEW_JOIN }, // Filtering events
         async () => {
-          if (type === "ds_algo") {
-            for (const key in latestWholeCodeStateRef.current?.code) {
-              const value = latestWholeCodeStateRef.current.code[key]
-                ? latestWholeCodeStateRef.current.code[key].value
-                : "";
-
-              const newPayload: CodeUpdate = {
-                language: key,
-                value,
-              };
-
-              setTimeout(() => {
-                channel.send({
-                  type: "broadcast",
-                  event: EVENT.CODE_UPDATE,
-                  payload: newPayload,
-                });
-              }, 1000);
-            }
-          } else if (type === "front_end") {
-            setTimeout(() => {
-              channel.send({
-                type: "broadcast",
-                event: EVENT.CODE_UPDATE,
-                payload: {
-                  language: "",
-                  value: latestFrontEndCodeRef.current,
-                } as CodeUpdate,
-              });
-            }, 1000);
-          }
+          setTimeout(() => {
+            channel.send({
+              type: "broadcast",
+              event: EVENT.CODE_UPDATE,
+              payload: {
+                language: "",
+                value: latestFrontEndCodeRef.current,
+              } as CodeUpdate,
+            });
+          }, 1000);
 
           let noteData: OutputData | undefined;
           if (!finished) noteData = await editorRef.current?.save();
@@ -403,16 +381,6 @@ export const useRealTimeFrontEnd = (
             if (setIsLocalChange) setIsLocalChange(false);
             setTimeout(() => updateCode(value), 10);
             return;
-          } else {
-            setTimeout(() => {
-              dispatchCode({
-                type: "UPDATE_CODE_BY_LANGUAGE",
-                payload: {
-                  language,
-                  value,
-                },
-              });
-            }, 100);
           }
         }
       )

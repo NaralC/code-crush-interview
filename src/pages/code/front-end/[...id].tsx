@@ -151,20 +151,20 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
   questions,
   frontEndType,
 }) => {
-  // Front-end specific hooks
+  // TODO: Front-end specific hooks
   const [isLocalChange, setIsLocalChange] = useState(true);
   const { updateCode } = useActiveCode();
 
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
   const [roomName, setRoomName] = useState<string>(initialRoomName);
+  // TODO: Front-end specific hook
   const { realTimeRef, userId } = useRealTimeFrontEnd(
     roomId,
     userName,
     (newName) => setRoomName(newName),
     isFinished,
     () => setIsFinished(true),
-    "front_end",
     setIsLocalChange
   );
   const { x, y } = useMousePosition();
@@ -187,6 +187,7 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
   const effectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
+      // TODO: Front-end specific hooks
       if (initialCodeState.length > 0) {
         setTimeout(() => updateCode(initialCodeState), 100);
         setIsLocalChange(false);

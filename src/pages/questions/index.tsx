@@ -72,7 +72,6 @@ const QuestionsPage: NextPage = () => {
 
   useEffect(() => refetchFn(), [selectedQuestionType]);
 
-  // TODO: Make this page responsive
   return (
     <main className="flex flex-col items-center justify-center min-h-screen gap-2 p-12 text-white bg-gradient-to-b from-black via-slate-900 to-slate-800 selection:text-black">
       <div className="w-full max-w-screen-md space-y-5">

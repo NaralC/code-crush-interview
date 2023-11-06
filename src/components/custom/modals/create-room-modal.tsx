@@ -33,7 +33,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FaPython, FaReact } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
 import { Transition } from "@headlessui/react";
 
 import Modal from "@/components/ui/modal";

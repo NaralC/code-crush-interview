@@ -109,6 +109,7 @@ const DsAlgoPage: NextPage<{
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
   const [roomName, setRoomName] = useState<string>(initialRoomName);
+  // TODO: DS-Algo specific hook
   const { realTimeRef, userId } = useRealTimeDsAlgo(
     roomId,
     userName,
@@ -123,7 +124,6 @@ const DsAlgoPage: NextPage<{
   const {
     endInterviewModal: { setOpen, setClose },
   } = useModalStore();
-  const { editorRef, editorIsMounted } = useNoteStore();
   const supa = supabaseClient;
 
   const sendMousePosition = throttle(() => {
@@ -162,14 +162,6 @@ const DsAlgoPage: NextPage<{
       effectRan.current = true;
     };
   }, []);
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     editorRef.current?.render(initialNoteState)
-  //   }, 1000);
-
-  //   return () => clearTimeout(timeout)
-  // }, [editorIsMounted]);
 
   const handleEndInterview = async () => {
     const { error } = await supa
