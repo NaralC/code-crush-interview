@@ -16,7 +16,7 @@ import Head from "next/head";
 
 // Hooks and Utility
 import useMousePosition from "@/hooks/use-mouse-position";
-import useRealTime from "@/hooks/use-real-time";
+import { useRealTimeDsAlgo, useRealTimeFrontEnd } from "@/hooks/use-real-time";
 import useWebRTC from "@/hooks/use-webrtc";
 import throttle from "lodash.throttle";
 import { EVENT } from "@/lib/constant";
@@ -109,13 +109,12 @@ const DsAlgoPage: NextPage<{
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
   const [roomName, setRoomName] = useState<string>(initialRoomName);
-  const { realTimeRef, userId } = useRealTime(
+  const { realTimeRef, userId } = useRealTimeDsAlgo(
     roomId,
     userName,
     (newName) => setRoomName(newName),
     isFinished,
-    () => setIsFinished(true),
-    "ds_algo"
+    () => setIsFinished(true)
   );
   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
   const [isMuted, setIsMuted] = useState<boolean>(false);

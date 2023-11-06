@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 const EndInterviewModal: FC<{ handleEndInterview: () => Promise<void> }> = ({
   handleEndInterview,
 }) => {
-  const {
-    endInterviewModal: { isOpen, setClose },
-  } = useModalStore();
+  const { endInterviewModal: { isOpen, setClose } } = useModalStore();
 
   return (
     <Modal

@@ -1,6 +1,6 @@
 import SackpackEditor from "@/components/custom/editors/sandpack-editor";
 import UtilityBar from "@/components/custom/utility-bar";
-import useRealTime from "@/hooks/use-real-time";
+import { useRealTimeFrontEnd } from "@/hooks/use-real-time";
 import { useCodeStore } from "@/stores/code-store";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import type { OutputData } from "@editorjs/editorjs";
@@ -158,7 +158,7 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
   // States
   const [isFinished, setIsFinished] = useState<boolean>(finished);
   const [roomName, setRoomName] = useState<string>(initialRoomName);
-  const { realTimeRef, userId } = useRealTime(
+  const { realTimeRef, userId } = useRealTimeFrontEnd(
     roomId,
     userName,
     (newName) => setRoomName(newName),
