@@ -27,7 +27,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useModalStore from "@/stores/modal-store";
 import supaClient from "@/lib/supa-client";
-import { FaPython, FaReact } from "react-icons/fa";
+import { FaPython, FaReact, FaAngular, FaVuejs } from "react-icons/fa";
 
 const browseRoomSchema = z.object({
   username: z.string().min(1, {
@@ -79,7 +79,9 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
 
     toast.success("Wallah! Redirecting you to it!");
     router.push({
-      pathname: `/code/${type === "ds_algo" ? "ds-algo" : "front-end"}/${selectedRoomId}`,
+      pathname: `/code/${
+        type === "ds_algo" ? "ds-algo" : "front-end"
+      }/${selectedRoomId}`,
       query: {
         userName: values.username,
       },
@@ -102,12 +104,28 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
       <div className="col-span-1 grid-rows-1">
         <div className="flex flex-col items-center">
           {room.type === "front_end" ? (
-            <FaReact
-              className={cn(
-                "text-2xl transition-colors hover:animate-spin",
-                selectedRoomId === room.room_id ? "text-teal-400" : ""
-              )}
-            />
+            room.front_end_type === "react" ? (
+              <FaReact
+                className={cn(
+                  "text-2xl transition-colors hover:animate-spin",
+                  selectedRoomId === room.room_id ? "text-teal-400" : ""
+                )}
+              />
+            ) : room.front_end_type === "angular" ? (
+              <FaAngular
+                className={cn(
+                  "text-2xl transition-colors",
+                  selectedRoomId === room.room_id ? "text-red-500" : ""
+                )}
+              />
+            ) : (
+              <FaVuejs
+                className={cn(
+                  "text-2xl transition-colors",
+                  selectedRoomId === room.room_id ? "text-emerald-400" : ""
+                )}
+              />
+            )
           ) : (
             <FaPython
               className={cn(

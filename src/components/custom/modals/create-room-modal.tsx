@@ -232,7 +232,6 @@ const CreateRoomModal: FC = () => {
                                   <div className="flex items-center space-x-2">
                                     <FaReact className="text-2xl transition-colors hover:animate-spin hover:text-teal-400" />
                                     <Label htmlFor="r1">Front-end</Label>
-                                    <Badge variant="caution">WIP</Badge>
                                   </div>
                                 </FormLabel>
                               </FormItem>

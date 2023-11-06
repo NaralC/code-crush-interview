@@ -187,8 +187,10 @@ const InternalFrontEndPage: NextPage<PageProps> = ({
   const effectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
-      setTimeout(() => updateCode(initialCodeState), 100);
-      setIsLocalChange(false);
+      if (initialCodeState.length > 0) {
+        setTimeout(() => updateCode(initialCodeState), 100);
+        setIsLocalChange(false);
+      }
 
       if (isFinished)
         toast(
