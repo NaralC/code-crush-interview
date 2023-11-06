@@ -5,7 +5,6 @@ import { useRealTimeFrontEnd } from "@/hooks/use-real-time";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { SandpackProvider, useActiveCode } from "@codesandbox/sandpack-react";
 import { atomDark } from "@codesandbox/sandpack-themes";
-import type { OutputData } from "@editorjs/editorjs";
 import type { NextPage, GetServerSideProps } from "next";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -69,14 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-type PageProps = {
-  initialCodeState: string;
-  initialNoteState: OutputData;
-  roomId: string;
-  roomName: string;
-  userName: string;
-  finished: boolean;
-  questions: Question[];
+type PageProps = CodingPagePropsBasis & {
   frontEndType: "react" | "angular" | "vue";
 };
 
@@ -104,7 +96,7 @@ const typeToFrameworkMap: Record<string, SandPackTemplates> = {
   vue: "vue-ts",
 };
 
-const FrontEndpage: NextPage<PageProps> = (props) => (
+const FrontEndPage: NextPage<PageProps> = (props) => (
   <SandpackProvider
     template={typeToFrameworkMap[props.frontEndType]}
     theme={atomDark}
@@ -125,9 +117,11 @@ const FrontEndpage: NextPage<PageProps> = (props) => (
 
 const InternalFrontEndPage: NextPage<PageProps> = (props) => {
   // Front-end specific logic
-  const [isLocalChange, setIsLocalChange] = React.useState(true);
   const [isFinished, setIsFinished] = React.useState<boolean>(props.finished);
   const [roomName, setRoomName] = React.useState<string>(props.roomName);
+  const type: InterviewType = "front_end"
+
+  const [isLocalChange, setIsLocalChange] = React.useState(true);
   const { updateCode } = useActiveCode();
   const { realTimeRef, userId } = useRealTimeFrontEnd(
     props.roomId,
@@ -146,7 +140,9 @@ const InternalFrontEndPage: NextPage<PageProps> = (props) => {
         isFinished,
         userId,
         realTimeRef,
+        type,
         fnToRunOnMount: () => {
+          // For setting code/note state from db or peer
           if (props.initialCodeState.length > 0) {
             setTimeout(() => updateCode(props.initialCodeState), 100);
             setIsLocalChange(false);
@@ -164,4 +160,4 @@ const InternalFrontEndPage: NextPage<PageProps> = (props) => {
   );
 };
 
-export default FrontEndpage;
+export default FrontEndPage;

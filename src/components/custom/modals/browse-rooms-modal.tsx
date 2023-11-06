@@ -122,7 +122,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
               <FaVuejs
                 className={cn(
                   "text-2xl transition-colors",
-                  selectedRoomId === room.room_id ? "text-emerald-400" : ""
+                  selectedRoomId === room.room_id ? "text-green-500" : ""
                 )}
               />
             )

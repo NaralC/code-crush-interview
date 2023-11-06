@@ -15,6 +15,7 @@ Essential:
     - Drag-around-or-hide-like-Zoom voice call ✅
     - Limit to 2 if voice call active ⌛
     - Voice call only works on yourself ⌛
+    - Mute/unmute
 - Interviewer/interviewee roles:
     - Role swap ✅
     - Pick questions/hints/follow-ups ✅
@@ -52,17 +53,12 @@ Nice to have:
 - User acceptance test
 
 Clean-ups:
-- Initial join sometimes doesn't work (fe/notes) ⌛
-- Make a "shared layout" component for the 2 coding pages ⌛
-- Code sync only works for 1 language
+- Initial join (and cursor names) sometimes doesn't work reliably (fe/notes) ⌛
 - Remove streaming in the note editor
 - Fixed timeouts don't work well with slow internet
-- Cursor name doesn't show up and no initial code sync for a new tab first time
-- Make AV control (on coding page) actually work
 - Abstract away "Supabase on client-side to api routes"
 - Fix infinite refetch when 'Compilation Error'
 - Code ref is one step behind actual thing
-- Async state sync for new joiners
 - Try the "real-time hilighter" by switching to App Router
 - ~~New tabs for Monaco~~
 - ~~Indicator of who's on which file~~

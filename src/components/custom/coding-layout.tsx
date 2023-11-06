@@ -34,6 +34,7 @@ type Props = React.PropsWithChildren<{
   userId: string;
   realTimeRef: React.MutableRefObject<RealtimeChannel | null>;
   roomName: string;
+  type: InterviewType
 }>;
 
 const CodingLayout: React.FC<Props> = ({
@@ -47,6 +48,7 @@ const CodingLayout: React.FC<Props> = ({
   realTimeRef,
   userId,
   roomName,
+  type
 }) => {
   // States
   const { x, y } = useMousePosition();
@@ -111,7 +113,7 @@ const CodingLayout: React.FC<Props> = ({
           roomName={roomName}
           roomId={roomId}
           finished={false}
-          type={"front_end"}
+          type={type}
         />
         <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
           <div className="w-full overflow-y-auto bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
