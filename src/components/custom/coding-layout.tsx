@@ -1,10 +1,6 @@
-import type { RealtimeChannel } from "@supabase/supabase-js";
 import * as React from "react";
-
 import { EVENT } from "@/lib/constant";
 import { Button } from "@/components/ui/button";
-import { useRealTimeFrontEnd } from "@/hooks/use-real-time";
-import { useActiveCode } from "@codesandbox/sandpack-react";
 import UtilityBar from "@/components/custom/utility-bar";
 import useWebRTC from "@/hooks/use-webrtc";
 import useMousePosition from "@/hooks/use-mouse-position";
@@ -20,9 +16,8 @@ import Head from "next/head";
 import AudioVideoCall from "@/components/custom/audio-video-call";
 import Split from "react-split";
 import NotionLikeEditor from "@/components/custom/editors/notion-like-editor";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import type { OutputData } from "@editorjs/editorjs";
-
-// THIS COMPONENT IS FOR HOOKS AND UI COMPONENTS THAT ARE TYPE AGNOSTIC
 
 type Props = React.PropsWithChildren<{
   roomId: string;
@@ -34,7 +29,7 @@ type Props = React.PropsWithChildren<{
   userId: string;
   realTimeRef: React.MutableRefObject<RealtimeChannel | null>;
   roomName: string;
-  type: InterviewType
+  type: InterviewType;
 }>;
 
 const CodingLayout: React.FC<Props> = ({
@@ -48,15 +43,14 @@ const CodingLayout: React.FC<Props> = ({
   realTimeRef,
   userId,
   roomName,
-  type
+  type,
 }) => {
   // States
   const { x, y } = useMousePosition();
-  const { endInterviewModal: { setOpen, setClose } } = useModalStore();
+  const {
+    endInterviewModal: { setOpen, setClose },
+  } = useModalStore();
   const supa = supabaseClient;
-  // const { editorRef, editorIsMounted } = useNoteStore();
-  // const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
-  // const [isMuted, setIsMuted] = useState<boolean>(false);
 
   const sendMousePosition = throttle(() => {
     realTimeRef.current?.send({
@@ -95,7 +89,7 @@ const CodingLayout: React.FC<Props> = ({
     if (error) toast.error("Could not end interview.");
     setClose();
   };
-
+  
   return (
     <>
       <Head>
@@ -129,14 +123,7 @@ const CodingLayout: React.FC<Props> = ({
           </div>
         </Split>
         <OutputConsole />
-        {/* {!finished && (
-          <AudioVideoCall
-            isMuted={isMuted}
-            setIsMuted={setIsMuted}
-            myVideo={myVideo}
-            partnerVideo={partnerVideo}
-          />
-        )} */}
+        {!isFinished && <AudioVideoCall realTimeRef={realTimeRef} />}
       </main>
 
       <HintsSolutionModal />

@@ -13,9 +13,9 @@ Essential:
 - Voice/audio call: ✅
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
+    - Voice call only works on yourself ⌛⌛⌛
     - Limit to 2 if voice call active ⌛
-    - Voice call only works on yourself ⌛
-    - Mute/unmute
+    - Mute/unmute ⌛
 - Interviewer/interviewee roles:
     - Role swap ✅
     - Pick questions/hints/follow-ups ✅
@@ -57,6 +57,7 @@ Clean-ups:
 - Remove streaming in the note editor
 - Fixed timeouts don't work well with slow internet
 - Abstract away "Supabase on client-side to api routes"
+- "Ending interview session" shows up when someone leaves
 - Fix infinite refetch when 'Compilation Error'
 - Code ref is one step behind actual thing
 - Try the "real-time hilighter" by switching to App Router

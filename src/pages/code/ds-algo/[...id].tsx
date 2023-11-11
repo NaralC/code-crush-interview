@@ -75,7 +75,7 @@ const DsAlgoPage: NextPage<PageProps> = (props) => {
   // DS-Algo specific logic
   const [isFinished, setIsFinished] = React.useState<boolean>(props.finished);
   const [roomName, setRoomName] = React.useState<string>(props.roomName);
-  const type: InterviewType = "ds_algo"
+  const type: InterviewType = "ds_algo";
 
   const { dispatchCode } = useCodeStore();
   const { realTimeRef, userId } = useRealTimeDsAlgo(
@@ -85,191 +85,52 @@ const DsAlgoPage: NextPage<PageProps> = (props) => {
     isFinished,
     () => setIsFinished(true)
   );
+  const [isRealTimeRefReady, setIsRealTimeRefReady] = React.useState(false);
+
+  React.useEffect(() => {
+    if (realTimeRef.current) {
+      setIsRealTimeRefReady(true);
+    }
+  }, [realTimeRef.current]);
 
   return (
-    <CodingLayout
-      {...{
-        ...props,
-        roomName,
-        isFinished,
-        userId,
-        realTimeRef,
-        type,
-        fnToRunOnMount: () => {
-          // For setting code/note state from db or peer
-          for (const language in props.initialCodeState) {
-            const value = props.initialCodeState[language].value;
-
-            dispatchCode({
-              type: "UPDATE_CODE_BY_LANGUAGE",
-              payload: {
-                language,
-                value,
-              },
-            });
-          }
-        },
-      }}
-    >
-      <MonacoEditor
+    <>
+      <button onClick={() => console.log(realTimeRef.current!.presenceState())}>
+        check presence state
+      </button>
+      {isRealTimeRefReady}
+      <CodingLayout
         realTimeRef={realTimeRef}
-        name={props.userName}
-        finished={isFinished}
-      />
-    </CodingLayout>
+        {...{
+          ...props,
+          roomName,
+          isFinished,
+          userId,
+          type,
+          fnToRunOnMount: () => {
+            // For setting code/note state from db or peer
+            for (const language in props.initialCodeState) {
+              const value = props.initialCodeState[language].value;
+
+              dispatchCode({
+                type: "UPDATE_CODE_BY_LANGUAGE",
+                payload: {
+                  language,
+                  value,
+                },
+              });
+            }
+          },
+        }}
+      >
+        <MonacoEditor
+          realTimeRef={realTimeRef}
+          name={props.userName}
+          finished={isFinished}
+        />
+      </CodingLayout>
+    </>
   );
 };
 
 export default DsAlgoPage;
-
-// const DsAlgoPage: NextPage<{
-//   initialCodeState: Record<string, { value: string }>;
-//   initialNoteState: OutputData;
-//   roomId: string;
-//   roomName: string;
-//   userName: string;
-//   finished: boolean;
-//   questions: Question[];
-// }> = ({
-//   initialCodeState,
-//   initialNoteState,
-//   roomId,
-//   roomName: initialRoomName,
-//   userName,
-//   finished,
-//   questions,
-// }) => {
-//   // States
-//   const [isFinished, setIsFinished] = useState<boolean>(finished);
-//   const [roomName, setRoomName] = useState<string>(initialRoomName);
-//   // TODO: DS-Algo specific hook
-//   const { realTimeRef, userId } = useRealTimeDsAlgo(
-//     roomId,
-//     userName,
-//     (newName) => setRoomName(newName),
-//     isFinished,
-//     () => setIsFinished(true)
-//   );
-//   const { myVideo, partnerVideo, host } = useWebRTC(realTimeRef);
-//   const [isMuted, setIsMuted] = useState<boolean>(false);
-//   const { dispatchCode } = useCodeStore();
-//   const { x, y } = useMousePosition();
-//   const {
-//     endInterviewModal: { setOpen, setClose },
-//   } = useModalStore();
-//   const supa = supabaseClient;
-
-//   const sendMousePosition = throttle(() => {
-//     realTimeRef.current?.send({
-//       type: "broadcast",
-//       event: EVENT.MOUSE_UPDATE,
-//       payload: { x, y, userName, userId },
-//     });
-//   }, 200);
-
-//   const effectRan = useRef(false);
-//   useEffect(() => {
-//     if (effectRan.current === false) {
-//       for (const language in initialCodeState) {
-//         const value = initialCodeState[language].value;
-
-//         dispatchCode({
-//           type: "UPDATE_CODE_BY_LANGUAGE",
-//           payload: {
-//             language,
-//             value,
-//           },
-//         });
-//       }
-
-//       if (isFinished)
-//         toast(
-//           "This interview is marked as finished. Editing text is no longer allowed.",
-//           {
-//             duration: 4000,
-//           }
-//         );
-//     }
-
-//     return () => {
-//       effectRan.current = true;
-//     };
-//   }, []);
-
-//   const handleEndInterview = async () => {
-//     const { error } = await supa
-//       .from("interview_rooms")
-//       .update({
-//         finished: true,
-//       })
-//       .eq("room_id", roomId)
-//       .select();
-
-//     if (error) toast.error("Could not end interview.");
-//     setClose();
-//   };
-
-//   return (
-//     <>
-//       <Head>
-//         <title>Interview Time!</title>
-//         <meta name="Code Crush" content="Code Crush" />
-//       </Head>
-
-//       <main
-//         className="flex flex-col w-full h-screen"
-//         onMouseMove={sendMousePosition}
-//       >
-//         <>
-//           <Cursors realTimeRef={realTimeRef} />
-//           <UtilityBar
-//             realTimeRef={realTimeRef}
-//             roomName={roomName}
-//             roomId={roomId}
-//             finished={isFinished}
-//             type={"ds_algo"}
-//           />
-//           <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
-//             <div className="w-full h-full bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-//               <MonacoEditor
-//                 realTimeRef={realTimeRef}
-//                 name={userName}
-//                 finished={isFinished}
-//               />
-//             </div>
-//             <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
-//               <NotionLikeEditor
-//                 realTimeRef={realTimeRef}
-//                 questions={questions}
-//                 finished={isFinished}
-//                 initialNoteData={initialNoteState}
-//               />
-//             </div>
-//           </Split>
-//           <OutputConsole />
-//           {/* {!finished && (
-//               <AudioVideoCall
-//                 isMuted={isMuted}
-//                 setIsMuted={setIsMuted}
-//                 myVideo={myVideo}
-//                 partnerVideo={partnerVideo}
-//               />
-//             )} */}
-//         </>
-//       </main>
-
-//       <HintsSolutionModal />
-//       <EndInterviewModal handleEndInterview={handleEndInterview} />
-//       {!isFinished && (
-//         <Button
-//           className="fixed z-40 shadow bottom-5 left-5 shadow-white"
-//           onClick={setOpen}
-//         >
-//           End Interview
-//         </Button>
-//       )}
-//     </>
-//   );
-// };
-
-// export default DsAlgoPage;
