@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/transition": "^2.1.0",
     "@codesandbox/sandpack-react": "^2.6.9",
     "@codesandbox/sandpack-themes": "^2.0.21",
     "@editorjs/code": "^2.8.0",
@@ -61,6 +62,8 @@
     "nanoid": "^4.0.2",
     "next": "13.4.10",
     "postcss": "8.4.26",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0-rc2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-draggable": "^4.4.5",

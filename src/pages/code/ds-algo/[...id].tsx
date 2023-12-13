@@ -95,9 +95,6 @@ const DsAlgoPage: NextPage<PageProps> = (props) => {
 
   return (
     <>
-      <button onClick={() => console.log(realTimeRef.current!.presenceState())}>
-        check presence state
-      </button>
       {isRealTimeRefReady}
       <CodingLayout
         realTimeRef={realTimeRef}
