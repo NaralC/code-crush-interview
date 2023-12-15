@@ -13,7 +13,7 @@ Essential:
 - Voice/audio call: ✅
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
-    - Voice call only works on yourself ⌛⌛⌛
+    - Voice call only works on yourself ✅
     - Limit to 2 if voice call active ⌛
     - Mute/unmute ⌛
 - Interviewer/interviewee roles:
@@ -45,7 +45,7 @@ Should haves:
     - Info for which framework a room's using ✅
 - Video/audio device settings ⌛
 - Authentication via Git ✅
-- Upload code to Git repo
+- Upload code to Git repo (https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-using-a-template / https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-for-the-authenticated-user)
 - Amongus background (https://codepen.io/matteobruni/pen/rNmMVEx)
 
 Nice to have:

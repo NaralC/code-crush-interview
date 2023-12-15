@@ -80,7 +80,7 @@ function VoiceCall({
             host.current = true;
 
             toast({
-              title: "You're the host!",
+              title: "Connected To Audio/Video Call!",
             });
           }
 
@@ -243,7 +243,7 @@ function VoiceCall({
         rtcConnection.current!.setLocalDescription(answer);
         channelRef.current?.trigger("client-answer", answer);
         toast({
-          title: "Joined as non-host!",
+          title: "Connected To Audio/Video Call!",
         });
       })
       .catch((error) => {
@@ -291,7 +291,7 @@ function VoiceCall({
       rtcConnection.current.close();
       rtcConnection.current = null;
       toast({
-        title: "Original host has disconnected. You're now the host",
+        title: "Peer Disconnected From Audio/Video Call",
       });
     }
   };
