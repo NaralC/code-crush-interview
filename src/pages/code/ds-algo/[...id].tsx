@@ -7,6 +7,7 @@ import { useCodeStore } from "@/stores/code-store";
 import type { GetServerSideProps, NextPage } from "next";
 import type { OutputData } from "@editorjs/editorjs";
 import MonacoEditor from "@/components/custom/editors/monaco-editor";
+import { SandpackProvider } from "@codesandbox/sandpack-react"
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -94,7 +95,7 @@ const DsAlgoPage: NextPage<PageProps> = (props) => {
   }, [realTimeRef.current]);
 
   return (
-    <>
+    <SandpackProvider>
       {isRealTimeRefReady}
       <CodingLayout
         realTimeRef={realTimeRef}
@@ -126,7 +127,7 @@ const DsAlgoPage: NextPage<PageProps> = (props) => {
           finished={isFinished}
         />
       </CodingLayout>
-    </>
+    </SandpackProvider>
   );
 };
 

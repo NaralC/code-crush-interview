@@ -19,7 +19,7 @@ export const repoExists = async (octokit: Octokit, checkFor: string) => {
 
 // TODO: Turn repo name and description into props if needed
 export const createRepo = async (octokit: Octokit) => {
-    const repoName = generateRepoName();
+  const repoName = generateRepoName();
 
   const res = await octokit.rest.repos.createForAuthenticatedUser({
     name: repoName,
@@ -44,13 +44,17 @@ export const retrieveSHA = async (
 // TODO: Replace hard-coded values
 export const uploadCode = async (
   octokit: Octokit,
-  body: { owner: string; email: string; sha: string }
+  body: {
+    owner: string;
+    email: string;
+    sha: string;
+    content: string;
+    repo: string;
+  }
 ) => {
   const { data } = await octokit.rest.repos.createOrUpdateFileContents({
-    repo: "index-solid-state-program",
     path: "README.md",
-    message: "😫😢😭🤡",
-    content: window.btoa("me fr"),
+    message: "Uploaded Code from Code Crush",
     committer: {
       name: body.owner,
       email: body.email,
@@ -59,11 +63,8 @@ export const uploadCode = async (
       name: body.owner,
       email: body.email,
     },
-    // owner: owner,
-    // sha: sha,
     ...body,
   });
 
   return data;
 };
-
