@@ -45,7 +45,9 @@ Should haves:
     - Info for which framework a room's using ✅
 - Video/audio device settings ⌛
 - Authentication via Git ✅
-- Upload code to Git repo (https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-using-a-template / https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-for-the-authenticated-user)
+- Upload code to Git repo:
+    > Provide access token with repo access: https://supabase.com/docs/reference/javascript/auth-signinwithoauth?example=sign-in-with-scopes
+    > Create repo: https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-a-repository-for-the-authenticated-user or https://octokit.github.io/rest.js/v20 (look for createForAuthenticatedUser)
 - Amongus background (https://codepen.io/matteobruni/pen/rNmMVEx)
 
 Nice to have:
@@ -53,7 +55,11 @@ Nice to have:
 - User acceptance test
 
 Clean-ups:
+- Supabase WS doesn't disconnect unless hard reload ⌛
+- `DOMException: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable`
+- `An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.` ⌛
 - Initial join (and cursor names) sometimes doesn't work reliably (fe/notes) ⌛
+- "Upload code to Git repo" does not work if token expires. Implement a guard for this
 - Remove streaming in the note editor
 - Fixed timeouts don't work well with slow internet
 - Abstract away "Supabase on client-side to api routes"
