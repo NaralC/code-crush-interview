@@ -50,6 +50,7 @@ import { useCodeStore } from "@/stores/code-store";
 import { useUsersStore } from "@/stores/users-store";
 import supabaseClient from "@/lib/supa-client";
 import { useActiveCode } from "@codesandbox/sandpack-react";
+import { formatRepoName } from "@/lib/utils";
 
 type Props = {
   roomName: string;
@@ -186,7 +187,7 @@ const UtilityBar: FC<Props> = ({
     const { data, error } = await supaClient
       .from("interview_rooms")
       .update({
-        name: roomNameInput,
+        name: formatRepoName(roomNameInput),
       })
       .eq("room_id", roomId)
       .select();

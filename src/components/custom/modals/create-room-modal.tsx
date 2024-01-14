@@ -42,6 +42,7 @@ import { useRouter } from "next/router";
 import useModalStore from "@/stores/modal-store";
 import { generateRoomName, generateUsername } from "@/lib/faker";
 import { useMutation } from "@tanstack/react-query";
+import { formatRepoName } from "@/lib/utils";
 
 const createRoomSchema = z
   .object({
@@ -111,7 +112,7 @@ const CreateRoomModal: FC = () => {
       const response = await fetch("/api/db", {
         method: "POST",
         body: JSON.stringify({
-          roomName: values.roomName,
+          roomName: formatRepoName(values.roomName),
           type: values.interviewType,
           frontEndType: interviewType === "front_end" ? values.frontEndType : null
         }),

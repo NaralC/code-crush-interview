@@ -26,14 +26,14 @@ import { useRouter } from "next/router";
 import { Collapse } from "@chakra-ui/transition";
 import { useToast } from "@/hooks/use-toast";
 import Draggable from "react-draggable";
-import { cn } from "@/lib/utils";
+import { cn, formatRepoName } from "@/lib/utils";
 import { useCodeStore } from "@/stores/code-store";
 import { useMutation } from "@tanstack/react-query";
 import {
   createRepo,
   initOctokit,
   repoExists,
-  retrieveSHA,
+  checkOrCreateReadme,
   uploadCode,
 } from "@/lib/octokit";
 import useUserSession from "@/hooks/use-user-session";
@@ -476,23 +476,23 @@ const CodingLayout: React.FC<Props> = ({
         throw new Error("Session or provider token not present");
       }
 
+      const formattedRepoName = formatRepoName(roomName);
       const octokit = initOctokit(session.provider_token);
 
       // See if repo with the room's name already exists
-      const exists = await repoExists(octokit, roomName);
+      const roomExists = await repoExists(octokit, formattedRepoName);
 
-      if (!exists) {
-        toast("Creating a new repo for you")
-        await createRepo(octokit, roomName)
-      }
-      else{
-        toast("Repo already exists, uploading your code")
+      if (!roomExists) {
+        toast("Creating a new repo for you");
+        await createRepo(octokit, roomName);
+      } else {
+        toast("Repo already exists, uploading your code");
       }
 
-      const sha = await retrieveSHA(octokit, {
+      const sha = await checkOrCreateReadme(octokit, {
         owner: session.user.user_metadata.user_name,
-        repo: "index-solid-state-program",
-        path: "README.md",
+        repo: formattedRepoName,
+        path: "README.md"
       });
 
       const data = await uploadCode(octokit, {
@@ -502,7 +502,7 @@ const CodingLayout: React.FC<Props> = ({
         content: window.btoa(
           JSON.stringify(type === "front_end" ? frontEndCode : dsAlgoCode)
         ),
-        repo: "index-solid-state-program",
+        repo: formattedRepoName,
       });
 
       return data.content?.name;

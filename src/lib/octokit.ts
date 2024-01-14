@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { Octokit } from "octokit";
+import { Octokit, RequestError } from "octokit";
 import { generateRoomDescription } from "@/lib/faker";
 
 // The flow: retrieveSHA -> uploadCode
@@ -31,16 +31,24 @@ export const createRepo = async (octokit: Octokit, name: string) => {
   }
 };
 
-export const retrieveSHA = async (
+export const checkOrCreateReadme = async (
   octokit: Octokit,
-  body: { owner: string; repo: string; path: string }
-): Promise<string> => {
-  const resForSHA = await octokit.rest.repos.getContent({
-    ...body,
-  });
-
-  // @ts-ignore
-  return resForSHA.data.sha;
+  body: { owner: string; repo: string; path: string; }
+) => {
+  try {
+    const resForSHA = await octokit.rest.repos.getContent({
+      ...body,
+    });
+    // @ts-ignore
+    return resForSHA.data.sha as string;
+  } catch (error) {
+    if (error instanceof RequestError && error.status === 404) {
+      toast("Repository empty — creating a README.md");
+      return undefined
+    } else {
+      toast.error((error as Error).message);
+    }
+  }
 };
 
 // TODO: Replace hard-coded values
@@ -49,24 +57,29 @@ export const uploadCode = async (
   body: {
     owner: string;
     email: string;
-    sha: string;
+    sha?: string;
     content: string;
     repo: string;
   }
 ) => {
-  const { data } = await octokit.rest.repos.createOrUpdateFileContents({
-    path: "README.md",
-    message: "Uploaded Code from Code Crush",
-    committer: {
-      name: body.owner,
-      email: body.email,
-    },
-    author: {
-      name: body.owner,
-      email: body.email,
-    },
-    ...body,
-  });
-
-  return data;
+  try {
+    const { data } = await octokit.rest.repos.createOrUpdateFileContents({
+      path: "README.md",
+      message: "Uploaded Code from Code Crush",
+      committer: {
+        name: body.owner,
+        email: body.email,
+      },
+      author: {
+        name: body.owner,
+        email: body.email,
+      },
+      ...body,
+    });
+    console.log("File created or updated:", data);
+    return data;
+  } catch (error) {
+    console.error("Error creating or updating file:", error);
+    throw error;
+  }
 };
