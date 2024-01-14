@@ -20,13 +20,24 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import type { OutputData } from "@editorjs/editorjs";
 
 import { useState, useRef, useEffect } from "react";
-import { Mic, PhoneCall, X } from "lucide-react";
+import { Mic, PhoneCall, X, GithubIcon, Loader2 } from "lucide-react";
 import Pusher, { Members, PresenceChannel } from "pusher-js";
 import { useRouter } from "next/router";
 import { Collapse } from "@chakra-ui/transition";
 import { useToast } from "@/hooks/use-toast";
 import Draggable from "react-draggable";
-import { cn } from "@/lib/utils";
+import { cn, formatRepoName } from "@/lib/utils";
+import { useCodeStore } from "@/stores/code-store";
+import { useMutation } from "@tanstack/react-query";
+import {
+  createRepo,
+  initOctokit,
+  repoExists,
+  checkOrCreateReadme,
+  uploadCode,
+} from "@/lib/octokit";
+import useUserSession from "@/hooks/use-user-session";
+import { useActiveCode } from "@codesandbox/sandpack-react";
 
 function VoiceCall({
   username,
@@ -453,6 +464,53 @@ const CodingLayout: React.FC<Props> = ({
     setClose();
   };
 
+  const { codeState: dsAlgoCode } = useCodeStore();
+  const { code: frontEndCode } = useActiveCode();
+  const { isAuthed, session } = useUserSession(supa);
+
+  // TODO: Create a new README.md file or update it
+  const { isLoading: isUploading, mutate: handleUploadToGitHub } = useMutation({
+    mutationKey: ["upload-to-github"],
+    mutationFn: async () => {
+      if (!session || !session.provider_token) {
+        throw new Error("Session or provider token not present");
+      }
+
+      const formattedRepoName = formatRepoName(roomName);
+      const octokit = initOctokit(session.provider_token);
+
+      // See if repo with the room's name already exists
+      const roomExists = await repoExists(octokit, formattedRepoName);
+
+      if (!roomExists) {
+        toast("Creating a new repo for you");
+        await createRepo(octokit, roomName);
+      } else {
+        toast("Repo already exists, uploading your code");
+      }
+
+      const sha = await checkOrCreateReadme(octokit, {
+        owner: session.user.user_metadata.user_name,
+        repo: formattedRepoName,
+        path: "README.md"
+      });
+
+      const data = await uploadCode(octokit, {
+        email: session.user.user_metadata.email,
+        owner: session.user.user_metadata.user_name,
+        sha: sha,
+        content: window.btoa(
+          JSON.stringify(type === "front_end" ? frontEndCode : dsAlgoCode)
+        ),
+        repo: formattedRepoName,
+      });
+
+      return data.content?.name;
+    },
+    onSuccess: (data) => toast.success(`Uploaded Room Data to '${data}'`),
+    onError: (error) => toast.error((error as Error).message),
+  });
+
   return (
     <>
       <Head>
@@ -500,6 +558,13 @@ const CodingLayout: React.FC<Props> = ({
           End Interview
         </Button>
       )}
+      <Button
+        className="fixed z-40 shadow bottom-5 left-40 shadow-white"
+        onClick={() => handleUploadToGitHub()}
+        disabled={!isAuthed || isUploading}
+      >
+        {isUploading ? <Loader2 className="animate-spin" /> : <GithubIcon />}
+      </Button>
     </>
   );
 };

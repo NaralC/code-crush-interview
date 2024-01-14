@@ -19,3 +19,12 @@ export function getTransformedPresenceState(
 
   return transformedState;
 }
+
+// "front end test" -> "front-end-test"
+export function formatRepoName(name: string) {
+  return name
+    .trim() // Remove leading/trailing whitespace
+    .toLowerCase() // Convert to lowercase
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/[^a-z0-9-]/g, ""); // Remove anything that is not a letter, number, or hyphen
+}
