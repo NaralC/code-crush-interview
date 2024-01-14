@@ -1,5 +1,6 @@
+import toast from "react-hot-toast";
 import { Octokit } from "octokit";
-import { generateRepoName, generateRoomDescription } from "@/lib/faker";
+import { generateRoomDescription } from "@/lib/faker";
 
 // The flow: retrieveSHA -> uploadCode
 // The other 3 are optional repo stuff
@@ -17,16 +18,17 @@ export const repoExists = async (octokit: Octokit, checkFor: string) => {
   return exists ? true : false;
 };
 
-// TODO: Turn repo name and description into props if needed
-export const createRepo = async (octokit: Octokit) => {
-  const repoName = generateRepoName();
+export const createRepo = async (octokit: Octokit, name: string) => {
+  try {
+    const res = await octokit.rest.repos.createForAuthenticatedUser({
+      name,
+      description: `Created from Code Crush: ${generateRoomDescription()}`,
+    });
 
-  const res = await octokit.rest.repos.createForAuthenticatedUser({
-    name: repoName,
-    description: `Created from Code Crush: ${generateRoomDescription()}`,
-  });
-
-  console.log(`Created repo called '${res.data.name}'`);
+    toast.success(`Created repo called '${res.data.name}'`);
+  } catch (error) {
+    toast.error((error as Error).message);
+  }
 };
 
 export const retrieveSHA = async (

@@ -29,7 +29,13 @@ import Draggable from "react-draggable";
 import { cn } from "@/lib/utils";
 import { useCodeStore } from "@/stores/code-store";
 import { useMutation } from "@tanstack/react-query";
-import { initOctokit, retrieveSHA, uploadCode } from "@/lib/octokit";
+import {
+  createRepo,
+  initOctokit,
+  repoExists,
+  retrieveSHA,
+  uploadCode,
+} from "@/lib/octokit";
 import useUserSession from "@/hooks/use-user-session";
 import { useActiveCode } from "@codesandbox/sandpack-react";
 
@@ -462,7 +468,7 @@ const CodingLayout: React.FC<Props> = ({
   const { code: frontEndCode } = useActiveCode();
   const { isAuthed, session } = useUserSession(supa);
 
-  // TODO: 👇 is a dupe of code in auth-popover
+  // TODO: Create a new README.md file or update it
   const { isLoading: isUploading, mutate: handleUploadToGitHub } = useMutation({
     mutationKey: ["upload-to-github"],
     mutationFn: async () => {
@@ -471,6 +477,17 @@ const CodingLayout: React.FC<Props> = ({
       }
 
       const octokit = initOctokit(session.provider_token);
+
+      // See if repo with the room's name already exists
+      const exists = await repoExists(octokit, roomName);
+
+      if (!exists) {
+        toast("Creating a new repo for you")
+        await createRepo(octokit, roomName)
+      }
+      else{
+        toast("Repo already exists, uploading your code")
+      }
 
       const sha = await retrieveSHA(octokit, {
         owner: session.user.user_metadata.user_name,
@@ -488,9 +505,9 @@ const CodingLayout: React.FC<Props> = ({
         repo: "index-solid-state-program",
       });
 
-      return data;
+      return data.content?.name;
     },
-    onSuccess: (data) => toast.success("Uploaded Room Data to Your GitHub"),
+    onSuccess: (data) => toast.success(`Uploaded Room Data to '${data}'`),
     onError: (error) => toast.error((error as Error).message),
   });
 
