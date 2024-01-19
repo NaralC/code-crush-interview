@@ -468,7 +468,7 @@ const CodingLayout: React.FC<Props> = ({
     mutationKey: ["upload-to-github"],
     mutationFn: async () => {
       if (!session || !session.provider_token) {
-        throw new Error("Session or provider token not present");
+        throw new Error("Session/Provider token not present. Please sign in again");
       }
 
       const formattedRepoName = formatRepoName(roomName);
@@ -555,7 +555,7 @@ const CodingLayout: React.FC<Props> = ({
       <Button
         className="fixed z-40 shadow bottom-5 left-40 shadow-white"
         onClick={() => handleUploadToGitHub()}
-        disabled={!isAuthed || isUploading}
+        disabled={isUploading}
       >
         {isUploading ? <Loader2 className="animate-spin" /> : <GithubIcon />}
       </Button>

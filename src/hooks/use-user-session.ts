@@ -16,7 +16,6 @@ const useUserSession = (supa: SupabaseClient) => {
 
       setMyData(session);
       supa.auth.onAuthStateChange(async (event, session) => {
-        // console.log(session);
 
         if (session && session.provider_token) {
           window.localStorage.setItem(
