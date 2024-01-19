@@ -468,7 +468,6 @@ const CodingLayout: React.FC<Props> = ({
   const { code: frontEndCode } = useActiveCode();
   const { isAuthed, session } = useUserSession(supa);
 
-  // TODO: Create a new README.md file or update it
   const { isLoading: isUploading, mutate: handleUploadToGitHub } = useMutation({
     mutationKey: ["upload-to-github"],
     mutationFn: async () => {
@@ -481,7 +480,6 @@ const CodingLayout: React.FC<Props> = ({
 
       // See if repo with the room's name already exists
       const roomExists = await repoExists(octokit, formattedRepoName);
-
       if (!roomExists) {
         toast("Creating a new repo for you");
         await createRepo(octokit, roomName);

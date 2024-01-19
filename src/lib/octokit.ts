@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { Octokit, RequestError } from "octokit";
 import { generateRoomDescription } from "@/lib/faker";
+import { formatRepoName } from "./utils";
 
 // The flow: retrieveSHA -> uploadCode
 // The other 3 are optional repo stuff
@@ -13,7 +14,8 @@ export const initOctokit = (providerToken: string) =>
 export const repoExists = async (octokit: Octokit, checkFor: string) => {
   const res = await octokit.rest.repos.listForAuthenticatedUser();
 
-  const exists = res.data.find(({ name }) => name === checkFor);
+  // TODO: This somehow doesn't fetch all existing repos
+  const exists = res.data.find(({ name }) => formatRepoName(name) === checkFor);
 
   return exists ? true : false;
 };
