@@ -39,13 +39,10 @@ import {
 import useUserSession from "@/hooks/use-user-session";
 import { useActiveCode } from "@codesandbox/sandpack-react";
 
-function VoiceCall({
-  username,
-  roomName,
-}: {
+const VoiceCall: React.FC<{
   username: string;
   roomName: string;
-}) {
+}> = ({ username, roomName }) => {
   // Generic states
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -261,6 +258,7 @@ function VoiceCall({
         console.log(error);
       });
   };
+  
   const handleAnswerReceived = (answer: RTCSessionDescriptionInit) => {
     rtcConnection
       .current!.setRemoteDescription(answer)
@@ -361,7 +359,6 @@ function VoiceCall({
   };
 
   return (
-    // <Draggable>
     <div className="fixed z-40 shadow bg-slate-900 text-white rounded-lg shadow-white bottom-[72px] left-5 w-fit cursor-grab">
       <Button className={cn(isOpen ? "hidden" : "")} onClick={onToggle}>
         <PhoneCall />
@@ -389,9 +386,8 @@ function VoiceCall({
         </div>
       </Collapse>
     </div>
-    // </Draggable>
   );
-}
+};
 
 type Props = React.PropsWithChildren<{
   roomId: string;
@@ -490,7 +486,7 @@ const CodingLayout: React.FC<Props> = ({
       const sha = await checkOrCreateReadme(octokit, {
         owner: session.user.user_metadata.user_name,
         repo: formattedRepoName,
-        path: "README.md"
+        path: "README.md",
       });
 
       const data = await uploadCode(octokit, {
@@ -550,7 +546,7 @@ const CodingLayout: React.FC<Props> = ({
       <EndInterviewModal handleEndInterview={handleEndInterview} />
       {!isFinished && (
         <Button
-          className="fixed z-40 shadow bottom-5 left-5 shadow-white"
+          className="fixed z-40 shadow bottom-5 left-5 shadow-white inter-font"
           onClick={setOpen}
         >
           End Interview
