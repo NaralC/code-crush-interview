@@ -58,7 +58,6 @@ Clean-ups:
 - `DOMException: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable`
 - `An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.` Voice call sometimes break ⌛
 - Initial join (and cursor names) sometimes doesn't work reliably (fe/notes) ⌛
-- "Upload code to Git repo" does not work if token expires. Implement a guard for this
 - `repoExists` doesn't fetch all repos, rendering repo dupe check dead
 - Remove streaming in the note editor
 - Fixed timeouts don't work well with slow internet
