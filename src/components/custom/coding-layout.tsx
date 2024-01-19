@@ -258,7 +258,7 @@ const VoiceCall: React.FC<{
         console.log(error);
       });
   };
-  
+
   const handleAnswerReceived = (answer: RTCSessionDescriptionInit) => {
     rtcConnection
       .current!.setRemoteDescription(answer)
@@ -468,7 +468,9 @@ const CodingLayout: React.FC<Props> = ({
     mutationKey: ["upload-to-github"],
     mutationFn: async () => {
       if (!session || !session.provider_token) {
-        throw new Error("Session/Provider token not present. Please sign in again");
+        throw new Error(
+          "Session/Provider token not present. Please sign in again"
+        );
       }
 
       const formattedRepoName = formatRepoName(roomName);
@@ -555,7 +557,7 @@ const CodingLayout: React.FC<Props> = ({
       <Button
         className="fixed z-40 shadow bottom-5 left-40 shadow-white"
         onClick={() => handleUploadToGitHub()}
-        disabled={isUploading}
+        disabled={isUploading || !isAuthed}
       >
         {isUploading ? <Loader2 className="animate-spin" /> : <GithubIcon />}
       </Button>

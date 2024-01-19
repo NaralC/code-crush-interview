@@ -14,7 +14,6 @@ Essential:
     - WebRTC ✅
     - Drag-around-or-hide-like-Zoom voice call ✅
     - Voice call only works on yourself ✅
-    - Mute/unmute ⌛
 - Interviewer/interviewee roles:
     - Role swap ✅
     - Pick questions/hints/follow-ups ✅
@@ -33,7 +32,6 @@ Should haves:
     - Live cursors ✅
     - Interview Status (ongoing/finished) ✅
     - Being able to end an interview ✅
-    - Password lock ⌛
 - FE interview: 
     - Being able to create FE questions ✅
     - Create a room-specific framework ✅
@@ -42,7 +40,6 @@ Should haves:
     - Initial join sync ✅
     - Tailwind Integration ✅
     - Info for which framework a room's using ✅
-- Video/audio device settings ⌛
 - Authentication via Git ✅
 - Upload code to Git repo: ✅
     > Provide access token with repo access: https://supabase.com/docs/reference/javascript/auth-signinwithoauth?example=sign-in-with-scopes
@@ -53,12 +50,15 @@ Nice to have:
 - Text hilighting to both editors
 - User acceptance test
 
-Clean-ups:
-- Supabase WS doesn't disconnect unless hard reload ⌛
+Bug Fixes:
+- Supabase WS and AV device doesn't disconnect unless hard reload ⌛
 - `DOMException: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable`
 - `An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.` Voice call sometimes break ⌛
 - Initial join (and cursor names) sometimes doesn't work reliably (fe/notes) ⌛
-- `repoExists` doesn't fetch all repos, rendering repo dupe check dead
+- `repoExists` doesn't fetch all repos, rendering repo dupe check dead ⌛
+
+Clean-ups:
+- Monaco editor flashes when a new piece of code update comes in
 - Remove streaming in the note editor
 - Fixed timeouts don't work well with slow internet
 - Abstract away "Supabase on client-side to api routes"
