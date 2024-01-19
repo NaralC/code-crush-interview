@@ -38,6 +38,7 @@ import {
 } from "@/lib/octokit";
 import useUserSession from "@/hooks/use-user-session";
 import { useActiveCode } from "@codesandbox/sandpack-react";
+import useViewportSize from "@/hooks/use-viewport-size";
 
 const VoiceCall: React.FC<{
   username: string;
@@ -507,6 +508,17 @@ const CodingLayout: React.FC<Props> = ({
     onError: (error) => toast.error((error as Error).message),
   });
 
+  // For handling split sizing on large and mobile screens
+  const { width } = useViewportSize();
+  const [splitSizes, setSplitSizes] = useState<number[]>([50, 50]);
+
+  useEffect(() => {
+    if (width) {
+      const newSizes = width > 768 ? [50, 50] : [100, 100];
+      setSplitSizes(newSizes);
+    }
+  }, [width]);
+
   return (
     <>
       <Head>
@@ -514,8 +526,9 @@ const CodingLayout: React.FC<Props> = ({
         <meta name="Code Crush" content="Code Crush" />
       </Head>
 
+      <p className="text-black">{width}</p>
       <main
-        className="flex flex-col w-full h-screen inter-font"
+        className="flex flex-col w-full h-screen overflow-y-auto inter-font"
         onMouseMove={sendMousePosition}
       >
         <Cursors realTimeRef={realTimeRef} />
@@ -526,11 +539,15 @@ const CodingLayout: React.FC<Props> = ({
           finished={false}
           type={type}
         />
-        <Split className="flex flex-row h-screen p-12 cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800">
-          <div className="w-full overflow-y-auto bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
+        <Split
+          className="flex flex-col h-screen gap-3 p-12 md:flex-row cursor-grab bg-gradient-to-b from-black via-slate-900 to-slate-800 md:gap-0"
+          sizes={splitSizes}
+          cursor="col-resize"
+        >
+          <div className="w-full overflow-y-auto bg-black rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30 md:h-auto min-h-[400px] md:min-h-full max-h-[800px]">
             {children}
           </div>
-          <div className="w-full bg-white rounded-md shadow-lg cursor-auto shadow-white ring ring-zinc-500/30">
+          <div className="w-4/5 bg-white rounded-md shadow-lg cursor-auto md:w-full shadow-white ring ring-zinc-500/30">
             <NotionLikeEditor
               realTimeRef={realTimeRef}
               questions={questions}
@@ -557,7 +574,7 @@ const CodingLayout: React.FC<Props> = ({
       <Button
         className="fixed z-40 shadow bottom-5 left-40 shadow-white"
         onClick={() => handleUploadToGitHub()}
-        disabled={isUploading || !isAuthed}
+        disabled={isUploading}
       >
         {isUploading ? <Loader2 className="animate-spin" /> : <GithubIcon />}
       </Button>

@@ -1,7 +1,7 @@
 import { useCodeStore } from "@/stores/code-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 
 const outputSchema = z
 .object({
@@ -78,9 +78,18 @@ const useCompileCode = () => {
       if (!data) return 300;
 
       const { id } = data?.status!;
-      return [1, 2].includes(id) ? 300 : false;
+      return [1, 2].includes(id) ? 500 : false;
     },
-    onError: (error) => toast.error("Compilation Error"),
+    // retry: (failureCount, error) => {
+    //   // If it's a compilation error, don't retry
+    //   if (error instanceof ZodError) {
+    //     return false;
+    //   }
+  
+    //   const maxRetries = 3;
+    //   return failureCount < maxRetries;
+    // },
+    onError: () => toast.error("Compilation Error"),
     onSettled: () =>
       dispatchAsync({
         type: "SET_IS_COMPILING",
