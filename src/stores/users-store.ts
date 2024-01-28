@@ -19,7 +19,7 @@ const latestRoleRef = createRef<Roles>() as MutableRefObject<Roles>;
 const initialState: State = {
   myUsername: "",
   otherUsers: {},
-  role: null,
+  role: "interviewer",
   latestRoleRef,
 };
 

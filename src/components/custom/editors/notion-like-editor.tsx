@@ -187,7 +187,7 @@ const NotionLikeEditor: FC<{
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto grow">
+    <div className="w-full h-full overflow-y-auto">
       {latestRoleRef.current === "interviewer" && (
         <Popover>
           <PopoverTrigger className="z-40" asChild>
@@ -263,7 +263,7 @@ const NotionLikeEditor: FC<{
         <div
           id="editor"
           className={cn(
-            "p-3 max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white min-h-",
+            "p-3 max-h-[800px] md:max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white",
             finished ? "hover:cursor-not-allowed" : ""
           )}
         />
