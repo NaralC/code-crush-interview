@@ -62,6 +62,7 @@ Automated tests with Cypress 🤔 (and some ideas):
 - Room name change
 - Create/join room logic
 - Make a CI/CD to test before pushing to Vercel
+- BG particle/localStorage logic ✅
 
 Bug Fixes:
 - When someone joins, the cursors get reset
