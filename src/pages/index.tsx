@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { data, error } = await supabaseClient
     .from("interview_rooms")
     .select(
-      "room_id, created_at, name, description, participants, type, finished, front_end_type"
+      "room_id, created_at, name, description, participants, type, finished, front_end_type, enable_voice_call"
     )
     .order("name", { ascending: true });
 

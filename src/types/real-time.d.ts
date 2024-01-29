@@ -38,6 +38,7 @@ type CodingPagePropsBasis = {
   finished: boolean;
   questions: Question[];
   frontEndType: "react" | "angular" | "vue";
+  voiceCallEnabled: boolean;
 };
 
 type HintsOrSolution = "hints" | "solution";

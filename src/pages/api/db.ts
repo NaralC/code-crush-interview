@@ -18,9 +18,9 @@ export default async function handler(
 
   // Creating a new room
   if (req.method === "POST") {
-    const { roomName, type, frontEndType } = JSON.parse(req.body);
+    const { roomName, type, frontEndType, options } = JSON.parse(req.body);
     const roomId = uuidv4();
-
+    
     const { data, error } = await supabaseServerClient
       .from("interview_rooms")
       .insert({
@@ -32,7 +32,8 @@ export default async function handler(
         name: roomName,
         type,
         finished: false,
-        front_end_type: frontEndType
+        front_end_type: frontEndType,
+        enable_voice_call: options
       })
       .select();
 
