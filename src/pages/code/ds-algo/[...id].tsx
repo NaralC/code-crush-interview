@@ -35,6 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     type,
     finished,
     note_state,
+    enable_voice_call
   } = rooms[0];
 
   const { data: questions, error: questionsError } = await supabaseClient
@@ -64,6 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       finished,
       questions,
       initialNoteState: note_state,
+      voiceCallEnabled: enable_voice_call
     },
   };
 };

@@ -401,6 +401,7 @@ type Props = React.PropsWithChildren<{
   realTimeRef: React.MutableRefObject<RealtimeChannel | null>;
   roomName: string;
   type: InterviewType;
+  voiceCallEnabled: boolean;
 }>;
 
 const CodingLayout: React.FC<Props> = ({
@@ -415,6 +416,7 @@ const CodingLayout: React.FC<Props> = ({
   userId,
   roomName,
   type,
+  voiceCallEnabled
 }) => {
   // States
   const { x, y } = useMousePosition();
@@ -526,7 +528,6 @@ const CodingLayout: React.FC<Props> = ({
         <meta name="Code Crush" content="Code Crush" />
       </Head>
 
-      <p className="text-black">{width}</p>
       <main
         className="flex flex-col w-full h-screen overflow-y-auto inter-font"
         onMouseMove={sendMousePosition}
@@ -560,7 +561,7 @@ const CodingLayout: React.FC<Props> = ({
         {/* {!isFinished && <AudioVideoCall realTimeRef={realTimeRef} />} */}
       </main>
 
-      <VoiceCall roomName={roomId} username={userName} />
+      {voiceCallEnabled ? <VoiceCall roomName={roomId} username={userName} /> : null}
       <HintsSolutionModal />
       <EndInterviewModal handleEndInterview={handleEndInterview} />
       {!isFinished && (

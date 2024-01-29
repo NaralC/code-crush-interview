@@ -49,12 +49,11 @@ Should haves:
 Nice to have:
 - Text hilighting to both editors
 - User acceptance test 🤔
-- Automated tests with Cypress 🤔
-- Make AV call optional? So up the limit 🤔
+- Make AV call optional ✅
 - Abstract Octokit into an API 🤔
 - Voice call not working again 🤔 (trying both from localhnost works, but not when one's from a deployment) + give AV call spin/load while this is not ready
 
-Testing ideas:
+Automated tests with Cypress 🤔 (and some ideas):
 - Compile logic (does it stop when fails, response shape)
 - Save logic
 - Upload to GH logic
@@ -64,6 +63,7 @@ Testing ideas:
 - Create/join room logic
 
 Bug Fixes:
+- When someone joins, the cursors get reset
 - Supabase WS and AV device doesn't disconnect unless hard reload ⏸
 - `DOMException: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable` Voice call sometimes break ⏸
 - `An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.` Security issue? ⏸

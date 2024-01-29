@@ -1,6 +1,6 @@
 // Components and UI
 import { Input } from "@/components/ui/input";
-import { Dices, Loader2 } from "lucide-react";
+import { Dices, Loader2, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Modal from "@/components/ui/modal";
@@ -98,10 +98,10 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
       onClick={() => setSelectedRoomId(room.room_id)}
     >
       <div className="col-span-4 grid-rows-1 truncate">{room.name}</div>
-      <div className="col-span-1 grid-rows-1 text-right">
+      <div className="col-span-1 grid-rows-1 mr-2 text-right">
         {Object.keys(room.participants ?? {}).length} / 2
       </div>
-      <div className="col-span-1 grid-rows-1">
+      <div className="flex col-span-1 grid-rows-1 gap-1">
         <div className="flex flex-col items-center">
           {room.type === "front_end" ? (
             room.front_end_type === "react" ? (
@@ -133,6 +133,13 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
                 selectedRoomId === room.room_id ? "text-yellow-400" : ""
               )}
             />
+          )}
+        </div>
+        <div>
+          {room.enable_voice_call ? (
+            <Mic className="text-green-500" />
+          ) : (
+            <MicOff className="text-red-500" />
           )}
         </div>
       </div>
