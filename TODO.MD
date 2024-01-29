@@ -61,6 +61,7 @@ Automated tests with Cypress 🤔 (and some ideas):
 - Role swap logic
 - Room name change
 - Create/join room logic
+- Make a CI/CD to test before pushing to Vercel
 
 Bug Fixes:
 - When someone joins, the cursors get reset

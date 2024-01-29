@@ -23,6 +23,9 @@ import { cn } from "@/lib/utils";
 import AuthPopover from "@/components/custom/auth-popover";
 import { useCodeStore } from "@/stores/code-store";
 import { useLocalSettingsStore } from "@/stores/local-settings-store";
+import dynamic from 'next/dynamic'
+
+const BgParticles = dynamic(() => import('@/components/custom/background-particles'), { ssr: false })
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -185,7 +188,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <CreateRoomModal />
         <JoinRoomModal rooms={rooms} />
         <BrowseRoomsModal rooms={rooms} />
-        {!!particleBgVisible && <BackgroundParticles />}
+        {!!particleBgVisible && <BgParticles />}
         <AuthPopover />
       </main>
     </>
