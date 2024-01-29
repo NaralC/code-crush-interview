@@ -54,3 +54,4 @@ cypress/e2e/2-advanced-examples/utilities.cy.js
 cypress/e2e/2-advanced-examples/viewport.cy.js
 cypress/e2e/2-advanced-examples/waiting.cy.js
 cypress/e2e/2-advanced-examples/window.cy.js
+cypress/fixtures/example.json

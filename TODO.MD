@@ -53,16 +53,21 @@ Nice to have:
 - Abstract Octokit into an API 🤔
 - Voice call not working again 🤔 (trying both from localhnost works, but not when one's from a deployment) + give AV call spin/load while this is not ready
 
-Automated tests with Cypress 🤔 (and some ideas):
-- Compile logic (does it stop when fails, response shape)
-- Save logic
-- Upload to GH logic
-- WebRTC logic
-- Role swap logic
+Automated tests with Cypress 🤔 (https://github.com/cypress-io/cypress-realworld-testing-blog/tree/main):
+- Compile (does it stop when fails, response shape)
+- Save
+- Upload to GH
+- WebRTC
+- Code context/store
+- Role swap
 - Room name change
-- Create/join room logic
+- Create/join room
 - Make a CI/CD to test before pushing to Vercel
-- BG particle/localStorage logic ✅
+- BG particle/localStorage ✅
+- Create room ✅
+- Join room by id
+- Browse room
+- Questions CRUD
 
 Bug Fixes:
 - When someone joins, the cursors get reset
