@@ -14,6 +14,7 @@ interface Database {
           code_state: Json | null
           created_at: string | null
           description: string | null
+          enable_voice_call: boolean
           finished: boolean
           front_end_type:
             | Database["public"]["Enums"]["front_end_frameworks"]
@@ -28,6 +29,7 @@ interface Database {
           code_state?: Json | null
           created_at?: string | null
           description?: string | null
+          enable_voice_call?: boolean
           finished: boolean
           front_end_type?:
             | Database["public"]["Enums"]["front_end_frameworks"]
@@ -42,6 +44,7 @@ interface Database {
           code_state?: Json | null
           created_at?: string | null
           description?: string | null
+          enable_voice_call?: boolean
           finished?: boolean
           front_end_type?:
             | Database["public"]["Enums"]["front_end_frameworks"]
@@ -98,6 +101,7 @@ interface Database {
           {
             foreignKeyName: "users_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -112,6 +116,7 @@ interface Database {
     }
     Enums: {
       front_end_frameworks: "react" | "angular" | "vue"
+      room_options: "password_protection" | "enable_voice_call"
       room_type: "front_end" | "ds_algo" | "behavioral"
     }
     CompositeTypes: {

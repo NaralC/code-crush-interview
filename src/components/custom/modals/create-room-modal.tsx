@@ -108,13 +108,15 @@ const CreateRoomModal: FC = () => {
           </pre>
         ),
       });
-
+      
       const response = await fetch("/api/db", {
         method: "POST",
         body: JSON.stringify({
           roomName: formatRepoName(values.roomName),
           type: values.interviewType,
-          frontEndType: interviewType === "front_end" ? values.frontEndType : null
+          frontEndType:
+            interviewType === "front_end" ? values.frontEndType : null,
+          options: Boolean(values.options![0])
         }),
       });
 
@@ -207,176 +209,157 @@ const CreateRoomModal: FC = () => {
               )}
             />
 
-            <Accordion type="single" defaultValue="item-1">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>Interview Type</AccordionTrigger>
-                <AccordionContent>
-                  <div>
-                    <FormField
-                      control={form.control}
-                      name="interviewType"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
+            <div>
+              <FormField
+                control={form.control}
+                name="interviewType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormControl>
+                      <RadioGroup
+                        // @ts-ignore
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
-                            <RadioGroup
-                              // @ts-ignore
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="front_end" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  <div className="flex items-center space-x-2">
-                                    <FaReact className="text-2xl transition-colors hover:animate-spin hover:text-teal-400" />
-                                    <Label htmlFor="r1">Front-end</Label>
-                                  </div>
-                                </FormLabel>
-                              </FormItem>
-
-                              <Transition
-                                show={interviewType === "front_end"}
-                                enter="transition-all duration-200 ease-out"
-                                enterFrom="translate-y-2"
-                                enterTo="translate-y-0"
-                                leave="transition-all ease-in duration-100"
-                                leaveFrom="translate-y-0"
-                                leaveTo="translate-y-2"
-                              >
-                                <FormField
-                                  control={form.control}
-                                  name="frontEndType"
-                                  render={({ field }) => (
-                                    <FormItem className="px-1">
-                                      <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        disabled={
-                                          !(interviewType === "front_end")
-                                        }
-                                      >
-                                        <FormControl>
-                                          <SelectTrigger className="capitalize">
-                                            <SelectValue placeholder="Select a framework" />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent className="inter-font">
-                                          {[
-                                            {
-                                              value: "react",
-                                            },
-                                            {
-                                              value: "angular",
-                                            },
-                                            {
-                                              value: "vue",
-                                            },
-                                          ].map(({ value }, idx) => (
-                                            <SelectItem
-                                              key={idx}
-                                              value={value}
-                                              className="capitalize"
-                                            >
-                                              {value}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectContent>
-                                      </Select>
-                                      <FormDescription>
-                                        Comes with TypeScript and Tailwind.
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </Transition>
-
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="ds_algo" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  <div className="flex items-center space-x-2">
-                                    <FaPython className="text-2xl transition-colors hover:text-yellow-400" />
-                                    <Label htmlFor="r2">
-                                      Data Structures & Algorithms
-                                    </Label>
-                                  </div>
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
+                            <RadioGroupItem value="front_end" />
                           </FormControl>
-                          <FormMessage />
+                          <FormLabel className="font-normal">
+                            <div className="flex items-center space-x-2">
+                              <FaReact className="text-2xl transition-colors hover:animate-spin hover:text-teal-400" />
+                              <Label htmlFor="r1">Front-end</Label>
+                            </div>
+                          </FormLabel>
                         </FormItem>
-                      )}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger>Options</AccordionTrigger>
-                <AccordionContent>
-                  <FormField
-                    control={form.control}
-                    name="options"
-                    render={() => (
-                      <FormItem>
-                        {[
-                          {
-                            id: "password_protection",
-                            label: "Protect this room with a password.",
-                          },
-                          {
-                            id: "enable_voice_call",
-                            label: "Enable voice call (experimental)",
-                          },
-                        ].map((item) => (
+
+                        <Transition
+                          show={interviewType === "front_end"}
+                          enter="transition-all duration-200 ease-out"
+                          enterFrom="translate-y-2"
+                          enterTo="translate-y-0"
+                          leave="transition-all ease-in duration-100"
+                          leaveFrom="translate-y-0"
+                          leaveTo="translate-y-2"
+                        >
                           <FormField
-                            key={item.id}
                             control={form.control}
-                            name="options"
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={item.id}
-                                  className="flex flex-row items-start py-1 space-x-3 space-y-0"
+                            name="frontEndType"
+                            render={({ field }) => (
+                              <FormItem className="px-1">
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  disabled={!(interviewType === "front_end")}
                                 >
                                   <FormControl>
-                                    <Checkbox
-                                      checked={field.value?.includes(item.id)}
-                                      onCheckedChange={(checked) => {
-                                        return checked
-                                          ? field.onChange([
-                                              ...field.value!,
-                                              item.id,
-                                            ])
-                                          : field.onChange(
-                                              field.value?.filter(
-                                                (value) => value !== item.id
-                                              )
-                                            );
-                                      }}
-                                    />
+                                    <SelectTrigger className="capitalize">
+                                      <SelectValue placeholder="Select a framework" />
+                                    </SelectTrigger>
                                   </FormControl>
-                                  <FormLabel className="font-medium">
-                                    {item.label}
-                                  </FormLabel>
-                                </FormItem>
-                              );
-                            }}
+                                  <SelectContent className="inter-font">
+                                    {[
+                                      {
+                                        value: "react",
+                                      },
+                                      {
+                                        value: "angular",
+                                      },
+                                      {
+                                        value: "vue",
+                                      },
+                                    ].map(({ value }, idx) => (
+                                      <SelectItem
+                                        key={idx}
+                                        value={value}
+                                        className="capitalize"
+                                      >
+                                        {value}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormDescription>
+                                  Comes with TypeScript and Tailwind.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
                           />
-                        ))}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                        </Transition>
+
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="ds_algo" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            <div className="flex items-center space-x-2">
+                              <FaPython className="text-2xl transition-colors hover:text-yellow-400" />
+                              <Label htmlFor="r2">
+                                Data Structures & Algorithms
+                              </Label>
+                            </div>
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="options"
+              render={() => (
+                <FormItem>
+                  {[
+                    {
+                      id: "enable_voice_call",
+                      label: "Enable voice call (experimental & limits room capacity to 2)",
+                    },
+                  ].map((item) => (
+                    <FormField
+                      key={item.id}
+                      control={form.control}
+                      name="options"
+                      render={({ field }) => {
+                        return (
+                          <FormItem
+                            key={item.id}
+                            className="flex flex-row items-start py-1 space-x-3 space-y-0"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(item.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([...field.value!, item.id])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value) => value !== item.id
+                                        )
+                                      );
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-medium capitalize">
+                              {item.label}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  ))}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" disabled={isCreatingRoom}>
-              Proceed {!!isCreatingRoom && <Loader2 className="ml-2 animate-spin" />}
+              Proceed{" "}
+              {!!isCreatingRoom && <Loader2 className="ml-2 animate-spin" />}
             </Button>
           </div>
         </form>
