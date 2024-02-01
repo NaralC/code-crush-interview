@@ -116,6 +116,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
             onClick={() => {
               createRoomModal.setOpen();
             }}
+            data-cy="create-room-modal"
           >
             <Code2 className="mr-2" />
             Create a Room
@@ -128,6 +129,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
             onClick={() => {
               joinRoomModal.setOpen();
             }}
+            data-cy="join-room-by-id-modal"
           >
             <Paperclip className="mr-2" />
             Join a Room by ID

@@ -16,13 +16,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useToast } from "@/hooks/use-toast";
-import { DEFAULT_ROOM_ID } from "@/lib/constant";
 import { Dices, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import supabaseClient from "@/lib/supa-client";
 import useModalStore from "@/stores/modal-store";
 import { generateUsername } from "@/lib/faker";
+import { useMutation } from "@tanstack/react-query";
 
 const joinRoomSchemaFrontend = z.object({
   roomId: z.string().min(1, {
@@ -34,68 +34,46 @@ const joinRoomSchemaFrontend = z.object({
 });
 
 const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     joinRoomModal: { isOpen, setOpen, setClose },
   } = useModalStore();
-  const { toast: debugToast } = useToast();
   const router = useRouter();
-  const supaClient = supabaseClient;
 
   const form = useForm<z.infer<typeof joinRoomSchemaFrontend>>({
     resolver: zodResolver(joinRoomSchemaFrontend),
     defaultValues: {
-      roomId: DEFAULT_ROOM_ID,
+      roomId: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof joinRoomSchemaFrontend>) => {
-    // debugToast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
+  const { mutate: joinRoom, isLoading: isJoiningRoom } = useMutation({
+    mutationKey: ["join-room-by-id"],
+    mutationFn: async (values: z.infer<typeof joinRoomSchemaFrontend>) => {
+      const response = await fetch(`/api/db?roomId=${values.roomId}`);
 
-    // Check if room is full
-    const { data, error } = await supaClient
-      .from("interview_rooms")
-      .select()
-      .eq("room_id", values.roomId);
-
-    if (!data || !data.length || error) {
-      toast.error("Room doesn't exist :(");
-      return;
-    }
-
-    const { participants, type } = data[0];
-
-    if (participants) {
-      const userCount = Object.keys(participants!).length;
-
-      if (userCount >= 2) {
-        toast.error("Room already full. :(");
-        return;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.content || "Either the room is full or it doesn't exist.");
       }
+
+      const { content: type } = await response.json();
+      return { type: type as string, roomId: values.roomId };
+    },
+    onSuccess: (data) => {
+      toast.success("Wallah! Redirecting you to it!");
+      router.push({
+        pathname: `/code/${
+          data!.type === "ds_algo" ? "ds-algo" : "front-end"
+        }/${data!.roomId}`,
+        query: {
+          userName: form.getValues().userName,
+        },
+      });
+    },
+    onError: (error) => {
+      toast.error((error as Error).message);
     }
-
-    toast.success("Wallah! Redirecting you to it!");
-    router.push({
-      pathname: `/code/${type === "ds_algo" ? "ds-algo" : "front-end"}/${values.roomId}`,
-      query: {
-        userName: values.userName,
-      },
-    });
-
-    setIsLoading(true);
-
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   setClose();
-    // }, 500);
-  };
+  });
 
   return (
     <Modal
@@ -105,7 +83,10 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
       setClose={setClose}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit((values) => joinRoom(values))}
+          className="space-y-8"
+        >
           <div className="grid items-center w-full gap-5">
             <FormField
               control={form.control}
@@ -115,7 +96,11 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
                   <FormItem>
                     <FormLabel>Room ID</FormLabel>
                     <FormControl className="select-none">
-                      <Input placeholder="Input your name" {...field} />
+                      <Input
+                        placeholder="Input your name"
+                        {...field}
+                        disabled={isJoiningRoom}
+                      />
                     </FormControl>
                     <FormDescription>Join a room by its id.</FormDescription>
                     <FormMessage />
@@ -132,15 +117,17 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
                     <FormLabel>Your Name</FormLabel>
                     <FormControl className="select-none">
                       <div className="flex items-center justify-between">
-                        <Input placeholder="Input your name" {...field} />
+                        <Input
+                          placeholder="Input your name"
+                          {...field}
+                          disabled={isJoiningRoom}
+                        />
                         <Dices
                           className="ml-4 cursor-pointer w-7 h-7"
                           onClick={() => {
-                            form.setValue(
-                              "userName",
-                              generateUsername()
-                            );
+                            form.setValue("userName", generateUsername());
                           }}
+                          data-cy="randomizer-dice"
                         />
                       </div>
                     </FormControl>
@@ -153,13 +140,14 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
               )}
             />
             <Button
-              disabled={isLoading}
+              disabled={isJoiningRoom}
               className="w-full"
               type="submit"
               onSubmit={(e) => e.preventDefault()}
+              data-cy="submit"
             >
               Proceed
-              {!!isLoading && <Loader2 className="ml-2 animate-spin" />}
+              {!!isJoiningRoom && <Loader2 className="ml-2 animate-spin" />}
             </Button>
           </div>
         </form>

@@ -69,11 +69,12 @@ Automated tests with Cypress 🤔 (https://github.com/cypress-io/cypress-realwor
 > E2E:
 - BG particle/localStorage ✅
 - Create room ✅
-- Join room by id
+- Join room by id ✅
 - Browse room
 - Questions CRUD
 
 Bug Fixes:
+- End interview, GH, Questions, Console btns should be dynamic depending on what's present
 - When someone joins, the cursors get reset
 - Supabase WS and AV device doesn't disconnect unless hard reload ⏸
 - `DOMException: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable` Voice call sometimes break ⏸
