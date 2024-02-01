@@ -7,7 +7,7 @@ describe("Creating a new room", () => {
     cy.contains("Create a Room").click();
     cy.get('input[name="roomName"]').type("E2E Test Room");
     cy.get('input[name="userName"]').type("Naral");
-    cy.contains("Proceed").click();
+    cy.get('[data-cy="create-room"]').click()
     cy.contains("You need to select an interview type.").should("be.visible");
   });
 
@@ -17,7 +17,7 @@ describe("Creating a new room", () => {
     cy.contains("Create a Room").click();
     cy.get('input[name="userName"]').type("Naral");
     cy.get('[value="ds_algo"]').click({ multiple: true, force: true });
-    cy.contains("Proceed").click();
+    cy.get('[data-cy="create-room"]').click()
     cy.contains("Room name cannot be empty").should("be.visible");
   });
 
@@ -27,7 +27,7 @@ describe("Creating a new room", () => {
     cy.contains("Create a Room").click();
     cy.get('input[name="roomName"]').type("E2E Test Room");
     cy.get('[value="ds_algo"]').click({ multiple: true, force: true });
-    cy.contains("Proceed").click();
+    cy.get('[data-cy="create-room"]').click()
     cy.contains("Name cannot be empty").should("be.visible");
   });
 
@@ -41,9 +41,11 @@ describe("Creating a new room", () => {
 
     // Create room
     cy.intercept("POST", "/api/db").as("createRoom");
-    cy.contains("Proceed").click();
-    cy.wait("@createRoom", { timeout: 30000 }); // shouldn't take more than 10 seconds
-    cy.url().should("include", "/code/ds-algo/");
+    cy.get('[data-cy="create-room"]').click()
+
+    // Shouldn't take more than 10 seconds each for creating and navigating to the room
+    cy.wait("@createRoom", { responseTimeout: 10000 });
+    cy.url({ timeout: 10000 }).should("include", "/code/ds-algo/");
   });
 
   // TODO: creating a front-end room

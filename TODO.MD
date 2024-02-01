@@ -61,7 +61,7 @@ Automated tests with Cypress 🤔 (https://github.com/cypress-io/cypress-realwor
 - Room name change
 
 > Real-time (https://docs.cypress.io/guides/references/trade-offs#Multiple-browsers-open-at-the-same-time):
-- WebRTC
+- WebRTC (https://webrtc.github.io/test-pages/)
 - Code context/store
 - Role swap
 - Make a CI/CD to test before pushing to Vercel

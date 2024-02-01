@@ -357,7 +357,7 @@ const CreateRoomModal: FC = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isCreatingRoom}>
+            <Button type="submit" disabled={isCreatingRoom} data-cy="create-room">
               Proceed{" "}
               {!!isCreatingRoom && <Loader2 className="ml-2 animate-spin" />}
             </Button>
