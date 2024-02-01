@@ -28,65 +28,53 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useModalStore from "@/stores/modal-store";
 import supaClient from "@/lib/supa-client";
 import { FaPython, FaReact, FaAngular, FaVuejs } from "react-icons/fa";
+import { useMutation } from "@tanstack/react-query";
 
 const browseRoomSchema = z.object({
-  username: z.string().min(1, {
-    message: "Name cannot be empty",
-  }),
+  username: z.string().min(1),
 });
 
 const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     browseRoomsModal: { isOpen, setClose },
   } = useModalStore();
   const router = useRouter();
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>();
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof browseRoomSchema>>({
     resolver: zodResolver(browseRoomSchema),
   });
 
-  const onSubmit = async (values: z.infer<typeof browseRoomSchema>) => {
-    if (!selectedRoomId || !selectedRoomId.length) {
-      toast.error("Select a room first");
-      return;
-    }
+  const { mutate: joinRoom, isLoading: isJoiningRoom } = useMutation({
+    mutationKey: ["join-room-by-id"],
+    mutationFn: async (values: z.infer<typeof browseRoomSchema>) => {
+      if (!selectedRoomId) throw new Error("Select a room first")
 
-    // Check if room is full
-    const { data, error } = await supaClient
-      .from("interview_rooms")
-      .select()
-      .eq("room_id", selectedRoomId);
+      const response = await fetch(`/api/db?roomId=${selectedRoomId}`);
 
-    if (!data) {
-      toast.error("Room doesn't exist :(");
-      return;
-    }
-
-    const { participants, type } = data[0];
-
-    if (participants) {
-      const userCount = Object.keys(participants!).length;
-
-      if (userCount >= 2) {
-        toast.error("Room already full. :(");
-        return;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.content || "Either the room is full or it doesn't exist.");
       }
+
+      const { content: type } = await response.json();
+      return { type: type as string, roomId: selectedRoomId };
+    },
+    onSuccess: (data) => {
+      toast.success("Wallah! Redirecting you to it!");
+      router.push({
+        pathname: `/code/${
+          data!.type === "ds_algo" ? "ds-algo" : "front-end"
+        }/${data!.roomId}`,
+        query: {
+          userName: form.getValues().username,
+        },
+      });
+    },
+    onError: (error) => {
+      toast.error((error as Error).message);
     }
-
-    setIsLoading(true);
-
-    toast.success("Wallah! Redirecting you to it!");
-    router.push({
-      pathname: `/code/${
-        type === "ds_algo" ? "ds-algo" : "front-end"
-      }/${selectedRoomId}`,
-      query: {
-        userName: values.username,
-      },
-    });
-  };
+  });
 
   const Card: FC<{ room: Room }> = ({ room }) => (
     <div
@@ -163,7 +151,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
       className="max-h-[75vh] overflow-x-clip"
     >
       <>
-        <ScrollArea className="max-h-[400px] w-full pr-4">
+        <ScrollArea className="max-h-[400px] w-full pr-4" data-cy="room-scroll-area">
           {rooms.map((room) => (
             <Card
               room={{
@@ -175,7 +163,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
           ))}
         </ScrollArea>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit((values) => joinRoom(values))} className="space-y-4">
             <FormField
               control={form.control}
               name="username"
@@ -191,6 +179,7 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
                           onClick={() => {
                             form.setValue("username", generateUsername());
                           }}
+                          data-cy="randomizer-dice"
                         />
                       </div>
                     </FormControl>
@@ -203,13 +192,14 @@ const BrowseRoomsModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
               )}
             />
             <Button
-              disabled={isLoading}
+              disabled={isJoiningRoom}
               className="w-full"
               type="submit"
               onSubmit={(e) => e.preventDefault()}
+              data-cy="submit"
             >
               Proceed
-              {!!isLoading && <Loader2 className="ml-2 animate-spin" />}
+              {!!isJoiningRoom && <Loader2 className="ml-2 animate-spin" />}
             </Button>
           </form>
         </Form>

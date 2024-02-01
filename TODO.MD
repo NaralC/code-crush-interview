@@ -56,9 +56,10 @@ Nice to have:
 Automated tests with Cypress 🤔 (https://github.com/cypress-io/cypress-realworld-testing-blog/tree/main):
 > API:
 - Compile (does it stop when fails, response shape)
-- Save
+- Save/Fetch Code
 - Upload to GH
 - Room name change
+- Pusher
 
 > Real-time (https://docs.cypress.io/guides/references/trade-offs#Multiple-browsers-open-at-the-same-time):
 - WebRTC (https://webrtc.github.io/test-pages/)

@@ -53,7 +53,7 @@ describe("Joining a new room by its id", () => {
     cy.get('[data-cy="submit"]').click();
 
     // TODO: Check if url is correct based on returned interviewtype and user name
-    // Response should be 200
+    // Response should be either 200 or 304
     cy.wait("@joinRoom", { responseTimeout: 10000 }).then((response) => {
       expect([200, 304]).to.include(response.response?.statusCode);
       cy.url({ timeout: 10000 }).should("match", /\/code\/(ds-algo|front-end)/);

@@ -142,6 +142,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
             onClick={() => {
               browseRoomsModal.setOpen();
             }}
+            data-cy="browse-room-modal"
           >
             <Globe2 className="mr-2" />
             Browse Rooms
