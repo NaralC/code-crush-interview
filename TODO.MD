@@ -54,15 +54,19 @@ Nice to have:
 - Voice call not working again 🤔 (trying both from localhnost works, but not when one's from a deployment) + give AV call spin/load while this is not ready
 
 Automated tests with Cypress 🤔 (https://github.com/cypress-io/cypress-realworld-testing-blog/tree/main):
+> API:
 - Compile (does it stop when fails, response shape)
 - Save
 - Upload to GH
+- Room name change
+
+> Real-time (https://docs.cypress.io/guides/references/trade-offs#Multiple-browsers-open-at-the-same-time):
 - WebRTC
 - Code context/store
 - Role swap
-- Room name change
-- Create/join room
 - Make a CI/CD to test before pushing to Vercel
+
+> E2E:
 - BG particle/localStorage ✅
 - Create room ✅
 - Join room by id
