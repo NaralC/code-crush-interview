@@ -12,7 +12,6 @@ import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNoteStore } from "@/stores/note-store";
 import { useQuery } from "@tanstack/react-query";
-import supabaseClient from "@/lib/supa-client";
 import useQuestionsMutation from "@/hooks/use-questions-mutation";
 import { Switch } from "@/components/ui/switch";
 
@@ -35,12 +34,12 @@ const QuestionsPage: NextPage = () => {
   const { data: questions, refetch } = useQuery({
     queryKey: ["fetch-questions"],
     queryFn: async () => {
-      const { data } = await supabaseClient
-        .from("questions")
-        .select("*")
-        .eq("type", selectedQuestionType)
-        .order("title", { ascending: true });
-      return data;
+      const response = await fetch(`/api/questions?type=${selectedQuestionType}`, {
+        method: "GET",
+      });
+      const { content } = await response.json();
+
+      return content as QuestionFromDB[]
     },
   });
 
