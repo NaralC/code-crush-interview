@@ -266,6 +266,8 @@ const NotionLikeEditor: FC<{
             "p-3 max-h-[800px] md:max-h-fit bg-gradient-to-b from-stone-900 via-stone-800 to-white selection:text-black selection:bg-white",
             finished ? "hover:cursor-not-allowed" : ""
           )}
+          data-cy="notion-editor"
+          contentEditable={true}
         />
       </div>
     </div>

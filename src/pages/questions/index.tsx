@@ -36,6 +36,7 @@ const QuestionsPage: NextPage = () => {
     queryFn: async () => {
       const response = await fetch(`/api/questions?type=${selectedQuestionType}`, {
         method: "GET",
+        cache: "no-store"
       });
       const { content } = await response.json();
 
@@ -95,6 +96,7 @@ const QuestionsPage: NextPage = () => {
               id="questions-type"
               checked={selectedQuestionType === "ds_algo" ? false : true}
               onCheckedChange={toggleQuestionType}
+              data-cy="toggle-question-type"
             />
             <div
               className={cn(
@@ -112,7 +114,7 @@ const QuestionsPage: NextPage = () => {
             </div>
           </div>
         </div>
-        <ScrollArea className="text-white max-h-[450px] px-3">
+        <ScrollArea className="text-white max-h-[450px] px-3" data-cy="questions-scroll-area">
           {questions?.map((question) => (
             <div className="flex" key={question.id}>
               <div
@@ -179,6 +181,7 @@ const QuestionsPage: NextPage = () => {
             onChange={(e) =>
               setTextInputs((prev) => ({ ...prev, title: e.target.value }))
             }
+            data-cy="title"
           />
         </div>
         <div className="text-2xl font-semibold">Body</div>
@@ -197,6 +200,7 @@ const QuestionsPage: NextPage = () => {
             onChange={(e) =>
               setTextInputs((prev) => ({ ...prev, hints: e.target.value }))
             }
+            data-cy="hint"
           />
         </div>
         <div className="font-semibold">
@@ -211,6 +215,7 @@ const QuestionsPage: NextPage = () => {
             onChange={(e) =>
               setTextInputs((prev) => ({ ...prev, solution: e.target.value }))
             }
+            data-cy="solution"
           />
         </div>
         <div className="flex justify-end gap-3">
@@ -228,6 +233,7 @@ const QuestionsPage: NextPage = () => {
               });
             }}
             className="px-16 shadow shadow-white w-fit"
+            data-cy="create"
           >
             Create Question
           </Button>
@@ -244,6 +250,7 @@ const QuestionsPage: NextPage = () => {
               });
             }}
             className="px-16 shadow shadow-white w-fit"
+            data-cy="edit"
           >
             Edit Question
           </Button>
