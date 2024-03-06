@@ -12,7 +12,6 @@ import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNoteStore } from "@/stores/note-store";
 import { useQuery } from "@tanstack/react-query";
-import supabaseClient from "@/lib/supa-client";
 import useQuestionsMutation from "@/hooks/use-questions-mutation";
 import { Switch } from "@/components/ui/switch";
 
@@ -35,12 +34,13 @@ const QuestionsPage: NextPage = () => {
   const { data: questions, refetch } = useQuery({
     queryKey: ["fetch-questions"],
     queryFn: async () => {
-      const { data } = await supabaseClient
-        .from("questions")
-        .select("*")
-        .eq("type", selectedQuestionType)
-        .order("title", { ascending: true });
-      return data;
+      const response = await fetch(`/api/questions?type=${selectedQuestionType}`, {
+        method: "GET",
+        cache: "no-store"
+      });
+      const { content } = await response.json();
+
+      return content as QuestionFromDB[]
     },
   });
 
@@ -96,6 +96,7 @@ const QuestionsPage: NextPage = () => {
               id="questions-type"
               checked={selectedQuestionType === "ds_algo" ? false : true}
               onCheckedChange={toggleQuestionType}
+              data-cy="toggle-question-type"
             />
             <div
               className={cn(
@@ -113,7 +114,7 @@ const QuestionsPage: NextPage = () => {
             </div>
           </div>
         </div>
-        <ScrollArea className="text-white max-h-[450px] px-3">
+        <ScrollArea className="text-white max-h-[450px] px-3" data-cy="questions-scroll-area">
           {questions?.map((question) => (
             <div className="flex" key={question.id}>
               <div
@@ -180,6 +181,7 @@ const QuestionsPage: NextPage = () => {
             onChange={(e) =>
               setTextInputs((prev) => ({ ...prev, title: e.target.value }))
             }
+            data-cy="title"
           />
         </div>
         <div className="text-2xl font-semibold">Body</div>
@@ -198,6 +200,7 @@ const QuestionsPage: NextPage = () => {
             onChange={(e) =>
               setTextInputs((prev) => ({ ...prev, hints: e.target.value }))
             }
+            data-cy="hint"
           />
         </div>
         <div className="font-semibold">
@@ -212,6 +215,7 @@ const QuestionsPage: NextPage = () => {
             onChange={(e) =>
               setTextInputs((prev) => ({ ...prev, solution: e.target.value }))
             }
+            data-cy="solution"
           />
         </div>
         <div className="flex justify-end gap-3">
@@ -229,6 +233,7 @@ const QuestionsPage: NextPage = () => {
               });
             }}
             className="px-16 shadow shadow-white w-fit"
+            data-cy="create"
           >
             Create Question
           </Button>
@@ -245,6 +250,7 @@ const QuestionsPage: NextPage = () => {
               });
             }}
             className="px-16 shadow shadow-white w-fit"
+            data-cy="edit"
           >
             Edit Question
           </Button>

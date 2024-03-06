@@ -23,6 +23,9 @@ import { cn } from "@/lib/utils";
 import AuthPopover from "@/components/custom/auth-popover";
 import { useCodeStore } from "@/stores/code-store";
 import { useLocalSettingsStore } from "@/stores/local-settings-store";
+import dynamic from 'next/dynamic'
+
+const BgParticles = dynamic(() => import('@/components/custom/background-particles'), { ssr: false })
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const supabaseClient = createPagesServerClient<Database>(ctx);
@@ -101,7 +104,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           Code Crush
         </p>
         <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance text-shadow-2xl">
-          Interviewing — the ultimate leverage for career progression. Practice
+          Pair Programming — the ultimate leverage for career progression. Practice
           now.
         </p>
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
@@ -113,6 +116,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
             onClick={() => {
               createRoomModal.setOpen();
             }}
+            data-cy="create-room-modal"
           >
             <Code2 className="mr-2" />
             Create a Room
@@ -125,6 +129,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
             onClick={() => {
               joinRoomModal.setOpen();
             }}
+            data-cy="join-room-by-id-modal"
           >
             <Paperclip className="mr-2" />
             Join a Room by ID
@@ -137,6 +142,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
             onClick={() => {
               browseRoomsModal.setOpen();
             }}
+            data-cy="browse-room-modal"
           >
             <Globe2 className="mr-2" />
             Browse Rooms
@@ -185,7 +191,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
         <CreateRoomModal />
         <JoinRoomModal rooms={rooms} />
         <BrowseRoomsModal rooms={rooms} />
-        {!!particleBgVisible && <BackgroundParticles />}
+        {!!particleBgVisible && <BgParticles />}
         <AuthPopover />
       </main>
     </>

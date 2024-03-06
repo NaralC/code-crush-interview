@@ -11,6 +11,7 @@
     background-color: #ffffff;
     border-radius: 5px;
     padding-right: 0px;
+    z-index: 40;
   }
 
   .ce-toolbar__actions--opened {
@@ -19,6 +20,7 @@
 
   .ce-inline-toolbar__toggler-and-button-wrapper {
     color: black;
+    z-index: 40;
   }
 
   .ce-conversion-toolbar {

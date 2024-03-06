@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 type Data = {
-  content: string;
+  content: string | QuestionFromDB[];
 };
 
 export default async function handler(
@@ -69,7 +69,7 @@ export default async function handler(
     const { error } = await supabaseServerClient
       .from("questions")
       .delete()
-      .eq("id", id)
+      .eq("id", id);
 
     if (error) {
       res.status(500).json({ content: "Failed to delete question" });
@@ -77,5 +77,23 @@ export default async function handler(
     }
 
     return res.status(200).json({ content: "Question deleted!" });
+  }
+
+  // Fetching all questions
+  else if (req.method === "GET") {
+    const { type } = req.query;
+
+    const { data, error } = await supabaseServerClient
+      .from("questions")
+      .select("*")
+      .eq("type", type as InterviewType)
+      .order("title", { ascending: true });
+
+    if (error) {
+      res.status(500).json({ content: "Failed to fetch questions" });
+      return;
+    }
+
+    return res.status(200).json({ content: data });
   }
 }

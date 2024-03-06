@@ -118,6 +118,9 @@ const CreateRoomModal: FC = () => {
             interviewType === "front_end" ? values.frontEndType : null,
           options: Boolean(values.options![0])
         }),
+        headers: {
+          "Cache-Control": "no-cache"
+        }
       });
 
       if (!response.ok) {
@@ -144,7 +147,7 @@ const CreateRoomModal: FC = () => {
 
   return (
     <Modal
-      title="Create an Interview Room"
+      title="Create a Room"
       description="Powered by Web Sockets"
       isOpen={isOpen}
       setClose={setClose}
@@ -318,7 +321,7 @@ const CreateRoomModal: FC = () => {
                   {[
                     {
                       id: "enable_voice_call",
-                      label: "Enable voice call (experimental & limits room capacity to 2)",
+                      label: "Enable voice call (experimental)",
                     },
                   ].map((item) => (
                     <FormField
@@ -357,7 +360,7 @@ const CreateRoomModal: FC = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isCreatingRoom}>
+            <Button type="submit" disabled={isCreatingRoom} data-cy="submit">
               Proceed{" "}
               {!!isCreatingRoom && <Loader2 className="ml-2 animate-spin" />}
             </Button>
