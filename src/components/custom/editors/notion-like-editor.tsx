@@ -191,7 +191,7 @@ const NotionLikeEditor: FC<{
       {latestRoleRef.current === "interviewer" && (
         <Popover>
           <PopoverTrigger className="z-40" asChild>
-            <Button className="fixed z-40 shadow bottom-6 right-6 shadow-white inter-font">
+            <Button className={cn("fixed z-40 shadow bottom-6 shadow-white inter-font right-10")}>
               Questions
             </Button>
           </PopoverTrigger>

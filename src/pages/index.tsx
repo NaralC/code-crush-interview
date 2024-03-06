@@ -104,7 +104,7 @@ const Home: NextPage<{ rooms: Room[] }> = ({ rooms }) => {
           Code Crush
         </p>
         <p className="mb-8 text-2xl font-normal text-center md:text-4xl text-balance text-shadow-2xl">
-          Interviewing — the ultimate leverage for career progression. Practice
+          Pair Programming — the ultimate leverage for career progression. Practice
           now.
         </p>
         <div className="flex flex-col items-center justify-between gap-5 md:flex-row">

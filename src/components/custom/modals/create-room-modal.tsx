@@ -147,7 +147,7 @@ const CreateRoomModal: FC = () => {
 
   return (
     <Modal
-      title="Create an Interview Room"
+      title="Create a Room"
       description="Powered by Web Sockets"
       isOpen={isOpen}
       setClose={setClose}
@@ -321,7 +321,7 @@ const CreateRoomModal: FC = () => {
                   {[
                     {
                       id: "enable_voice_call",
-                      label: "Enable voice call (experimental & limits room capacity to 2)",
+                      label: "Enable voice call (experimental)",
                     },
                   ].map((item) => (
                     <FormField

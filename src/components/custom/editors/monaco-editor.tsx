@@ -8,6 +8,7 @@ import throttle from "lodash.throttle";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCodeStore } from "@/stores/code-store";
+import { useUsersStore } from "@/stores/users-store";
 
 type MonacoEditorProps = {
   realTimeRef: MutableRefObject<RealtimeChannel | null>;
@@ -51,12 +52,14 @@ const MonacoEditor: FC<MonacoEditorProps> = ({ realTimeRef, name, finished }) =>
     [codeState.code]
   );
 
+  const { role } = useUsersStore();
+
   // TODO: Make it autofocus on monaco when a language is changed
   // Refer to: https://www.npmjs.com/package/@monaco-editor/react
   return (
     <>
       <Button
-        className="fixed z-40 shadow bottom-6 right-6 shadow-white"
+        className={cn("fixed z-40 shadow bottom-6 shadow-white", role === "interviewee" ? "right-40" : "right-10")}
         onClick={() =>
           dispatchConsole({
             type: "SET_CONSOLE_VISIBLE",

@@ -77,7 +77,7 @@ const JoinRoomModal: FC<{ rooms: Room[] }> = ({ rooms }) => {
 
   return (
     <Modal
-      title="Join an Interview Room"
+      title="Join a Room"
       description="Powered by Web Sockets"
       isOpen={isOpen}
       setClose={setClose}
