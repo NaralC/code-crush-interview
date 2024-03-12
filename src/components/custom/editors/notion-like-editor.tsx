@@ -188,7 +188,7 @@ const NotionLikeEditor: FC<{
 
   return (
     <div className="w-full h-full overflow-y-auto">
-      {latestRoleRef.current === "interviewer" && (
+      {(latestRoleRef.current === "interviewer" && !finished) && (
         <Popover>
           <PopoverTrigger className="z-40" asChild>
             <Button className={cn("fixed z-40 shadow bottom-6 shadow-white inter-font right-10")}>

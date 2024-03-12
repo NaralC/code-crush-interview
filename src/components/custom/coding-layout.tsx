@@ -561,7 +561,7 @@ const CodingLayout: React.FC<Props> = ({
         {/* {!isFinished && <AudioVideoCall realTimeRef={realTimeRef} />} */}
       </main>
 
-      {voiceCallEnabled ? <VoiceCall roomName={roomId} username={userName} /> : null}
+      {(voiceCallEnabled && !isFinished) ? <VoiceCall roomName={roomId} username={userName} /> : null}
       <HintsSolutionModal />
       <EndInterviewModal handleEndInterview={handleEndInterview} />
       {!isFinished && (
