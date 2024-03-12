@@ -195,7 +195,7 @@ const NotionLikeEditor: FC<{
               Questions
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="fixed bottom-12 -right-14 shadow-black drop-shadow inter-font">
+          <PopoverContent className="fixed overflow-y-auto bottom-12 -right-14 shadow-black drop-shadow inter-font h-[550px] max-h-[85vh]">
             <ul>
               {questions?.map((question) => (
                 <li key={question.id} className="px-2 rounded-lg">
@@ -219,6 +219,25 @@ const NotionLikeEditor: FC<{
                       setBody(question.hints);
                       setOpen();
 
+                      // if (realTimeRef) {
+                      //   realTimeRef.current?.send({
+                      //     type: "broadcast",
+                      //     event: EVENT.HINT_SOLUTION_SHOW,
+                      //     payload: { type: "hints", body: question.hints },
+                      //   });
+                      // }
+                    }}
+                  >
+                    <CornerDownRight className="p-1" />
+                    Hint for Yourself
+                  </div>
+                  <div
+                    className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                    onClick={() => {
+                      setType("hints");
+                      setBody(question.hints);
+                      // setOpen();
+
                       if (realTimeRef) {
                         realTimeRef.current?.send({
                           type: "broadcast",
@@ -229,7 +248,7 @@ const NotionLikeEditor: FC<{
                     }}
                   >
                     <CornerDownRight className="p-1" />
-                    Show Hint(s)
+                    Hint for Peer
                   </div>
                   <div
                     className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
@@ -237,6 +256,28 @@ const NotionLikeEditor: FC<{
                       setType("solution");
                       setBody(question.solution);
                       setOpen();
+
+                      // if (realTimeRef) {
+                      //   realTimeRef.current?.send({
+                      //     type: "broadcast",
+                      //     event: EVENT.HINT_SOLUTION_SHOW,
+                      //     payload: {
+                      //       type: "solution",
+                      //       body: question.solution,
+                      //     },
+                      //   });
+                      // }
+                    }}
+                  >
+                    <CornerDownRight className="p-1" />
+                    Solution for Yourself
+                  </div>
+                  <div
+                    className="flex flex-wrap px-2 text-sm text-gray-500 transition-colors hover:cursor-pointer hover:bg-black hover:text-white rounded-xl"
+                    onClick={() => {
+                      setType("solution");
+                      setBody(question.solution);
+                      // setOpen();
 
                       if (realTimeRef) {
                         realTimeRef.current?.send({
@@ -251,7 +292,7 @@ const NotionLikeEditor: FC<{
                     }}
                   >
                     <CornerDownRight className="p-1" />
-                    Show Solution
+                    Solution for Peer
                   </div>
                 </li>
               ))}

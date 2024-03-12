@@ -59,7 +59,7 @@ const MonacoEditor: FC<MonacoEditorProps> = ({ realTimeRef, name, finished }) =>
   return (
     <>
       <Button
-        className={cn("fixed z-40 shadow bottom-6 shadow-white", role === "interviewee" ? "right-40" : "right-10")}
+        className={cn("fixed z-40 shadow bottom-6 shadow-white right-40")}
         onClick={() =>
           dispatchConsole({
             type: "SET_CONSOLE_VISIBLE",
