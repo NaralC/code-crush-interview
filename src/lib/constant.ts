@@ -19,6 +19,7 @@ export const LANGUAGE_ID = {
   typescript: 74,
   python: 71,
   "c#": 51,
+  java: 62
 };
 
 export const ICE_SERVERS = {

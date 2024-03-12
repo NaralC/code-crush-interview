@@ -14,7 +14,7 @@ export default async function handler(
     const { code, language } = JSON.parse(req.body);
     const parsedCode = z.string().parse(code);
     const parsedLanguage = z
-      .enum(["typescript", "c#", "python"])
+      .enum(["typescript", "c#", "python", "java"])
       .parse(language);
 
     const response = await fetch(

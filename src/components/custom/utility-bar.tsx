@@ -51,6 +51,7 @@ import { useUsersStore } from "@/stores/users-store";
 import supabaseClient from "@/lib/supa-client";
 import { useActiveCode } from "@codesandbox/sandpack-react";
 import { formatRepoName } from "@/lib/utils";
+import { FaJava } from "react-icons/fa";
 
 type Props = {
   roomName: string;
@@ -64,6 +65,7 @@ const DsAlgoDropdownContent = [
   { language: "TypeScript", icon: <SiTypescript /> },
   { language: "Python", icon: <SiPython /> },
   { language: "C#", icon: <SiCsharp /> },
+  { language: "Java", icon: <FaJava /> },
 ];
 
 const SaveCodeBtnDsAlgo = ({ finished, roomId }: { finished: boolean; roomId: string; }) => {
