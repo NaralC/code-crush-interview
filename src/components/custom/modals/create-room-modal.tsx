@@ -98,16 +98,7 @@ const CreateRoomModal: FC = () => {
   const { mutate: createRoom, isLoading: isCreatingRoom } = useMutation({
     mutationKey: ["create-room"],
     mutationFn: async (values: z.infer<typeof createRoomSchema>) => {
-      debugToast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(values, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
+      
       
       const response = await fetch("/api/db", {
         method: "POST",
