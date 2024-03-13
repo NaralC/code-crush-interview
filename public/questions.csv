@@ -1,0 +1,697 @@
+﻿id,title,body,hints,solution,type
+1,Add Two Integers,"{
+  ""body"": {
+    ""time"": 1710283861009,
+    ""blocks"": [
+      {
+        ""id"": ""sL270qn4Wf"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Given two integers num1 and num2, return the sum of the two integers.""
+        }
+      },
+      {
+        ""id"": ""RwsGKOAt_S"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 1:""
+        }
+      },
+      {
+        ""id"": ""m7huKlEs-8"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: num1 = 12, num2 = 5\nOutput: 17\nExplanation: num1 is 12, num2 is 5, and their sum is 12 + 5 = 17, so 17 is returned.\n""
+        }
+      },
+      {
+        ""id"": ""3zTGQCTvKs"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 2:""
+        }
+      },
+      {
+        ""id"": ""4Nw3m-BrDn"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: num1 = -10, num2 = 4\nOutput: -6\nExplanation: num1 + num2 = -6, so -6 is returned.""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""You don't need any special operations or conditions to add two integers in most programming languages. Just use the standard addition (+) operator.""
+
+Hint 2:
+""Ensure you understand how addition works with negative numbers. Remember, adding a negative number is the same as subtracting its absolute value.""
+
+Hint 3:
+""After adding the two numbers, return the result directly. There's no need for further manipulation or checks since integer addition in programming behaves the same way as in basic arithmetic.""","# Python
+class Solution:
+    def sum(self, num1: int, num2: int) -> int:
+        return num1 + num2
+
+// Java
+public class Main {
+  public static void main(String[] args) {
+    int x = 5;
+    int y = 3;
+    System.out.println(x + y);
+  }
+}",ds_algo
+2,Two Sum,"{
+  ""body"": {
+    ""time"": 1710283954571,
+    ""blocks"": [
+      {
+        ""id"": ""uH2t70Hrgc"",
+        ""type"": ""header"",
+        ""data"": {
+          ""text"": ""\nGiven an array of integers and an integer target, return the two numbers such that they add up to the target."",
+          ""level"": 6
+        }
+      },
+      {
+        ""id"": ""LXdL8stuvI"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 1:""
+        }
+      },
+      {
+        ""id"": ""uJedaavAe9"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].\n""
+        }
+      },
+      {
+        ""id"": ""w_1qq-2MAF"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 2:""
+        }
+      },
+      {
+        ""id"": ""LOl1RJp1Z3"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [3,2,4], target = 6\nOutput: [1,2]\n""
+        }
+      },
+      {
+        ""id"": ""vkHjJsORls"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 3:""
+        }
+      },
+      {
+        ""id"": ""tCJ0al-iOt"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [3,3], target = 6\nOutput: [0,1]""
+        }
+      },
+      {
+        ""id"": ""Cq9TtWXOgg"",
+        ""type"": ""header"",
+        ""data"": {
+          ""text"": ""Examples"",
+          ""level"": 3
+        }
+      },
+      {
+        ""id"": ""kY1AOzqX_J"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Example 1:\nInput: nums = [2,7,11,15], target = 9\nOutput: [2, 7]\nExplanation: 2 + 7 = 9\n\nExample 2:\nInput: nums = [3,2,4], target = 6\nOutput: [2, 4]\n\nExample 3:\nInput: nums = [3,3], target = 6\nOutput: [3, 3]""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""Consider iterating through the array with a loop. For each element, check if there's another element in the array that can be added to it to meet the target sum.""
+
+Hint 2:
+""Think about using a data structure, like a hash map, to store elements you've already checked. This way, you can efficiently look up the complement of the current element (target - current element) to see if it exists in your array.""
+
+Hint 3:
+""Once you find the two numbers that add up to the target, return their values. If the array contains duplicate elements that meet the condition, consider how you will handle this scenario to return the first valid pair you find.""","seen = set()
+
+        for idx, n in enumerate(nums):
+            diff = target - n
+
+            if diff in seen:
+                return [n, diff]
+
+            seen.add(diff)
+
+        return []",ds_algo
+3,Palindrome,"{
+  ""body"": {
+    ""time"": 1710283843972,
+    ""blocks"": [
+      {
+        ""id"": ""uH2t70Hrgc"",
+        ""type"": ""header"",
+        ""data"": {
+          ""text"": ""A phrase is a palindrome if it reads the same forward and backward."",
+          ""level"": 6
+        }
+      },
+      {
+        ""id"": ""F6QqgbyawC"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""For example - <i><b>\""racecar\""</b></i> reads the same whether forward or backward.""
+        }
+      },
+      {
+        ""id"": ""Cq9TtWXOgg"",
+        ""type"": ""header"",
+        ""data"": {
+          ""text"": ""Examples"",
+          ""level"": 3
+        }
+      },
+      {
+        ""id"": ""kY1AOzqX_J"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""# Example 1\nInput: s = \""racecar\""\nOutput: true\nExplanation: \""racecar\"" == \""racecar is a palindrome.\n\n# Example 2\nInput: s = \""i love mom\""\nOutput: false\nExplanation: \""i love mom\"" != \""mom evol i\"".\n\n# Example 3\nInput: s = \"" \""\nOutput: true\nExplanation: An empty string reads the same regardless of direction.""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""Identify the start and end of the phrase and compare these characters. If at any point they don't match, the phrase isn't a palindrome.""
+
+Hint 2:
+""Use two pointers or indices to iterate over the phrase: one moving forward from the beginning and the other moving backward from the end. Increment and decrement these pointers, respectively, after each comparison.""
+
+Hint 3:
+""Continue comparing the characters until the pointers meet or cross each other. If all corresponding characters match during the iteration, then the phrase is a palindrome.""
+
+Hint 4:
+""Just write a condition that checks if the reversed version is equal to the original.""","# Python
+
+# O(n) way both time and space — the easy way out
+return string[::-1] == string
+
+# O(n) time, O(1) space — a bit more complex
+l, r = 0, len(s) - 1
+
+     while l < r:
+          # Compare
+          if s[l].lower() != s[r].lower(): return
+          l += 1; r -= 1
+
+          return True
+",ds_algo
+4,Good Pairs,"{
+  ""body"": {
+    ""time"": 1710284061103,
+    ""blocks"": [
+      {
+        ""id"": ""gubqkKmHOB"",
+        ""type"": ""list"",
+        ""data"": {
+          ""style"": ""unordered"",
+          ""items"": [
+            ""Given an array of integers&nbsp;nums, return&nbsp;the number of&nbsp;good pairs.""
+          ]
+        }
+      },
+      {
+        ""id"": ""6jMhz9EC1A"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Given an array of integers&nbsp;<code>nums</code>, return&nbsp;the number of&nbsp;good pairs.""
+        }
+      },
+      {
+        ""id"": ""s02rY3FuLA"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""A pair&nbsp;<code>(i, j)</code>&nbsp;is called&nbsp;good&nbsp;if&nbsp;<code>nums[i] == nums[j]</code>&nbsp;and&nbsp;<code>i</code>&nbsp;&lt;&nbsp;<code>j</code>.""
+        }
+      },
+      {
+        ""id"": ""lrkJsLCy91"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 1:""
+        }
+      },
+      {
+        ""id"": ""dd4npAx14l"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [1,2,3,1,1,3]\nOutput: 4\nExplanation: There are 4 good pairs (0,3), (0,4), (3,4), (2,5) 0-indexed.\n""
+        }
+      },
+      {
+        ""id"": ""6NFUoo9lVi"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 2:""
+        }
+      },
+      {
+        ""id"": ""EtMRTquZ06"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [1,1,1,1]\nOutput: 6\nExplanation: Each pair in the array are good.\n""
+        }
+      },
+      {
+        ""id"": ""VNJey5MaMa"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 3:""
+        }
+      },
+      {
+        ""id"": ""FOPVh5Hr6o"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [1,2,3]\nOutput: 0""
+        }
+      },
+      {
+        ""id"": ""LXdL8stuvI"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 1:""
+        }
+      },
+      {
+        ""id"": ""uJedaavAe9"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].\n""
+        }
+      },
+      {
+        ""id"": ""w_1qq-2MAF"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 2:""
+        }
+      },
+      {
+        ""id"": ""LOl1RJp1Z3"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [3,2,4], target = 6\nOutput: [1,2]\n""
+        }
+      },
+      {
+        ""id"": ""vkHjJsORls"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 3:""
+        }
+      },
+      {
+        ""id"": ""tCJ0al-iOt"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: nums = [3,3], target = 6\nOutput: [0,1]""
+        }
+      },
+      {
+        ""id"": ""Cq9TtWXOgg"",
+        ""type"": ""header"",
+        ""data"": {
+          ""text"": ""Examples"",
+          ""level"": 3
+        }
+      },
+      {
+        ""id"": ""kY1AOzqX_J"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Example 1:\nInput: nums = [2,7,11,15], target = 9\nOutput: [2, 7]\nExplanation: 2 + 7 = 9\n\nExample 2:\nInput: nums = [3,2,4], target = 6\nOutput: [2, 4]\n\nExample 3:\nInput: nums = [3,3], target = 6\nOutput: [3, 3]""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""Iterate through the array using a nested loop where the second loop starts from the index right after the first loop's index. This way, you can compare every pair of elements without repeating.""
+
+Hint 2:
+""During the iteration, check if nums[i] == nums[j] where i < j. If they are equal, it means you've found a good pair. Increment a counter each time this condition is true.""
+
+Hint 3:
+""After completing the iterations, the counter will represent the total number of good pairs in the array. Return this count as the final answer.""
+","# Python
+def numIdenticalPairs(self, nums: List[int]) -> int:
+        ans = 0
+        for i in range(len(nums)):
+            for j in range(i + 1, len(nums)):
+                if nums[i] == nums[j]:
+                    ans += 1
+        
+        return ans
+
+// Java
+public int numIdenticalPairs(int[] nums) {
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] == nums[j]) {
+                    ans++;
+                }
+            }
+        }
+        
+        return ans;
+    }",ds_algo
+5,Convert the Temperature,"{
+  ""body"": {
+    ""time"": 1710284285435,
+    ""blocks"": [
+      {
+        ""id"": ""T3bsnEdKgm"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""You are given a non-negative floating point number rounded to two decimal places&nbsp;<code>celsius</code>, that denotes the&nbsp;temperature in Celsius.""
+        }
+      },
+      {
+        ""id"": ""eA_I3ZRLFH"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""You should convert Celsius into&nbsp;Kelvin&nbsp;and&nbsp;Fahrenheit&nbsp;and return it as an array&nbsp;<code>ans = [kelvin, fahrenheit]</code>.""
+        }
+      },
+      {
+        ""id"": ""CSEOdboz-z"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Return&nbsp;the array&nbsp;<code>ans</code>.&nbsp;Answers within&nbsp;<code>10-5</code>&nbsp;of the actual answer will be accepted.""
+        }
+      },
+      {
+        ""id"": ""x7u3bQQtUP"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Note that:""
+        }
+      },
+      {
+        ""id"": ""u3K8QhDybi"",
+        ""type"": ""list"",
+        ""data"": {
+          ""style"": ""unordered"",
+          ""items"": [
+            ""Kelvin = Celsius + 273.15"",
+            ""Fahrenheit = Celsius * 1.80 + 32.00""
+          ]
+        }
+      },
+      {
+        ""id"": ""n0ROjMNynx"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 1:""
+        }
+      },
+      {
+        ""id"": ""yl_AE1xNwF"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: celsius = 36.50\nOutput: [309.65000,97.70000]\nExplanation: Temperature at 36.50 Celsius converted in Kelvin is 309.65 and converted in Fahrenheit is 97.70.\n""
+        }
+      },
+      {
+        ""id"": ""VuxbRhNEou"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 2:""
+        }
+      },
+      {
+        ""id"": ""hW-TiyAAlR"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: celsius = 122.11\nOutput: [395.26000,251.79800]\nExplanation: Temperature at 122.11 Celsius converted in Kelvin is 395.26 ""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""Implement formulas that are given in the statement.""","return [celsius + 273.15, celsius * 1.80 + 32.00]",ds_algo
+6,Defanging an IP Address,"{
+  ""body"": {
+    ""time"": 1710284424883,
+    ""blocks"": [
+      {
+        ""id"": ""n0_DFgDd3h"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Given a valid (IPv4) IP&nbsp;<code>address</code>, return a defanged version of that IP address.""
+        }
+      },
+      {
+        ""id"": ""ll5GnpHyLp"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""A&nbsp;defanged&nbsp;IP address&nbsp;replaces every period&nbsp;<code>\"".\""</code>&nbsp;with&nbsp;<code>\""[.]\""</code>.""
+        }
+      },
+      {
+        ""id"": ""8edU-fBIYY"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 1:""
+        }
+      },
+      {
+        ""id"": ""1X2oMhOOD4"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: address = \""1.1.1.1\""\nOutput: \""1[.]1[.]1[.]1\""\n""
+        }
+      },
+      {
+        ""id"": ""yfDmAHP_Jw"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Example 2:""
+        }
+      },
+      {
+        ""id"": ""gG8pBb_naw"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""Input: address = \""255.100.50.0\""\nOutput: \""255[.]100[.]50[.]0\""""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""Consider the string manipulation functions available in your programming language of choice. You need a function that can search and replace all occurrences of a specific character or substring.""
+
+Hint 2:
+""Loop through each character of the IP address and each time you encounter a period ('.'), replace it with '[.]'. Alternatively, you could split the string by '.' and rejoin it using '[.]' as the delimiter.""
+
+Hint 3:
+""There's no need to check for the validity of the IP address format based on the problem's statement. Once you've processed the entire string and replaced all periods, return the modified string as the defanged IP address.""","output = []
+        
+        for char in address:
+            if char == '.':
+                output.append('[.]')
+            else:
+                output.append(char)
+                
+        return """".join(output)",ds_algo
+7,Breakpoint Colors,"{
+  ""body"": {
+    ""time"": 1710285941519,
+    ""blocks"": [
+      {
+        ""id"": ""NYaIol5SN0"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Implement a CSS media query that changes the background color of a webpage when the screen width is less than 640 pixels.""
+        }
+      },
+      {
+        ""id"": ""sYZrr-62wB"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""<!-- Using Tailwind's default breakpoints, sm: applies for <640px -->\n<div class=\""bg-white sm:bg-red-500\"">\n  <!-- Your content goes here -->\n</div>""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hint 1:
+""Review how Tailwind's responsive utility classes work. Remember, these classes enable you to apply different styles at various breakpoints. While the exact 600px breakpoint isn't standard, you can use sm: for a similar effect.""
+
+Hint 2:
+""Consider the default behavior of the content without any responsive classes applied. By default, the background color will be what you set without any prefix. Then, use the sm: prefix to define how the background should change on smaller screens.""
+
+Hint 3:
+""When testing your implementation, resize your browser window to see the background color change in action. This visual test can confirm that your responsive design is working as expected, even though it's at 640px rather than 600px.""","<div class=""bg-white sm:bg-blue-500"">
+  <!-- Your content goes here -->
+</div>",front_end
+8,Input Field with Character Count,"{
+  ""body"": {
+    ""time"": 1710289559740,
+    ""blocks"": [
+      {
+        ""id"": ""YHTf6LjLwo"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""import React, { useState } from 'react';\n\nexport default function CharacterCountInput() {\n  return (\n    <div className=\""p-4\"">\n      <input type=\""text\"" className=\""border p-2\"" placeholder=\""Type something...\"" />\n      <div>Characters Count: 0</div>\n    </div>\n  );\n}""
+        }
+      },
+      {
+        ""id"": ""URFF5O-HTA"",
+        ""type"": ""list"",
+        ""data"": {
+          ""style"": ""unordered"",
+          ""items"": []
+        }
+      },
+      {
+        ""id"": ""ZRReezTCtU"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Implement an input field with a live character count. Use the code above as the starting point!""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hints:
+- Use the useState hook to manage the input field's state.
+- Bind the input's value to a state variable and update it on every change to capture user input.
+- Display the length of the input string below the input field to show the character count dynamically.","import React, { useState } from 'react';
+
+export default function CharacterCountInput() {
+  const [inputValue, setInputValue] = useState<string>('');
+
+  return (
+    <div className=""p-4"">
+      <input
+        type=""text""
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className=""input input-bordered w-full max-w-xs bg-slate-300 ring-1 ring-red-500""
+      />
+      <p className=""text-sm mt-2"">Character Count: {inputValue.length}</p>
+    </div>
+  );
+}
+
+
+
+
+",front_end
+9,Collapsible Accordion,"{
+  ""body"": {
+    ""time"": 1710289253392,
+    ""blocks"": [
+      {
+        ""id"": ""YHTf6LjLwo"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""import React, { useState } from 'react';\n\nexport default function Accordion() {\n  const [openIndex, setOpenIndex] = useState<boolean | null>(null);\n\n  const toggleItem = (index) => {\n    // TODO:\n  };\n\n  return (\n    <div className=\""p-4\"">\n      {[1, 2, 3].map((item, index) => (\n        <div key={index} onClick={() => toggleItem(index)} className=\""cursor-pointer py-2\"">\n          <div>Item {item}</div>\n          {openIndex === index && <div className=\""text-sm\"">Content for item {item}</div>}\n        </div>\n      ))}\n    </div>\n  );\n}\n""
+        }
+      },
+      {
+        ""id"": ""URFF5O-HTA"",
+        ""type"": ""list"",
+        ""data"": {
+          ""style"": ""ordered"",
+          ""items"": []
+        }
+      },
+      {
+        ""id"": ""ZRReezTCtU"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Implement an accordion which collapses on click; it also comes with content inside!""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hints:
+
+- Manage the state of the open item using the useState hook.
+- Implement a function to update the open item index, allowing each item to be expanded or collapsed.
+- Use conditional rendering to display the content of the currently opened item.","import React, { useState } from 'react';
+
+export default function Accordion() {
+  const [openIndex, setOpenIndex] = useState<boolean | null>(null);
+
+  const toggleItem = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <div className=""p-4"">
+      {[1, 2, 3].map((item, index) => (
+        <div key={index} onClick={() => toggleItem(index)} className=""cursor-pointer py-2"">
+          <div>Item {item}</div>
+          {openIndex === index && <div className=""text-sm"">Content for item {item}</div>}
+        </div>
+      ))}
+    </div>
+  );
+}",front_end
+10,Navigation Bar,"{
+  ""body"": {
+    ""time"": 1710327941005,
+    ""blocks"": [
+      {
+        ""id"": ""R1qoWVwLTf"",
+        ""type"": ""paragraph"",
+        ""data"": {
+          ""text"": ""Create a navigation bar that contains links to 'Home', 'About', and 'Contact' pages. This navigation bar should adjust for smaller screens by showing a menu icon (hamburger menu) instead of the full link texts.""
+        }
+      },
+      {
+        ""id"": ""IXlcg-rt58"",
+        ""type"": ""code"",
+        ""data"": {
+          ""code"": ""import React, { useState } from 'react';\n\nconst Icon = () => <svg className=\""w-6 h-6\"" fill=\""none\"" stroke=\""currentColor\"" viewBox=\""0 0 24 24\"" xmlns=\""http://www.w3.org/2000/svg\""><path strokeLinecap=\""round\"" strokeLinejoin=\""round\"" strokeWidth={2} d=\""M4 6h16M4 12h16m-7 6h7\"" /></svg>\n\nexport default function NavigationBar() {\n  const [isMenuOpen, setIsMenuOpen] = useState(false);\n\n  return (\n    <nav className=\""p-4 w-full flex flex-row justify-around\"">\n      <div>item 1</div>\n      <div>item 2</div>\n      <div>item 3</div>\n    </nav>\n  );\n}\n""
+        }
+      }
+    ],
+    ""version"": ""2.27.2""
+  }
+}","Hints:
+- Tailwind's responsive classes, such as md:hidden and hidden md:flex, can help show or hide elements based on the screen size.
+- You do not need to manage state or handle click events for this simplified version. Focus on using Tailwind's utilities to achieve responsiveness.
+- The <nav> element should always be visible, but the way its contents are displayed will change based on the screen width.","import React, { useState } from 'react';
+
+const Icon = () => <svg className=""w-6 h-6"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24"" xmlns=""http://www.w3.org/2000/svg""><path strokeLinecap=""round"" strokeLinejoin=""round"" strokeWidth={2} d=""M4 6h16M4 12h16m-7 6h7"" /></svg>
+
+export default function NavigationBar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <nav className=""p-4 w-full flex flex-col sm:flex-row justify-around bg-slate-300"">
+      <div className=""hidden sm:flex"">item 1</div>
+      <div className=""hidden sm:flex"">item 2</div>
+      <div className=""hidden sm:flex"">item 3</div>
+      <div className=""sm:hidden flex"">
+        <Icon />
+      </div>
+    </nav>
+  );
+}",front_end
